@@ -1,0 +1,104 @@
+[
+  {
+    "adm4Code": "34.01.01.2004",
+    "desa": "Glagah",
+    "kecamatan": "Temon",
+    "kabupaten": "Kulon Progo"
+  },
+  {
+    "adm4Code": "34.01.08.2003",
+    "desa": "Hargowilis",
+    "kecamatan": "Kokap",
+    "kabupaten": "Kulon Progo"
+  },
+  {
+    "adm4Code": "34.02.03.2002",
+    "desa": "Parangtritis",
+    "kecamatan": "Kretek",
+    "kabupaten": "Bantul"
+  },
+  {
+    "adm4Code": "34.02.11.2001",
+    "desa": "Mangunan",
+    "kecamatan": "Dlingo",
+    "kabupaten": "Bantul"
+  },
+  {
+    "adm4Code": "34.02.15.2002",
+    "desa": "Timbulharjo",
+    "kecamatan": "Sewon",
+    "kabupaten": "Bantul"
+  },
+  {
+    "adm4Code": "34.02.16.2001",
+    "desa": "Bangunjiwo",
+    "kecamatan": "Kasihan",
+    "kabupaten": "Bantul"
+  },
+  {
+    "adm4Code": "34.03.04.2008",
+    "desa": "Nglanggeran",
+    "kecamatan": "Patuk",
+    "kabupaten": "Gunungkidul"
+  },
+  {
+    "adm4Code": "34.03.07.2004",
+    "desa": "Tepus",
+    "kecamatan": "Tepus",
+    "kabupaten": "Gunungkidul"
+  },
+  {
+    "adm4Code": "34.03.17.2003",
+    "desa": "Kemadang",
+    "kecamatan": "Tanjungsari",
+    "kabupaten": "Gunungkidul"
+  },
+  {
+    "adm4Code": "34.04.07.2001",
+    "desa": "Caturtunggal",
+    "kecamatan": "Depok",
+    "kabupaten": "Sleman"
+  },
+  {
+    "adm4Code": "34.04.09.2006",
+    "desa": "Bokoharjo",
+    "kecamatan": "Prambanan",
+    "kabupaten": "Sleman"
+  },
+  {
+    "adm4Code": "34.04.13.2004",
+    "desa": "Pandowoharjo",
+    "kecamatan": "Sleman",
+    "kabupaten": "Sleman"
+  },
+  {
+    "adm4Code": "34.04.16.2005",
+    "desa": "Hargobinangun",
+    "kecamatan": "Pakem",
+    "kabupaten": "Sleman"
+  },
+  {
+    "adm4Code": "34.04.17.2005",
+    "desa": "Umbulharjo",
+    "kecamatan": "Cangkringan",
+    "kabupaten": "Sleman"
+  },
+  {
+    "adm4Code": "34.71.09.1001",
+    "desa": "Patehan",
+    "kecamatan": "Kraton",
+    "kabupaten": "Kota Yogyakarta"
+  },
+  {
+    "adm4Code": "34.71.09.1002",
+    "desa": "Panembahan",
+    "kecamatan": "Kraton",
+    "kabupaten": "Kota Yogyakarta"
+  },
+  {
+    "adm4Code": "34.71.10.1001",
+    "desa": "Ngupasan",
+    "kecamatan": "Gondomanan",
+    "kabupaten": "Kota Yogyakarta"
+  }
+]

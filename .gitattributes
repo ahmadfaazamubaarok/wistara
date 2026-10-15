@@ -1,0 +1,20 @@
+# Paksa LF di semua OS. Tanpa ini, Git di Windows (core.autocrlf=true) mengubah
+# skrip shell menjadi CRLF dan container Linux gagal menjalankannya
+# ("/bin/sh^M: bad interpreter").
+* text=auto eol=lf
+
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Berkas biner: jangan diubah Git.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary

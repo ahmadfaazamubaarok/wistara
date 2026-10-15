@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/*
+ * Token desain dari DESIGN-jelajahlokal.md (front matter), diterjemahkan ke
+ * tema Tailwind v4. Ubah nilai di dokumen desain DAN di sini bersamaan.
+ * Setiap token menjadi utilitas, mis. --color-canvas -> bg-canvas / text-canvas.
+ */
+@theme {
+  /* Merek dan permukaan */
+  --color-canvas: #faf9f5;
+  --color-surface-soft: #f5f0e8;
+  --color-surface-card: #efe9de;
+  --color-surface-card-strong: #e8e0d2;
+  --color-surface-dark: #1e2b45; /* nila */
+  --color-surface-dark-elevated: #2a3a5a;
+  --color-primary: #9a4f2c; /* soga */
+  --color-primary-active: #7a3d22;
+  --color-primary-disabled: #e6dfd8;
+  --color-on-primary: #ffffff;
+  --color-on-dark: #faf9f5;
+  --color-on-dark-soft: #c9cdd6;
+
+  /* Teks */
+  --color-ink: #141413;
+  --color-body: #3d3d3a;
+  --color-muted: #66635c;
+
+  /* Garis */
+  --color-border-input: #8f877b;
+  --color-hairline: #e6dfd8; /* dekoratif saja, bukan batas komponen */
+  --color-focus: #1e2b45;
+
+  /* Status skor kelayakan (selalu sebagai chip berlatar muda) */
+  --color-score-good-text: #1a6b4f;
+  --color-score-good-bg: #dcefe6;
+  --color-score-mid-text: #8a5a00;
+  --color-score-mid-bg: #f6e7c8;
+  --color-score-bad-text: #b3261e;
+  --color-score-bad-bg: #f7dcd8;
+  --color-score-closed-text: #66635c;
+  --color-score-closed-bg: #efe9de;
+
+  /* Banner */
+  --color-banner-stale-text: #8a5a00;
+  --color-banner-stale-bg: #f6e7c8;
+  --color-banner-alert-text: #b3261e;
+  --color-banner-alert-bg: #f7dcd8;
+
+  /* Tipografi: font dimuat dari paket @fontsource-variable (lihat layout.tsx) */
+  --font-serif: "Fraunces Variable", "Source Serif 4", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Radius (menggantikan skala bawaan Tailwind) */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-canvas);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    font-size: 16px; /* minimal 16px agar input di iOS tidak memicu zoom */
+    line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Serif hanya untuk judul halaman dan judul bagian, selalu bobot 400. */
+  h1,
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--color-ink);
+  }
+  h1 {
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+  }
+  h2 {
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-ink);
+  }
+  @media (min-width: 1024px) {
+    h1 {
+      font-size: 40px;
+    }
+    h2 {
+      font-size: 28px;
+    }
+    h3 {
+      font-size: 18px;
+    }
+  }
+
+  /* Tautan dalam teks: warna soga dan bergaris bawah. */
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  /* Semua elemen interaktif punya cincin fokus nila 2px, jarak 2px. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,5 @@
+# Image dev hanya butuh skrip entrypoint. Kode sumber di-bind-mount oleh
+# compose.yaml, jadi konteks build dibuat sekecil mungkin (penting di Windows,
+# supaya node_modules tidak ikut dikirim ke daemon Docker).
+*
+!docker/dev-entrypoint.sh

@@ -1,0 +1,482 @@
+[
+  {
+    "slug": "pantai-parangtritis",
+    "name": "Pantai Parangtritis",
+    "category": "pantai",
+    "isIndoor": false,
+    "adm4Code": "34.02.03.2002",
+    "lat": -8.027283,
+    "lon": 110.337008,
+    "openHours": null,
+    "description": "Pantai berpasir gelap di pesisir selatan Bantul, dikenal dengan ombak besar dan pemandangan matahari terbenam.",
+    "osmRef": "way/364274285",
+    "verifiedAt": null
+  },
+  {
+    "slug": "pantai-indrayanti",
+    "name": "Pantai Indrayanti",
+    "category": "pantai",
+    "isIndoor": false,
+    "adm4Code": "34.03.07.2004",
+    "lat": -8.149893,
+    "lon": 110.611317,
+    "openHours": null,
+    "description": "Pantai berpasir putih di Tepus, Gunungkidul, diapit tebing karang dan deretan warung makanan laut di tepinya.",
+    "osmRef": "way/310371954",
+    "verifiedAt": null
+  },
+  {
+    "slug": "pantai-baron",
+    "name": "Pantai Baron",
+    "category": "pantai",
+    "isIndoor": false,
+    "adm4Code": "34.03.17.2003",
+    "lat": -8.128947,
+    "lon": 110.54918,
+    "openHours": null,
+    "description": "Pantai di Gunungkidul tempat air sungai bawah tanah bertemu laut, ramai oleh perahu nelayan dan pengunjung keluarga.",
+    "osmRef": "way/310361685",
+    "verifiedAt": null
+  },
+  {
+    "slug": "pantai-glagah",
+    "name": "Pantai Glagah",
+    "category": "pantai",
+    "isIndoor": false,
+    "adm4Code": "34.01.01.2004",
+    "lat": -7.904699,
+    "lon": 110.077441,
+    "openHours": null,
+    "description": "Pantai di pesisir Kulon Progo dengan pemecah ombak yang membuat sisi daratnya lebih tenang untuk berjalan santai.",
+    "osmRef": "node/5534390312",
+    "verifiedAt": null
+  },
+  {
+    "slug": "gumuk-pasir-parangkusumo",
+    "name": "Gumuk Pasir Parangkusumo",
+    "category": "alam",
+    "isIndoor": false,
+    "adm4Code": "34.02.03.2002",
+    "lat": -8.017052,
+    "lon": 110.317192,
+    "openHours": null,
+    "description": "Hamparan bukit pasir pesisir di Bantul, bentang alam yang jarang ditemukan di Indonesia dan sering dipakai untuk berfoto.",
+    "osmRef": "way/1275504019",
+    "verifiedAt": null
+  },
+  {
+    "slug": "gunung-api-purba-nglanggeran",
+    "name": "Gunung Api Purba Nglanggeran",
+    "category": "alam",
+    "isIndoor": false,
+    "adm4Code": "34.03.04.2008",
+    "lat": -7.8408,
+    "lon": 110.5469,
+    "openHours": null,
+    "description": "Sisa gunung api purba di Patuk, Gunungkidul, dengan jalur pendakian ringan dan pemandangan dari puncaknya.",
+    "osmRef": null,
+    "verifiedAt": null
+  },
+  {
+    "slug": "hutan-pinus-mangunan",
+    "name": "Hutan Pinus Mangunan",
+    "category": "alam",
+    "isIndoor": false,
+    "adm4Code": "34.02.11.2001",
+    "lat": -7.926158,
+    "lon": 110.430913,
+    "openHours": null,
+    "description": "Kawasan hutan pinus yang sejuk di Dlingo, Bantul, cocok untuk bersantai dan berjalan di antara pepohonan.",
+    "osmRef": "node/8395855553",
+    "verifiedAt": null
+  },
+  {
+    "slug": "kalibiru",
+    "name": "Kalibiru",
+    "category": "alam",
+    "isIndoor": false,
+    "adm4Code": "34.01.08.2003",
+    "lat": -7.808246,
+    "lon": 110.12942,
+    "openHours": null,
+    "description": "Kawasan wisata alam di perbukitan Kokap, Kulon Progo, dengan pemandangan waduk dan perbukitan di sekitarnya.",
+    "osmRef": "node/3359764340",
+    "verifiedAt": null
+  },
+  {
+    "slug": "keraton-yogyakarta",
+    "name": "Keraton Yogyakarta",
+    "category": "budaya",
+    "isIndoor": false,
+    "adm4Code": "34.71.09.1002",
+    "lat": -7.807597,
+    "lon": 110.36387,
+    "openHours": {
+      "mon": [
+        "08:30",
+        "14:00"
+      ],
+      "tue": [
+        "08:30",
+        "14:00"
+      ],
+      "wed": [
+        "08:30",
+        "14:00"
+      ],
+      "thu": [
+        "08:30",
+        "14:00"
+      ],
+      "fri": [
+        "08:30",
+        "13:00"
+      ],
+      "sat": [
+        "08:30",
+        "14:00"
+      ],
+      "sun": [
+        "08:30",
+        "14:00"
+      ]
+    },
+    "description": "Istana Kasultanan Yogyakarta yang masih berfungsi sebagai pusat budaya, dengan bangsal, museum, dan pertunjukan seni.",
+    "osmRef": "way/542298637",
+    "verifiedAt": null
+  },
+  {
+    "slug": "taman-sari",
+    "name": "Taman Sari",
+    "category": "budaya",
+    "isIndoor": false,
+    "adm4Code": "34.71.09.1001",
+    "lat": -7.81,
+    "lon": 110.3594,
+    "openHours": {
+      "mon": [
+        "09:00",
+        "15:00"
+      ],
+      "tue": [
+        "09:00",
+        "15:00"
+      ],
+      "wed": [
+        "09:00",
+        "15:00"
+      ],
+      "thu": [
+        "09:00",
+        "15:00"
+      ],
+      "fri": [
+        "09:00",
+        "15:00"
+      ],
+      "sat": [
+        "09:00",
+        "15:00"
+      ],
+      "sun": [
+        "09:00",
+        "15:00"
+      ]
+    },
+    "description": "Bekas kompleks taman dan pemandian keluarga kesultanan di tengah kota Yogyakarta, dengan lorong dan kolam bersejarah.",
+    "osmRef": null,
+    "verifiedAt": null
+  },
+  {
+    "slug": "candi-prambanan",
+    "name": "Candi Prambanan",
+    "category": "budaya",
+    "isIndoor": false,
+    "adm4Code": "34.04.09.2006",
+    "lat": -7.752227,
+    "lon": 110.491533,
+    "openHours": {
+      "mon": [
+        "06:30",
+        "17:00"
+      ],
+      "tue": [
+        "06:30",
+        "17:00"
+      ],
+      "wed": [
+        "06:30",
+        "17:00"
+      ],
+      "thu": [
+        "06:30",
+        "17:00"
+      ],
+      "fri": [
+        "06:30",
+        "17:00"
+      ],
+      "sat": [
+        "06:30",
+        "17:00"
+      ],
+      "sun": [
+        "06:30",
+        "17:00"
+      ]
+    },
+    "description": "Kompleks candi Hindu dari abad ke-9 dengan menara-menara tinggi yang ramping, di perbatasan Sleman dan Klaten.",
+    "osmRef": "way/1264832884",
+    "verifiedAt": null
+  },
+  {
+    "slug": "candi-ratu-boko",
+    "name": "Candi Ratu Boko",
+    "category": "budaya",
+    "isIndoor": false,
+    "adm4Code": "34.04.09.2006",
+    "lat": -7.770512,
+    "lon": 110.489464,
+    "openHours": {
+      "mon": [
+        "06:30",
+        "17:00"
+      ],
+      "tue": [
+        "06:30",
+        "17:00"
+      ],
+      "wed": [
+        "06:30",
+        "17:00"
+      ],
+      "thu": [
+        "06:30",
+        "17:00"
+      ],
+      "fri": [
+        "06:30",
+        "17:00"
+      ],
+      "sat": [
+        "06:30",
+        "17:00"
+      ],
+      "sun": [
+        "06:30",
+        "17:00"
+      ]
+    },
+    "description": "Situs istana kuno di atas bukit dekat Prambanan, populer sebagai tempat menikmati matahari terbenam.",
+    "osmRef": "way/1264965330",
+    "verifiedAt": null
+  },
+  {
+    "slug": "museum-benteng-vredeburg",
+    "name": "Museum Benteng Vredeburg",
+    "category": "museum",
+    "isIndoor": true,
+    "adm4Code": "34.71.10.1001",
+    "lat": -7.800154,
+    "lon": 110.366336,
+    "openHours": {
+      "tue": [
+        "08:30",
+        "16:00"
+      ],
+      "wed": [
+        "08:30",
+        "16:00"
+      ],
+      "thu": [
+        "08:30",
+        "16:00"
+      ],
+      "fri": [
+        "08:30",
+        "16:00"
+      ],
+      "sat": [
+        "08:30",
+        "16:00"
+      ],
+      "sun": [
+        "08:30",
+        "16:00"
+      ]
+    },
+    "description": "Benteng peninggalan masa kolonial di ujung Malioboro yang kini menjadi museum sejarah perjuangan bangsa.",
+    "osmRef": "way/1266553557",
+    "verifiedAt": null
+  },
+  {
+    "slug": "museum-sonobudoyo",
+    "name": "Museum Sonobudoyo",
+    "category": "museum",
+    "isIndoor": true,
+    "adm4Code": "34.71.10.1001",
+    "lat": -7.802137,
+    "lon": 110.363781,
+    "openHours": {
+      "tue": [
+        "08:00",
+        "15:30"
+      ],
+      "wed": [
+        "08:00",
+        "15:30"
+      ],
+      "thu": [
+        "08:00",
+        "15:30"
+      ],
+      "fri": [
+        "08:00",
+        "15:30"
+      ],
+      "sat": [
+        "08:00",
+        "15:30"
+      ],
+      "sun": [
+        "08:00",
+        "15:30"
+      ]
+    },
+    "description": "Museum kebudayaan Jawa di sisi Alun-alun Utara dengan koleksi wayang, keris, topeng, dan benda seni lainnya.",
+    "osmRef": "way/316773368",
+    "verifiedAt": null
+  },
+  {
+    "slug": "museum-affandi",
+    "name": "Museum Affandi",
+    "category": "museum",
+    "isIndoor": true,
+    "adm4Code": "34.04.07.2001",
+    "lat": -7.782754,
+    "lon": 110.396332,
+    "openHours": {
+      "mon": [
+        "09:00",
+        "16:00"
+      ],
+      "tue": [
+        "09:00",
+        "16:00"
+      ],
+      "wed": [
+        "09:00",
+        "16:00"
+      ],
+      "thu": [
+        "09:00",
+        "16:00"
+      ],
+      "fri": [
+        "09:00",
+        "16:00"
+      ],
+      "sat": [
+        "09:00",
+        "16:00"
+      ],
+      "sun": [
+        "09:00",
+        "16:00"
+      ]
+    },
+    "description": "Museum dan galeri karya pelukis Affandi di tepi Sungai Gajah Wong, memamerkan lukisan dan rumah tinggal sang pelukis.",
+    "osmRef": "way/191907719",
+    "verifiedAt": null
+  },
+  {
+    "slug": "museum-ullen-sentalu",
+    "name": "Museum Ullen Sentalu",
+    "category": "museum",
+    "isIndoor": true,
+    "adm4Code": "34.04.16.2005",
+    "lat": -7.597648,
+    "lon": 110.423396,
+    "openHours": {
+      "tue": [
+        "08:30",
+        "16:00"
+      ],
+      "wed": [
+        "08:30",
+        "16:00"
+      ],
+      "thu": [
+        "08:30",
+        "16:00"
+      ],
+      "fri": [
+        "08:30",
+        "16:00"
+      ],
+      "sat": [
+        "08:30",
+        "16:00"
+      ],
+      "sun": [
+        "08:30",
+        "16:00"
+      ]
+    },
+    "description": "Museum budaya Jawa di lereng Merapi, Kaliurang, yang menampilkan batik, lukisan, dan kisah keluarga keraton.",
+    "osmRef": "way/361661917",
+    "verifiedAt": null
+  },
+  {
+    "slug": "desa-wisata-pentingsari",
+    "name": "Desa Wisata Pentingsari",
+    "category": "desa_wisata",
+    "isIndoor": false,
+    "adm4Code": "34.04.17.2005",
+    "lat": -7.615,
+    "lon": 110.456,
+    "openHours": null,
+    "description": "Desa wisata di lereng Merapi, Cangkringan, yang menawarkan menginap di rumah warga, kegiatan bertani, dan kesenian.",
+    "osmRef": null,
+    "verifiedAt": null
+  },
+  {
+    "slug": "desa-wisata-brayut",
+    "name": "Desa Wisata Brayut",
+    "category": "desa_wisata",
+    "isIndoor": false,
+    "adm4Code": "34.04.13.2004",
+    "lat": -7.701884,
+    "lon": 110.373583,
+    "openHours": null,
+    "description": "Desa wisata di Pandowoharjo, Sleman, tempat pengunjung belajar kegiatan pertanian, kerajinan, dan permainan tradisional.",
+    "osmRef": "way/314101463",
+    "verifiedAt": null
+  },
+  {
+    "slug": "desa-wisata-kasongan",
+    "name": "Desa Wisata Kasongan",
+    "category": "desa_wisata",
+    "isIndoor": false,
+    "adm4Code": "34.02.16.2001",
+    "lat": -7.84492,
+    "lon": 110.334959,
+    "openHours": null,
+    "description": "Kampung perajin gerabah di Bantul tempat pengunjung bisa melihat dan mencoba membuat kerajinan dari tanah liat.",
+    "osmRef": "way/136916277",
+    "verifiedAt": null
+  },
+  {
+    "slug": "desa-wisata-tembi",
+    "name": "Desa Wisata Tembi",
+    "category": "desa_wisata",
+    "isIndoor": false,
+    "adm4Code": "34.02.15.2002",
+    "lat": -7.869815,
+    "lon": 110.356404,
+    "openHours": null,
+    "description": "Desa wisata budaya di Sewon, Bantul, dengan rumah tradisional Jawa, kesenian, dan kuliner khas.",
+    "osmRef": "way/345472423",
+    "verifiedAt": null
+  }
+]

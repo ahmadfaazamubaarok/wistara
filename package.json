@@ -1,0 +1,55 @@
+{
+  "name": "jelajahlokal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JelajahLokal: waktu terbaik mengunjungi destinasi wisata DIY (MVP UINIC 8.0)",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "predev": "node scripts/copy-vendor-assets.mjs",
+    "dev:docker": "next dev --webpack --hostname 0.0.0.0",
+    "predev:docker": "node scripts/copy-vendor-assets.mjs",
+    "prebuild": "node scripts/copy-vendor-assets.mjs",
+    "build": "next build",
+    "start": "next start",
+    "db:migrate": "tsx scripts/db-migrate.ts",
+    "db:seed": "tsx scripts/db-seed.ts",
+    "seed:destinations": "tsx scripts/seed-destinations.ts",
+    "seed:facilities": "tsx scripts/seed-facilities.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:int": "vitest run --config vitest.int.config.mts",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^9.1.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
+    "maplibre-gl": "^6.14.0",
+    "next": "^16.4.1",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@scalar/api-reference": "^1.74.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^24.19.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.1",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
+}

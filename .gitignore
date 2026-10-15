@@ -1,0 +1,40 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# disalin dari node_modules saat dev/build (scripts/copy-vendor-assets.mjs)
+/public/vendor/
+
+# env: hanya .env.example yang boleh masuk repository (rahasia tidak boleh)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# logs
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.pem
+.idea/
+.vscode/*
+!.vscode/extensions.json
