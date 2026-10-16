@@ -120,3 +120,34 @@ describe("mergeUnderstanding (dengan model)", () => {
     expect(understand("ke mana ya", [], { intent: "recommend", when: { dayOffset: 9 } }).when.beyond).not.toBeNull();
   });
 });
+
+describe("pertanyaan santai dan singkatan", () => {
+  it("'ada di daerah mana' = topik lokasi", () => {
+    const u = understand("pantai glagah ada di daerah mana");
+    expect(u).toMatchObject({ intent: "info", slugs: ["pantai-glagah"] });
+    expect(u.topics).toEqual(["lokasi"]);
+  });
+
+  it("'tiketnya brp' = hanya topik tiket (akhiran -nya dan singkatan dipahami)", () => {
+    const u = understand("pantai glagah harga tiketnya brp");
+    expect(u.intent).toBe("info");
+    expect(u.topics).toEqual(["tiket"]);
+  });
+
+  it("'harga per orangnya berapa tuh' setelah membahas satu destinasi merujuk destinasi itu", () => {
+    const u = understand("harga per orangnya berapa tuh", ["pantai-glagah"]);
+    expect(u).toMatchObject({ intent: "info", slugs: ["pantai-glagah"] });
+    expect(u.topics).toContain("tiket");
+  });
+
+  it("pertanyaan topik setelah banyak hasil dan tanpa nama = tanya balik yang mana", () => {
+    const u = understand("harga tiketnya berapa", ["candi-prambanan", "candi-ratu-boko"]);
+    expect(u.ambiguousReference).toBe(true);
+  });
+
+  it("'panas' sebagai preferensi tidak dianggap pertanyaan topik cuaca terhadap hasil sebelumnya", () => {
+    const u = understand("yang tidak panas dong", ["pantai-glagah"]);
+    expect(u.topics).not.toContain("cuaca");
+    expect(u.slugs).toEqual([]);
+  });
+});

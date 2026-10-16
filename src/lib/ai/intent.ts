@@ -18,7 +18,7 @@ export const INTENTS = [
 ] as const;
 export type AssistantIntent = (typeof INTENTS)[number];
 
-export const TOPICS = ["jam_buka", "tiket", "fasilitas", "cuaca", "tips", "sorotan", "jarak"] as const;
+export const TOPICS = ["lokasi", "jam_buka", "tiket", "fasilitas", "cuaca", "tips", "sorotan", "jarak"] as const;
 export type Topic = (typeof TOPICS)[number];
 
 export const PREFERENCES = ["teduh", "hujan", "keluarga", "sunset", "foto", "murah"] as const;
@@ -65,11 +65,14 @@ export function detectTopics(query: string): Topic[] {
   const t = normalize(query);
   const topics: Topic[] = [];
   if (has(t, /\b(buka|tutup|jam operasional|jam kunjung|jam berapa|hari apa buka|libur)\b/)) topics.push("jam_buka");
-  if (has(t, /\b(tiket|htm|harga masuk|biaya masuk|bayar|retribusi|karcis|parkir berapa|tarif)\b/)) topics.push("tiket");
+  if (has(t, /\b(lokasi|alamat|letak|terletak|dimana|di mana|daerah mana|wilayah mana|kabupaten mana|kecamatan mana|desa mana|posisi)\b/)) {
+    topics.push("lokasi");
+  }
+  if (has(t, /\b(tiket|htm|harga|biaya|bayar|retribusi|karcis|tarif|per orang)\b/)) topics.push("tiket");
   if (has(t, /\b(fasilitas|toilet|wc|kamar mandi|musala|mushola|masjid|ibadah|parkir|atm|makan|restoran|warung|kantin|halte|stasiun)\b/)) {
     topics.push("fasilitas");
   }
-  if (has(t, /\b(cuaca|suhu|temperatur|cerah|mendung|berawan|angin|panas|dingin|gerimis)\b/) && !has(t, /\bkalau hujan\b/)) topics.push("cuaca");
+  if (has(t, /\b(cuaca|suhu|temperatur|prakiraan|angin)\b/) && !has(t, /\bkalau hujan\b/)) topics.push("cuaca");
   if (has(t, /\b(tips|saran|sebaiknya bawa|perlu bawa|bawa apa|pakai apa|pakaian)\b/)) topics.push("tips");
   if (has(t, /\b(ada apa|apa saja|ngapain|bisa ngapain|kegiatan|aktivitas|daya tarik|keunikan|highlight|spot|menarik)\b/)) topics.push("sorotan");
   if (has(t, /\b(jarak|berapa km|berapa kilo|rute|naik apa|berapa lama|perjalanan dari)\b/)) topics.push("jarak");
@@ -117,7 +120,7 @@ export function detectOrdinal(query: string): number | null {
 export function refersToPrevious(query: string): boolean {
   const t = normalize(query);
   return (
-    has(t, /\b(itu|tadi|tersebut|di sana|disana|situ|yang tadi|yang itu|dia|tempat ini|keduanya|ketiganya|semuanya)\b/) ||
+    has(t, /\b(itu|tadi|tersebut|di sana|disana|situ|yang tadi|yang itu|dia|tempat ini|kedua|ketiga|semua|keduanya|ketiganya|semuanya)\b/) ||
     detectOrdinal(query) !== null
   );
 }

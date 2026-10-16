@@ -73,10 +73,12 @@ export function mergeUnderstanding(query: string, ctx: UnderstandContext, model:
   // ---- rujukan ke hasil sebelumnya ("yang kedua", "itu", "bandingkan keduanya")
   let ambiguousReference = false;
   const focus = ctx.focus.filter((s) => validSlugs.has(s)).slice(0, 3);
-  if (slugs.length === 0 && focus.length > 0 && refersToPrevious(query)) {
+  // Pertanyaan topik spesifik tanpa nama ("harga per orangnya berapa?") juga merujuk hasil sebelumnya.
+  const aboutOneThing = detectTopics(query).some((t) => ["lokasi", "jam_buka", "tiket", "fasilitas", "tips", "jarak"].includes(t));
+  if (slugs.length === 0 && focus.length > 0 && (refersToPrevious(query) || aboutOneThing)) {
     const ordinal = detectOrdinal(query);
     if (ordinal !== null && focus[ordinal]) slugs = [focus[ordinal]];
-    else if (/\b(keduanya|ketiganya|semuanya|bandingkan)\b/.test(normalize(query)) && focus.length >= 2) slugs = focus;
+    else if (/\b(kedua|ketiga|semua|keduanya|ketiganya|semuanya|bandingkan)\b/.test(normalize(query)) && focus.length >= 2) slugs = focus;
     else if (focus.length === 1) slugs = [focus[0]];
     else ambiguousReference = true;
   }

@@ -420,7 +420,8 @@ async function info(input: EngineInput): Promise<EngineResult> {
     return ask(items, input, "Destinasi mana yang Anda maksud?");
   }
 
-  const topics: Topic[] = input.topics.length > 0 ? input.topics : ["jam_buka", "tiket", "cuaca", "sorotan"];
+  // Tanpa topik spesifik (mis. hanya menyebut nama): ringkasan pendek; detail ada di kartu.
+  const topics: Topic[] = input.topics.length > 0 ? input.topics : ["lokasi", "jam_buka", "tiket"];
   const dayOffset = dayOffsetOf(when);
   const dayKey = getWibDateKey(new Date(now.getTime() + dayOffset * 86_400_000));
   const pick = pickSlot(dest.slots, dayKey, when, now);
@@ -430,7 +431,10 @@ async function info(input: EngineInput): Promise<EngineResult> {
   const notices: string[] = [];
 
   for (const topic of topics) {
-    if (topic === "jam_buka") {
+    if (topic === "lokasi") {
+      const r = dest.region;
+      lines.push(`${dest.name} berada di Desa ${r.desa}, Kecamatan ${r.kecamatan}, ${/^kota\b/i.test(r.kabupaten) ? r.kabupaten : `Kabupaten ${r.kabupaten}`}, DIY. Tombol "Sorot di peta" menampilkan titiknya.`);
+    } else if (topic === "jam_buka") {
       const hours = openHoursText(dest);
       lines.push(`Jam buka ${dest.name}: ${hours.text}. ${verificationNote(dest)}`);
     } else if (topic === "tiket") {

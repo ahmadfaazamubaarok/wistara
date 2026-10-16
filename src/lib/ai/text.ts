@@ -1,13 +1,25 @@
 // Utilitas teks murni untuk asisten: normalisasi, jarak edit, dan kemiripan.
 
-/** Huruf kecil, tanpa diakritik dan tanda baca; spasi dirapatkan. */
+/** Singkatan percakapan yang umum; hanya yang tidak ambigu. */
+const SLANG: Record<string, string> = {
+  brp: "berapa", berapaan: "berapa", dmn: "dimana", dimn: "dimana", kmn: "kemana", gmn: "gimana", gimn: "gimana",
+  utk: "untuk", dgn: "dengan", yg: "yang", jm: "jam", tkt: "tiket", hrg: "harga", bgt: "banget",
+};
+
+/**
+ * Huruf kecil, tanpa diakritik dan tanda baca; spasi dirapatkan. Singkatan umum diperluas
+ * ("brp" -> "berapa") dan akhiran "-nya" dilepas ("tiketnya" -> "tiket") agar pola kata kunci cocok.
+ */
 export function normalize(input: string): string {
   return input
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]+/g, " ")
-    .trim();
+    .trim()
+    .split(" ")
+    .map((token) => SLANG[token] ?? (token.length >= 6 && token.endsWith("nya") ? token.slice(0, -3) : token))
+    .join(" ");
 }
 
 /** Jarak Levenshtein dengan batas atas (berhenti dini bila sudah melebihi `max`). */

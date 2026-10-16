@@ -259,3 +259,38 @@ describe("preferensi sebagai pembeda saat skor setara", () => {
     expect(r.cards[0].score).toBe(100);
   });
 });
+
+describe("jawaban info menjawab yang ditanya saja", () => {
+  const glagah = makeDest("pantai-glagah", {
+    region: { desa: "Glagah", kecamatan: "Temon", kabupaten: "Kulon Progo" },
+    enrichment: { ticketPrice: { domestic: "Rp 6.000 / orang", parking: "Motor Rp 3.000" }, highlights: ["Pemecah ombak tetrapod"], tips: [], tags: [] },
+  });
+
+  it("lokasi: menyebut desa, kecamatan, dan kabupaten, tanpa jam buka atau tiket", async () => {
+    const r = await ask("pantai glagah ada di daerah mana", [glagah]);
+    expect(r.baseReply).toContain("Desa Glagah, Kecamatan Temon, Kabupaten Kulon Progo");
+    expect(r.baseReply).not.toContain("Jam buka");
+    expect(r.baseReply).not.toContain("Tiket");
+  });
+
+  it("tiket saja: tidak ikut membawa jam buka dan prakiraan", async () => {
+    const r = await ask("pantai glagah harga tiketnya brp", [glagah]);
+    expect(r.baseReply).toContain("Rp 6.000");
+    expect(r.baseReply).not.toContain("Jam buka");
+    expect(r.baseReply).not.toContain("Prakiraan");
+  });
+
+  it("hanya menyebut nama: ringkasan pendek (lokasi, jam buka, tiket), tanpa daya tarik dan cuaca", async () => {
+    const r = await ask("pantai glagah", [glagah]);
+    expect(r.baseReply).toContain("Desa Glagah");
+    expect(r.baseReply).toContain("Rp 6.000");
+    expect(r.baseReply).not.toContain("Daya tarik");
+    expect(r.baseReply).not.toContain("Prakiraan");
+  });
+
+  it("pertanyaan lanjutan tanpa nama dijawab untuk destinasi sebelumnya", async () => {
+    const r = await ask("harga per orangnya berapa tuh", [glagah], {}, ["pantai-glagah"]);
+    expect(r.cards[0].slug).toBe("pantai-glagah");
+    expect(r.baseReply).toContain("Rp 6.000");
+  });
+});
