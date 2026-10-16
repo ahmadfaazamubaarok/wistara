@@ -104,20 +104,20 @@ export default async function DestinationPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <main id="konten" className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-6 md:px-8 md:py-8">
+      <main id="konten" className="mx-auto w-full max-w-[1200px] min-w-0 flex-1 px-4 py-6 md:px-8 md:py-8">
         <Link href="/" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium">
           <span aria-hidden="true">←</span> Semua destinasi
         </Link>
 
-        <div className="mt-2 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
+        <div className="mt-2 grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
           <div className="flex min-w-0 flex-col gap-6">
             <header className="flex flex-col gap-1">
-              <h1>{destination.name}</h1>
+              <h1 className="break-words">{destination.name}</h1>
               <p className="text-[13px] text-muted">
                 {CATEGORY_LABEL[destination.category]} · {destination.region.kabupaten} · {destination.region.desa},{" "}
                 {destination.region.kecamatan}
               </p>
-              {destination.description && <p className="mt-2 max-w-[65ch]">{destination.description}</p>}
+              {destination.description && <p className="mt-2 max-w-[65ch] break-words">{destination.description}</p>}
             </header>
 
             {/* PRD F10: Banner Peringatan Dini Cuaca Ekstrem BMKG */}
@@ -222,8 +222,8 @@ export default async function DestinationPage({ params, searchParams }: Props) {
               <h2 id="akses-judul">Akses</h2>
               <dl className="flex flex-col">
                 <div className="flex min-h-12 items-center justify-between gap-3 border-b border-hairline">
-                  <dt className="text-[15px] text-muted">Halte terdekat</dt>
-                  <dd className="text-right text-[15px] text-body">
+                  <dt className="shrink-0 text-[15px] text-muted">Halte terdekat</dt>
+                  <dd className="min-w-0 break-words text-right text-[15px] text-body">
                     {nearestHalte ? (
                       <>
                         {nearestHalte.name ?? "Halte tanpa nama"} ·{" "}
@@ -235,8 +235,8 @@ export default async function DestinationPage({ params, searchParams }: Props) {
                   </dd>
                 </div>
                 <div className="flex min-h-12 items-center justify-between gap-3 border-b border-hairline">
-                  <dt className="text-[15px] text-muted">Stasiun terdekat</dt>
-                  <dd className="text-right text-[15px] text-body">
+                  <dt className="shrink-0 text-[15px] text-muted">Stasiun terdekat</dt>
+                  <dd className="min-w-0 break-words text-right text-[15px] text-body">
                     {nearestStasiun ? (
                       <>
                         {nearestStasiun.name ?? "Stasiun tanpa nama"} ·{" "}

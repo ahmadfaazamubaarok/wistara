@@ -171,7 +171,7 @@ export function FacilitiesPanel({ slug, destination, initialRadius, initialFacil
                       key={facility.id}
                       className="flex min-h-12 items-center justify-between gap-3 border-b border-hairline last:border-b-0"
                     >
-                      <span className="text-[15px] text-body">{facility.name ?? "Tanpa nama"}</span>
+                      <span className="min-w-0 break-words text-[15px] text-body">{facility.name ?? "Tanpa nama"}</span>
                       <span className="shrink-0 text-[15px] tabular-nums text-ink">{formatDistance(facility.distanceM)}</span>
                     </li>
                   ))}

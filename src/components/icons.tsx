@@ -53,6 +53,8 @@ const MISC = {
   chevronUp: ["m18 15-6-6-6 6"],
   chevronDown: ["m6 9 6 6 6-6"],
   cloudLightning: ["M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973", "m13 12-3 5h4l-3 5"],
+  search: ["m21 21-4.35-4.35", "M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0z"],
+  x: ["M18 6 6 18", "m6 6 12 12"],
 } as const;
 
 export function MiscIcon({ name, ...props }: IconProps & { name: keyof typeof MISC }) {

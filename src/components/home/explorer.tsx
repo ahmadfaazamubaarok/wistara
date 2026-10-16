@@ -66,6 +66,7 @@ function useIsDesktop() {
 
 export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
   const [categories, setCategories] = useState<DestCategory[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [dayIndex, setDayIndex] = useState(0);
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
@@ -129,14 +130,29 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
   );
 
   const visible = useMemo(() => {
-    const filtered = categories.length ? items.filter((item) => categories.includes(item.category)) : items;
+    const q = searchQuery.trim().toLowerCase();
+    const filtered = items.filter((item) => {
+      if (categories.length && !categories.includes(item.category)) {
+        return false;
+      }
+      if (q) {
+        const nameMatch = item.name.toLowerCase().includes(q);
+        const kabupatenMatch = item.kabupaten.toLowerCase().includes(q);
+        const categoryMatch = CATEGORY_LABEL[item.category]?.toLowerCase().includes(q);
+        if (!nameMatch && !kabupatenMatch && !categoryMatch) {
+          return false;
+        }
+      }
+      return true;
+    });
+
     // Skor tertinggi di hari/slot terpilih lebih dulu; tanpa slot buka di paling bawah.
     return [...filtered].sort((a, b) => {
       const evalA = getItemEvaluation(a);
       const evalB = getItemEvaluation(b);
       return evalB.sortScore - evalA.sortScore || a.name.localeCompare(b.name, "id");
     });
-  }, [items, categories, getItemEvaluation]);
+  }, [items, categories, searchQuery, getItemEvaluation]);
 
   const markers = useMemo<MapMarker[]>(
     () =>
@@ -232,7 +248,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
         >
           <span className="h-1 w-9 rounded-pill bg-border-input" aria-hidden="true" />
           <span className="text-[13px] font-medium text-muted" aria-live="polite">
-            {visible.length} destinasi
+            {searchQuery ? `${visible.length} hasil pencarian` : `${visible.length} destinasi`}
           </span>
         </button>
 
@@ -242,6 +258,35 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
             <p className="mt-2 text-sm text-muted">
               Skor kelayakan per slot 3 jam untuk 20 destinasi di DIY, dari prakiraan BMKG.
             </p>
+          </div>
+
+          <div className="relative w-full">
+            <label htmlFor="cari-destinasi" className="sr-only">
+              Cari destinasi wisata
+            </label>
+            <div className="relative flex items-center">
+              <span className="pointer-events-none absolute left-3 text-muted" aria-hidden="true">
+                <MiscIcon name="search" size={18} />
+              </span>
+              <input
+                id="cari-destinasi"
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari wisata, kabupaten, atau kategori…"
+                className="min-h-11 w-full rounded-md border border-border-input bg-canvas pl-9 pr-9 text-base text-ink placeholder:text-muted focus:border-focus"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  aria-label="Hapus kata kunci pencarian"
+                  className="absolute right-2 inline-flex size-8 items-center justify-center rounded-pill text-muted hover:bg-surface-soft hover:text-ink"
+                >
+                  <MiscIcon name="x" size={16} />
+                </button>
+              )}
+            </div>
           </div>
 
           {source?.isStale && (
@@ -339,62 +384,85 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           </fieldset>
 
           <p className="hidden text-sm text-muted md:block" aria-live="polite">
-            {selectedHour
-              ? `${visible.length} destinasi, diurutkan untuk ${relativeDayName(dayIndex).toLowerCase()} pukul ${selectedHour} WIB`
-              : `${visible.length} destinasi, skor terbaik ${relativeDayName(dayIndex).toLowerCase()} lebih dulu`}
+            {searchQuery
+              ? `${visible.length} destinasi ditemukan untuk "${searchQuery}"`
+              : selectedHour
+                ? `${visible.length} destinasi, diurutkan untuk ${relativeDayName(dayIndex).toLowerCase()} pukul ${selectedHour} WIB`
+                : `${visible.length} destinasi, skor terbaik ${relativeDayName(dayIndex).toLowerCase()} lebih dulu`}
           </p>
 
-          <ul ref={listRef} className="flex flex-col gap-3">
-            {visible.map((item) => {
-              const evaluation = getItemEvaluation(item);
-              const selected = item.slug === selectedSlug;
-              return (
-                <li
-                  key={item.slug}
-                  data-slug={item.slug}
-                  className={`rounded-lg bg-surface-card p-4 ${selected ? "outline-2 outline-surface-dark" : ""}`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <h2 className="font-sans text-[17px] font-semibold leading-snug tracking-normal">
-                        <Link href={`/destinasi/${item.slug}`} className="text-ink">
-                          {item.name}
-                        </Link>
-                      </h2>
-                      <p className="mt-0.5 text-[13px] text-muted">
-                        {CATEGORY_LABEL[item.category]} · {item.kabupaten}
-                      </p>
+          {visible.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-lg bg-surface-card p-6 text-center">
+              <p className="font-semibold text-ink">Tidak ada destinasi ditemukan</p>
+              <p className="mt-1 text-sm text-muted">
+                {searchQuery
+                  ? `Tidak ada wisata yang cocok dengan "${searchQuery}".`
+                  : "Tidak ada wisata yang sesuai dengan filter kategori."}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setCategories([]);
+                }}
+                className="mt-3 inline-flex min-h-9 items-center rounded-md border border-border-input bg-canvas px-3 text-sm font-semibold text-ink hover:bg-surface-soft"
+              >
+                Reset pencarian & filter
+              </button>
+            </div>
+          ) : (
+            <ul ref={listRef} className="flex flex-col gap-3">
+              {visible.map((item) => {
+                const evaluation = getItemEvaluation(item);
+                const selected = item.slug === selectedSlug;
+                return (
+                  <li
+                    key={item.slug}
+                    data-slug={item.slug}
+                    className={`rounded-lg bg-surface-card p-4 ${selected ? "outline-2 outline-surface-dark" : ""}`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h2 className="font-sans text-[17px] font-semibold leading-snug tracking-normal">
+                          <Link href={`/destinasi/${item.slug}`} className="text-ink">
+                            {item.name}
+                          </Link>
+                        </h2>
+                        <p className="mt-0.5 text-[13px] text-muted">
+                          {CATEGORY_LABEL[item.category]} · {item.kabupaten}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => select(item.slug)}
+                        aria-label={`Tampilkan ${item.name} di peta`}
+                        className="-mr-2 -mt-1 inline-flex size-11 shrink-0 items-center justify-center rounded-pill text-body hover:bg-surface-card-strong"
+                      >
+                        <MiscIcon name="mapPin" size={20} />
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => select(item.slug)}
-                      aria-label={`Tampilkan ${item.name} di peta`}
-                      className="-mr-2 -mt-1 inline-flex size-11 shrink-0 items-center justify-center rounded-pill text-body hover:bg-surface-card-strong"
-                    >
-                      <MiscIcon name="mapPin" size={20} />
-                    </button>
-                  </div>
-                  <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-                    {evaluation.isOpen && evaluation.score !== null ? (
-                      <>
-                        <ScoreChip score={evaluation.score} />
-                        <span className="text-[13px] text-muted">
-                          {evaluation.timeText}
-                          {evaluation.weatherDesc ? ` · ${evaluation.weatherDesc}` : ""}
-                          {evaluation.t !== null ? ` (${Math.round(evaluation.t)}°C)` : ""}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <ScoreChip score={null} />
-                        <span className="text-[13px] text-muted">{evaluation.timeText}</span>
-                      </>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                      {evaluation.isOpen && evaluation.score !== null ? (
+                        <>
+                          <ScoreChip score={evaluation.score} />
+                          <span className="text-[13px] text-muted">
+                            {evaluation.timeText}
+                            {evaluation.weatherDesc ? ` · ${evaluation.weatherDesc}` : ""}
+                            {evaluation.t !== null ? ` (${Math.round(evaluation.t)}°C)` : ""}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <ScoreChip score={null} />
+                          <span className="text-[13px] text-muted">{evaluation.timeText}</span>
+                        </>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
 
           <div className="mt-2 border-t border-hairline pt-4">
             <AttributionBar />
@@ -408,7 +476,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
         markers={markers}
         selectedId={selectedSlug}
         onSelect={(slug) => select(slug, true)}
-        fitKey={categories.join(",")}
+        fitKey={`${categories.join(",")}-${searchQuery}`}
         getPadding={() =>
           isDesktop
             ? { top: 56, bottom: 56, left: 56, right: 56 }

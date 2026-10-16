@@ -75,7 +75,7 @@ export function SlotExplorer({ dayKeys, slots, alternatives, otherSlots, initial
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex min-w-0 flex-col gap-5">
       <div role="tablist" aria-label="Pilih hari" className="flex gap-2">
         {dayKeys.map((day, index) => {
           const has = slots.some((slot) => dayOf(slot) === day);
@@ -87,14 +87,14 @@ export function SlotExplorer({ dayKeys, slots, alternatives, otherSlots, initial
               aria-selected={activeDay === day}
               disabled={!has}
               onClick={() => chooseDay(day)}
-              className={`min-h-11 flex-1 rounded-md border px-2 py-1 text-sm font-semibold leading-tight disabled:cursor-not-allowed disabled:border-hairline disabled:bg-primary-disabled disabled:text-muted ${
+              className={`min-h-11 min-w-0 flex-1 rounded-md border px-2 py-1 text-sm font-semibold leading-tight disabled:cursor-not-allowed disabled:border-hairline disabled:bg-primary-disabled disabled:text-muted ${
                 activeDay === day
                   ? "border-surface-dark bg-surface-dark text-on-dark"
                   : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
               }`}
             >
-              <span className="block">{relativeDayName(index)}</span>
-              <span className="block text-[12px] font-normal opacity-90">{has ? formatDayKey(day) : "Belum ada data"}</span>
+              <span className="block truncate">{relativeDayName(index)}</span>
+              <span className="block truncate text-[12px] font-normal opacity-90">{has ? formatDayKey(day) : "Belum ada data"}</span>
             </button>
           );
         })}
@@ -104,7 +104,7 @@ export function SlotExplorer({ dayKeys, slots, alternatives, otherSlots, initial
         role="listbox"
         aria-label="Slot waktu 3 jam (WIB). Gunakan tombol panah untuk berpindah."
         onKeyDown={onKeyDown}
-        className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0"
+        className="relative -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0"
       >
         {daySlots.map((slot) => {
           const isSelected = slot.validAt === selectedValidAt;
@@ -234,7 +234,7 @@ export function SlotExplorer({ dayKeys, slots, alternatives, otherSlots, initial
                     <button
                       type="button"
                       onClick={() => setSelectedValidAt(other.validAt)}
-                      className="inline-flex min-h-11 items-center gap-2 self-start rounded-md border border-border-input bg-canvas px-4 text-[15px] font-semibold text-ink hover:bg-surface-soft"
+                      className="inline-flex min-h-11 max-w-full flex-wrap items-center gap-2 self-start rounded-md border border-border-input bg-canvas px-4 py-2 text-[15px] font-semibold text-ink hover:bg-surface-soft"
                     >
                       Lihat {relativeDayName(dayKeys.indexOf(dayOf(other)))} pukul {slotHour(other.localTime)} di sini
                       <span className="text-muted">(skor {other.score})</span>
