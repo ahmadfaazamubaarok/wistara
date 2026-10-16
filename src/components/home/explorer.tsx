@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { AttributionBar } from "@/components/attribution-bar";
 import { CategoryIcon, MiscIcon } from "@/components/icons";
 import { MapView, type MapMarker } from "@/components/map/map-view";
@@ -12,6 +12,7 @@ import { CATEGORY_LABEL, DEST_CATEGORIES, type DestCategory } from "@/lib/catego
 import { formatDayKey, formatWibDateTime, relativeDayName, slotHour } from "@/lib/format";
 import { bestOverlappingSlot } from "@/lib/forecast/slots";
 import { getDestinationEnrichment } from "@/lib/destination-enrichment";
+import { WistaraAiPanel } from "./wistara-ai-panel";
 import { BAND_COLOR, type ScoreBand } from "@/lib/score-band";
 
 export type HomeSlotItem = {
@@ -76,24 +77,25 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [sheet, setSheet] = useState<Sheet>("half");
+  const [sidebarTab, setSidebarTab] = useState<"explore" | "ai">("explore");
   const isDesktop = useIsDesktop();
   const listRef = useRef<HTMLUListElement>(null);
 
   // Lebar panel samping untuk desktop (bawaan 440px, bisa ditarik-geser antara 360px - 720px)
-  const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("wistara-sidebar-width");
-        if (saved) {
-          const parsed = Number(saved);
-          if (parsed >= MIN_SIDEBAR_WIDTH && parsed <= MAX_SIDEBAR_WIDTH) {
-            return parsed;
-          }
+  const [sidebarWidth, setSidebarWidth] = useState<number>(DEFAULT_SIDEBAR_WIDTH);
+
+  // Ambil preferensi lebar panel tersimpan dari localStorage setelah mount di client (mencegah hydration mismatch)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("wistara-sidebar-width");
+      if (saved) {
+        const parsed = Number(saved);
+        if (parsed >= MIN_SIDEBAR_WIDTH && parsed <= MAX_SIDEBAR_WIDTH) {
+          setSidebarWidth(parsed);
         }
-      } catch {}
-    }
-    return DEFAULT_SIDEBAR_WIDTH;
-  });
+      }
+    } catch {}
+  }, []);
   const isResizing = useRef(false);
 
   const startResizing = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -299,7 +301,66 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           </span>
         </button>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 pb-6 pt-2 md:pt-6">
+        {/* Tab Switcher Puncak Panel Kiri (Jelajah Destinasi vs Tanya Wistara AI) */}
+        <div
+          className="flex shrink-0 border-b border-hairline bg-surface-card/70 p-1.5 gap-1.5"
+          role="tablist"
+          aria-label="Mode tampilan panel samping"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={sidebarTab === "explore"}
+            onClick={() => setSidebarTab("explore")}
+            className={`flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold transition-all ${
+              sidebarTab === "explore"
+                ? "border border-border-input bg-canvas text-ink shadow-xs"
+                : "text-muted hover:bg-surface-soft hover:text-ink"
+            }`}
+          >
+            <MiscIcon name="list" size={15} />
+            <span>Jelajah Destinasi</span>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected={sidebarTab === "ai"}
+            onClick={() => {
+              setSidebarTab("ai");
+              if (!isDesktop && sheet === "collapsed") setSheet("half");
+            }}
+            className={`flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold transition-all ${
+              sidebarTab === "ai"
+                ? "border border-primary/30 bg-primary text-white shadow-xs"
+                : "text-muted hover:bg-surface-soft hover:text-primary"
+            }`}
+          >
+            <svg
+              className={`h-4 w-4 ${sidebarTab === "ai" ? "text-white" : "text-primary"}`}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+              <path d="M20 3v4" />
+              <path d="M22 5h-4" />
+            </svg>
+            <span>Tanya Wistara AI</span>
+          </button>
+        </div>
+
+        {sidebarTab === "ai" ? (
+          <WistaraAiPanel
+            onSelectDestination={(slug) => select(slug, true)}
+            onClose={() => setSidebarTab("explore")}
+          />
+        ) : (
+          <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 pb-6 pt-2 md:pt-6">
           <div className="sr-only md:not-sr-only">
             <h1>Kapan waktu terbaik berkunjung?</h1>
             <p className="mt-2 text-sm text-muted">
@@ -531,7 +592,8 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
             <AttributionBar />
           </div>
         </div>
-      </aside>
+      )}
+    </aside>
 
       {/* Pengatur lebar panel desktop (tarik-geser / draggable splitter) */}
       <div

@@ -68,15 +68,21 @@ type ScoreChipProps = {
   score: number | null;
   /** Hanya ikon + angka (untuk sel slot yang sempit). Label tetap terbaca pembaca layar. */
   compact?: boolean;
+  /** Ukuran chip: "sm" (lebih kecil/ringkas) atau "md" (bawaan). */
+  size?: "sm" | "md";
+  className?: string;
 };
 
-export function ScoreChip({ score, compact = false }: ScoreChipProps) {
+export function ScoreChip({ score, compact = false, size = "md", className }: ScoreChipProps) {
   const band = getScoreBand(score);
   const label = SCORE_LABEL[band];
+  const isSm = size === "sm";
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-pill px-2.5 py-1 text-sm font-medium ${BAND_CLASS[band]}`}
+      className={`inline-flex shrink-0 whitespace-nowrap items-center rounded-pill ${
+        isSm ? "gap-1 px-2 py-0.5 text-xs font-semibold [&_svg]:h-3.5 [&_svg]:w-3.5" : "gap-1.5 px-2.5 py-1 text-sm font-medium"
+      } ${BAND_CLASS[band]} ${className ?? ""}`}
     >
       {BAND_ICON[band]}
       {score !== null && <span className="font-bold tabular-nums">{score}</span>}
