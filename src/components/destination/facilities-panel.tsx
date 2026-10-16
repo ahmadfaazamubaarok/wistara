@@ -78,6 +78,8 @@ export function FacilitiesPanel({ slug, destination, initialRadius, initialFacil
         color: "#9a4f2c",
         glyph: destination.category,
         shape: "pin",
+        isHero: true,
+        heroName: destination.name,
       },
       ...facilities.slice(0, MAX_MAP_DOTS).map((facility) => ({
         id: `f-${facility.id}`,
@@ -123,7 +125,7 @@ export function FacilitiesPanel({ slug, destination, initialRadius, initialFacil
         styleUrl={mapStyleUrl}
         markers={markers}
         fitKey={`${slug}-${radius}`}
-        getPadding={() => ({ top: 32, bottom: 32, left: 32, right: 32 })}
+        getPadding={() => ({ top: 48, bottom: 32, left: 32, right: 32 })}
         cooperativeGestures
         ariaLabel={`Peta fasilitas di sekitar ${destination.name}`}
       />

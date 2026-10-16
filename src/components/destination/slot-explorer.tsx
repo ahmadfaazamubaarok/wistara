@@ -20,7 +20,10 @@ type Props = {
 };
 
 const dayOf = (slot: SlotDto) => slot.localTime.slice(0, 10);
-const isTriggered = (slot: SlotDto) => slot.score !== null && slot.score < 50 && slot.dominantPenalty === "rain";
+const isTriggered = (slot: SlotDto) =>
+  slot.score !== null &&
+  slot.score < 50 &&
+  (slot.dominantPenalty === "rain" || slot.dominantPenalty === "heat");
 
 function bestOf(slots: SlotDto[]): SlotDto | undefined {
   let best: SlotDto | undefined;
@@ -191,10 +194,18 @@ export function SlotExplorer({ dayKeys, slots, alternatives, otherSlots, initial
 
           {triggered && (
             <aside
-              aria-label="Alternatif saat hujan"
+              aria-label={
+                selected.dominantPenalty === "heat"
+                  ? "Alternatif saat cuaca panas terik"
+                  : "Alternatif saat hujan"
+              }
               className="rounded-lg border-l-4 border-surface-dark bg-surface-card p-4"
             >
-              <h4 className="font-sans text-[17px] font-semibold text-ink">Kalau hujan, coba ini</h4>
+              <h4 className="font-sans text-[17px] font-semibold text-ink">
+                {selected.dominantPenalty === "heat"
+                  ? "Saat cuaca panas terik, coba ini"
+                  : "Kalau hujan, coba ini"}
+              </h4>
               {picks.length > 0 ? (
                 <ul className="mt-3 flex flex-col gap-3">
                   {picks.map((alt) => (
@@ -214,7 +225,11 @@ export function SlotExplorer({ dayKeys, slots, alternatives, otherSlots, initial
                 </ul>
               ) : (
                 <div className="mt-2 flex flex-col gap-3 text-body">
-                  <p>Belum ada destinasi indoor dalam 15 km yang buka dan cocok pada jam ini.</p>
+                  <p>
+                    {selected.dominantPenalty === "heat"
+                      ? "Belum ada destinasi indoor dalam 15 km yang buka dan lebih nyaman pada jam ini."
+                      : "Belum ada destinasi indoor dalam 15 km yang buka dan cocok pada jam ini."}
+                  </p>
                   {other && (
                     <button
                       type="button"

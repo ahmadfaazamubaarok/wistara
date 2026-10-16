@@ -12,6 +12,21 @@ export const SCORE_LABEL: Record<ScoreBand, string> = {
   closed: "Tutup",
 };
 
+export const SCORE_RANGE: Record<ScoreBand, string> = {
+  good: "≥ 75",
+  mid: "50–74",
+  bad: "< 50",
+  closed: "—",
+};
+
+// Warna penanda peta sesuai token desain (kontras >= 3:1 pada peta).
+export const BAND_COLOR: Record<ScoreBand, string> = {
+  good: "#1a6b4f",
+  mid: "#8a5a00",
+  bad: "#b3261e",
+  closed: "#66635c",
+};
+
 /**
  * @param score skor 0-100, atau `null` untuk slot di luar jam buka (tanpa skor).
  * @throws RangeError bila skor bukan angka berhingga di rentang 0-100.

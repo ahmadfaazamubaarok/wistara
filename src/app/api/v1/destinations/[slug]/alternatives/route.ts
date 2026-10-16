@@ -25,11 +25,13 @@ export const GET = withApi<Context>(async (request, { params }) => {
   const now = new Date();
   const forecast = await getDestinationForecast(destination, { days: 3, now });
 
-  // Slot yang memuat waktu yang diminta (mulai <= waktu < mulai + 3 jam).
-  const slot = forecast.slots.find((candidate) => {
-    const start = new Date(candidate.validAt).getTime();
-    return start <= instant.getTime() && instant.getTime() < start + SLOT_MS;
-  });
+  // Slot yang cocok persis (validAt) atau memuat waktu yang diminta (mulai <= waktu < mulai + 3 jam).
+  const slot =
+    forecast.slots.find((candidate) => candidate.validAt === instant.toISOString()) ??
+    forecast.slots.find((candidate) => {
+      const start = new Date(candidate.validAt).getTime();
+      return start <= instant.getTime() && instant.getTime() < start + SLOT_MS;
+    });
   if (!slot) {
     throw new ApiError("NOT_FOUND", "Slot tidak ditemukan pada prakiraan 3 hari ke depan");
   }

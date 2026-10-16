@@ -28,7 +28,11 @@ export type Alternative = {
 };
 
 export function isAlternativeTrigger(slot: Pick<ScoredSlot, "score" | "dominant">): boolean {
-  return slot.score !== null && slot.score < ALT_TRIGGER_BELOW && slot.dominant === "rain";
+  return (
+    slot.score !== null &&
+    slot.score < ALT_TRIGGER_BELOW &&
+    (slot.dominant === "rain" || slot.dominant === "heat")
+  );
 }
 
 /** Slot lain di destinasi yang sama dengan skor tertinggi (seri: paling awal), hanya bila lebih baik. */

@@ -34,6 +34,10 @@ export type MapMarker = {
   badgeText?: string;
   /** Detail cuaca/waktu (misal: "pukul 12.00 · Cerah Berawan (29°C)"). */
   weatherText?: string;
+  /** Bila true, penanda adalah destinasi utama (Hero Marker) yang tampil lebih mencolok dengan beacon radar & label nama mengambang. */
+  isHero?: boolean;
+  /** Teks label permanen di atas pin hero (biasanya nama destinasi, misal "Candi Prambanan"). */
+  heroName?: string;
 };
 
 type Props = {
@@ -49,6 +53,7 @@ type Props = {
   cooperativeGestures?: boolean;
   ariaLabel: string;
   className?: string;
+  children?: React.ReactNode;
 };
 
 // Warna lapisan dasar disesuaikan ke palet desain (krem dan nila pucat).
@@ -207,10 +212,11 @@ function buildMarkerElement(
   const isPin = isPinMarker(marker);
 
   if (isPin) {
-    const pinWidth = selected ? 38 : 30;
-    const pinHeight = selected ? 48 : 38;
+    const isHero = Boolean(marker.isHero);
+    const pinWidth = isHero ? (selected ? 46 : 42) : (selected ? 38 : 30);
+    const pinHeight = isHero ? (selected ? 56 : 52) : (selected ? 48 : 38);
 
-    // Tombol luar 44x48px agar area sentuh ramah ponsel (WCAG 44px min)
+    // Tombol luar agar area sentuh ramah ponsel (WCAG 44px min)
     const btnWidth = Math.max(44, pinWidth);
     const btnHeight = Math.max(48, pinHeight);
 
@@ -230,6 +236,14 @@ function buildMarkerElement(
       overflow: "visible",
     });
 
+    // Beacon radar/sonar berdenyut di bawah ujung jarum pin hero
+    if (isHero) {
+      const pulse = document.createElement("span");
+      pulse.className = "wistara-hero-pulse";
+      pulse.setAttribute("aria-hidden", "true");
+      button.appendChild(pulse);
+    }
+
     const svg = document.createElementNS(SVG_NS, "svg");
     svg.setAttribute("viewBox", "0 0 32 42");
     svg.setAttribute("width", String(pinWidth));
@@ -237,9 +251,11 @@ function buildMarkerElement(
     Object.assign(svg.style, {
       display: "block",
       overflow: "visible",
-      filter: selected
-        ? "drop-shadow(0 4px 8px rgba(20,20,19,0.38))"
-        : "drop-shadow(0 3px 6px rgba(20,20,19,0.26))",
+      filter: isHero
+        ? "drop-shadow(0 4px 12px rgba(154, 79, 44, 0.45)) drop-shadow(0 2px 4px rgba(20,20,19,0.35))"
+        : (selected
+          ? "drop-shadow(0 4px 8px rgba(20,20,19,0.38))"
+          : "drop-shadow(0 3px 6px rgba(20,20,19,0.26))"),
       transition: "transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)",
       transformOrigin: "bottom center",
     });
@@ -249,7 +265,7 @@ function buildMarkerElement(
     pinPath.setAttribute("d", "M16 41 C10 27 2 22 2 16 A 14 14 0 0 1 30 16 C 30 22 22 27 16 41 Z");
     pinPath.setAttribute("fill", marker.color);
     pinPath.setAttribute("stroke", "#ffffff");
-    pinPath.setAttribute("stroke-width", selected ? "2.5" : "2");
+    pinPath.setAttribute("stroke-width", isHero ? "3" : (selected ? "2.5" : "2"));
     pinPath.setAttribute("stroke-linejoin", "round");
     svg.appendChild(pinPath);
 
@@ -283,6 +299,24 @@ function buildMarkerElement(
     }
 
     button.appendChild(svg);
+
+    // Label nama permanen melayang di atas pin hero (misal: "Candi Prambanan")
+    if (isHero && (marker.heroName || marker.title)) {
+      const label = document.createElement("span");
+      label.className = "wistara-hero-label";
+      label.setAttribute("aria-hidden", "true");
+
+      const dot = document.createElement("span");
+      dot.className = "wistara-hero-label-dot";
+      label.appendChild(dot);
+
+      const text = document.createElement("span");
+      text.className = "wistara-hero-label-text";
+      text.textContent = marker.heroName ?? marker.title ?? "";
+      label.appendChild(text);
+
+      button.appendChild(label);
+    }
 
     button.addEventListener("click", (event) => {
       event.stopPropagation();
@@ -408,6 +442,7 @@ export function MapView({
   cooperativeGestures = false,
   ariaLabel,
   className,
+  children,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -444,7 +479,7 @@ export function MapView({
         attributionControl: { compact: true },
       });
       mapRef.current = map;
-      map.addControl(new maplibre.NavigationControl({ showCompass: false }), "top-right");
+      map.addControl(new maplibre.NavigationControl({ showCompass: false }), "bottom-right");
 
       let loaded = false;
       timer = setTimeout(() => {
@@ -540,7 +575,10 @@ export function MapView({
       if (!map || !popup) return;
       const content = createPopupContent(marker);
       const isPin = isPinMarker(marker);
-      const offset = isPin ? (marker.id === selectedId ? 56 : 46) : (marker.id === selectedId ? 24 : 18);
+      let offset = isPin ? (marker.id === selectedId ? 56 : 46) : (marker.id === selectedId ? 24 : 18);
+      if (marker.isHero) {
+        offset = 84;
+      }
       popup
         .setLngLat([marker.lon, marker.lat])
         .setOffset(offset)
@@ -556,7 +594,7 @@ export function MapView({
     markerRefs.current = markers.map((marker) => {
       const selected = marker.id === selectedId;
       const isPin = isPinMarker(marker);
-      return new maplibre.Marker({
+      const m = new maplibre.Marker({
         element: buildMarkerElement(
           marker,
           selected,
@@ -568,6 +606,14 @@ export function MapView({
       })
         .setLngLat([marker.lon, marker.lat])
         .addTo(map);
+
+      if (marker.isHero) {
+        m.getElement().style.zIndex = "100";
+      } else if (selected) {
+        m.getElement().style.zIndex = "50";
+      }
+
+      return m;
     });
   }, [markers, selectedId, ready]);
 
@@ -604,6 +650,7 @@ export function MapView({
       <div className="absolute inset-0">
         <div ref={containerRef} role="region" aria-label={ariaLabel} className="h-full w-full" />
       </div>
+      {children}
       {failed && (
         <div
           role="status"

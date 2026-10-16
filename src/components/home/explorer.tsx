@@ -5,12 +5,13 @@ import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "re
 import { AttributionBar } from "@/components/attribution-bar";
 import { CategoryIcon, MiscIcon } from "@/components/icons";
 import { MapView, type MapMarker } from "@/components/map/map-view";
+import { MapLegend } from "@/components/map/map-legend";
 import { ScoreChip } from "@/components/score-chip";
 import { StatusBanner } from "@/components/ui";
 import { CATEGORY_LABEL, DEST_CATEGORIES, type DestCategory } from "@/lib/categories";
 import { formatDayKey, formatWibDateTime, relativeDayName, slotHour } from "@/lib/format";
 import { bestOverlappingSlot } from "@/lib/forecast/slots";
-import type { ScoreBand } from "@/lib/score-band";
+import { BAND_COLOR, type ScoreBand } from "@/lib/score-band";
 
 export type HomeSlotItem = {
   validAt: string;
@@ -50,14 +51,6 @@ const SHEET_ORDER: Sheet[] = ["collapsed", "half", "full"];
 
 // Jam acuan standar kunjungan wisata (3-jam): pagi, siang, sore, malam.
 const STANDARD_HOURS = ["06.00", "09.00", "12.00", "15.00", "18.00", "21.00"] as const;
-
-// Warna status = warna teks pada token desain (kontras >= 3:1 pada peta).
-const BAND_COLOR: Record<ScoreBand, string> = {
-  good: "#1a6b4f",
-  mid: "#8a5a00",
-  bad: "#b3261e",
-  closed: "#66635c",
-};
 
 function useIsDesktop() {
   return useSyncExternalStore(
@@ -410,7 +403,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
       </aside>
 
       <MapView
-        className="h-full w-full"
+        className="home-map h-full w-full"
         styleUrl={mapStyleUrl}
         markers={markers}
         selectedId={selectedSlug}
@@ -423,7 +416,9 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
               { top: 72, bottom: Math.round(window.innerHeight * 0.55) + 24, left: 40, right: 40 }
         }
         ariaLabel="Peta destinasi wisata DIY. Semua isi peta juga tersedia di daftar."
-      />
+      >
+        <MapLegend />
+      </MapView>
     </div>
   );
 }

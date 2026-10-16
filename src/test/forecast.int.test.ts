@@ -161,14 +161,15 @@ describe("GET /destinations/{slug}/alternatives (F5)", () => {
     }
   });
 
-  it("tidak terpicu bila penalti terbesarnya bukan hujan (mis. panas)", async () => {
+  it("terpicu saat cuaca panas terik (dominant = heat)", async () => {
     await setForecast(PRAMBANAN, day, [{ hourWib: 13, t: 36 }]); // panas: skor 20, dominan heat
     const body = alternativesResponseSchema.parse(
       (await call(getAlternatives, alternativesUrl(13), withSlug("candi-prambanan"))).json,
     );
     expect(body.slot.score).toBeLessThan(50);
     expect(body.slot.dominantPenalty).toBe("heat");
-    expect(body).toMatchObject({ triggered: false, alternatives: [], otherSlot: null });
+    expect(body.triggered).toBe(true);
+    expect(body.alternatives.length).toBeGreaterThan(0);
   });
 
   it("tanpa destinasi indoor dalam 15 km: sarankan slot lain di destinasi yang sama", async () => {
