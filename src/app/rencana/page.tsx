@@ -5,6 +5,7 @@ import { removeItemAction, deleteTripAction } from "@/app/actions/trips";
 import { CategoryIcon } from "@/components/icons";
 import { ScoreChip } from "@/components/score-chip";
 import { SiteFooter } from "@/components/site-footer";
+import { ConfirmDelete } from "@/components/trips/confirm-delete";
 import { CreateTripForm } from "@/components/trips/create-trip-form";
 import { buttonClass } from "@/components/ui";
 import { getPageUser } from "@/lib/auth/session";
@@ -88,12 +89,22 @@ export default async function TripsPage() {
                     <h2 id={`rencana-${trip.id}`} className="!text-[22px]">
                       {trip.title}
                     </h2>
-                    <form action={deleteTripAction}>
-                      <input type="hidden" name="tripId" value={trip.id} />
-                      <button type="submit" className={buttonClass.secondary} aria-label={`Hapus rencana ${trip.title}`}>
-                        Hapus rencana
-                      </button>
-                    </form>
+                    <ConfirmDelete
+                      action={deleteTripAction}
+                      fields={{ tripId: trip.id }}
+                      triggerLabel="Hapus rencana"
+                      triggerClassName={buttonClass.secondary}
+                      triggerAriaLabel={`Hapus rencana ${trip.title}`}
+                      title="Hapus rencana ini?"
+                      description={
+                        <>
+                          Rencana <strong className="text-ink">{trip.title}</strong>
+                          {trip.items.length > 0 ? ` beserta ${trip.items.length} destinasi di dalamnya` : ""} akan dihapus
+                          permanen dan tidak bisa dikembalikan.
+                        </>
+                      }
+                      confirmLabel="Hapus rencana"
+                    />
                   </div>
 
                   {trip.items.length === 0 ? (
@@ -130,17 +141,21 @@ export default async function TripsPage() {
                                   Belum ada prakiraan untuk slot ini (sudah lewat atau di luar 3 hari).
                                 </span>
                               )}
-                              <form action={removeItemAction}>
-                                <input type="hidden" name="tripId" value={trip.id} />
-                                <input type="hidden" name="itemId" value={item.id} />
-                                <button
-                                  type="submit"
-                                  className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold text-primary underline"
-                                  aria-label={`Hapus ${item.destination.name} dari rencana ${trip.title}`}
-                                >
-                                  Hapus
-                                </button>
-                              </form>
+                              <ConfirmDelete
+                                action={removeItemAction}
+                                fields={{ tripId: trip.id, itemId: item.id }}
+                                triggerLabel="Hapus"
+                                triggerClassName="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold text-primary underline"
+                                triggerAriaLabel={`Hapus ${item.destination.name} dari rencana ${trip.title}`}
+                                title="Hapus dari rencana?"
+                                description={
+                                  <>
+                                    <strong className="text-ink">{item.destination.name}</strong> akan dihapus dari rencana{" "}
+                                    {trip.title}. Rencana lain tidak terpengaruh.
+                                  </>
+                                }
+                                confirmLabel="Hapus destinasi"
+                              />
                             </div>
                           </li>
                         );
