@@ -145,6 +145,47 @@
     scrollbar-width: none;
   }
 
+  /* Kembalikan scrollbar di halaman detail wisata */
+  html:has(.destination-detail-page),
+  body:has(.destination-detail-page),
+  .destination-detail-page,
+  .destination-detail-page * {
+    -ms-overflow-style: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-input) transparent;
+  }
+
+  html:has(.destination-detail-page)::-webkit-scrollbar,
+  body:has(.destination-detail-page)::-webkit-scrollbar,
+  .destination-detail-page::-webkit-scrollbar,
+  .destination-detail-page *::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+    height: 8px;
+  }
+
+  html:has(.destination-detail-page)::-webkit-scrollbar-track,
+  body:has(.destination-detail-page)::-webkit-scrollbar-track,
+  .destination-detail-page::-webkit-scrollbar-track,
+  .destination-detail-page *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  html:has(.destination-detail-page)::-webkit-scrollbar-thumb,
+  body:has(.destination-detail-page)::-webkit-scrollbar-thumb,
+  .destination-detail-page::-webkit-scrollbar-thumb,
+  .destination-detail-page *::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-input);
+    border-radius: 9999px;
+  }
+
+  html:has(.destination-detail-page)::-webkit-scrollbar-thumb:hover,
+  body:has(.destination-detail-page)::-webkit-scrollbar-thumb:hover,
+  .destination-detail-page::-webkit-scrollbar-thumb:hover,
+  .destination-detail-page *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-primary);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

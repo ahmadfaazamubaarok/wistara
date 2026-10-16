@@ -104,7 +104,10 @@ export default async function DestinationPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <main id="konten" className="mx-auto w-full max-w-[1200px] min-w-0 flex-1 px-4 py-6 md:px-8 md:py-8">
+      <main
+        id="konten"
+        className="destination-detail-page mx-auto w-full max-w-[1200px] min-w-0 flex-1 px-4 py-6 md:px-8 md:py-8"
+      >
         <Link href="/" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium">
           <span aria-hidden="true">←</span> Semua destinasi
         </Link>
