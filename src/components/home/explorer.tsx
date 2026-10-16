@@ -8,8 +8,9 @@ import { MapView, type MapMarker } from "@/components/map/map-view";
 import { MapLegend } from "@/components/map/map-legend";
 import { ScoreChip } from "@/components/score-chip";
 import { StatusBanner } from "@/components/ui";
-import { CATEGORY_LABEL, DEST_CATEGORIES, type DestCategory } from "@/lib/categories";
-import { formatDayKey, formatWibDateTime, relativeDayName, slotHour } from "@/lib/format";
+import { CATEGORY_LABEL, DEST_CATEGORIES, FACILITY_LABEL, type DestCategory, type FacilityType } from "@/lib/categories";
+import { FACILITY_COLOR } from "@/lib/icon-data";
+import { formatDayKey, formatDistance, formatWibDateTime, relativeDayName, slotHour } from "@/lib/format";
 import { bestOverlappingSlot } from "@/lib/forecast/slots";
 import { getDestinationEnrichment } from "@/lib/destination-enrichment";
 import { WistaraAiPanel } from "./wistara-ai-panel";
@@ -39,6 +40,15 @@ export type HomeItem = {
   slots?: HomeSlotItem[];
   /** False bila prakiraan BMKG belum pernah tersimpan untuk destinasi ini. */
   hasForecast: boolean;
+};
+
+export type FacilityItem = {
+  id: number;
+  type: FacilityType;
+  name: string | null;
+  lat: number;
+  lon: number;
+  distanceM: number;
 };
 
 type Props = {
@@ -76,6 +86,47 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
   const [dayIndex, setDayIndex] = useState(0);
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [nearbyFacilities, setNearbyFacilities] = useState<FacilityItem[]>([]);
+  const [isLoadingFacilities, setIsLoadingFacilities] = useState(false);
+  const facilityCacheRef = useRef<Record<string, FacilityItem[]>>({});
+
+  // Muat fasilitas umum terdekat (toilet, tempat makan, tempat ibadah, parkir, ATM) saat destinasi dipilih
+  useEffect(() => {
+    if (!selectedSlug) {
+      setNearbyFacilities([]);
+      return;
+    }
+
+    if (facilityCacheRef.current[selectedSlug]) {
+      setNearbyFacilities(facilityCacheRef.current[selectedSlug]);
+      return;
+    }
+
+    let isMounted = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsLoadingFacilities(true);
+
+    fetch(
+      `/api/v1/destinations/${encodeURIComponent(selectedSlug)}/facilities?radius=1000&type=toilet,parkir,makan,ibadah,atm`,
+    )
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!isMounted) return;
+        const list = (data?.facilities as FacilityItem[]) || [];
+        facilityCacheRef.current[selectedSlug] = list;
+        setNearbyFacilities(list);
+      })
+      .catch(() => {
+        if (isMounted) setNearbyFacilities([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingFacilities(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedSlug]);
   const [sheet, setSheet] = useState<Sheet>("half");
   const [sidebarTab, setSidebarTab] = useState<"explore" | "ai">("explore");
   const isDesktop = useIsDesktop();
@@ -96,7 +147,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           setSidebarWidth(parsed);
         }
       }
-    } catch {}
+    } catch { }
   }, []);
   const isResizing = useRef(false);
 
@@ -118,7 +169,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
       localStorage.setItem("wistara-sidebar-width", String(sidebarWidth));
-    } catch {}
+    } catch { }
   };
 
   const currentDayKey = days[dayIndex];
@@ -245,12 +296,36 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
     [visible, getItemEvaluation, selectedHour, dayIndex],
   );
 
+  const facilityMarkers = useMemo<MapMarker[]>(() => {
+    if (!selectedSlug || nearbyFacilities.length === 0) return [];
+    return nearbyFacilities.slice(0, 35).map((f) => ({
+      id: `f-${f.id}`,
+      lat: f.lat,
+      lon: f.lon,
+      label: `${FACILITY_LABEL[f.type]}: ${f.name ?? "tanpa nama"}, ${formatDistance(f.distanceM)}`,
+      title: FACILITY_LABEL[f.type],
+      subtitle: `${f.name ? f.name + " · " : ""}${formatDistance(f.distanceM)}`,
+      color: FACILITY_COLOR[f.type] ?? "#1e2b45",
+      glyph: f.type,
+      shape: "circle" as const,
+      size: 24,
+    }));
+  }, [selectedSlug, nearbyFacilities]);
+
+  const allMarkers = useMemo(() => [...markers, ...facilityMarkers], [markers, facilityMarkers]);
+  const selectedItem = useMemo(() => items.find((i) => i.slug === selectedSlug) ?? null, [items, selectedSlug]);
+
   const toggleCategory = (category: DestCategory) =>
     setCategories((current) =>
       current.includes(category) ? current.filter((c) => c !== category) : [...current, category],
     );
 
   const select = (slug: string, fromMap = false) => {
+    if (slug === selectedSlug) {
+      // Klik penanda yang sama di peta -> tutup fasilitas
+      setSelectedSlug(null);
+      return;
+    }
     setSelectedSlug(slug);
     if (fromMap) {
       if (!isDesktop && sheet === "collapsed") setSheet("half");
@@ -314,11 +389,10 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
             role="tab"
             aria-selected={sidebarTab === "explore"}
             onClick={() => setSidebarTab("explore")}
-            className={`flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold transition-all ${
-              sidebarTab === "explore"
+            className={`flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold transition-all ${sidebarTab === "explore"
                 ? "border border-border-input bg-canvas text-ink shadow-xs"
                 : "text-muted hover:bg-surface-soft hover:text-ink"
-            }`}
+              }`}
           >
             <MiscIcon name="list" size={15} />
             <span>Jelajah Destinasi</span>
@@ -332,11 +406,10 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
               setSidebarTab("ai");
               if (!isDesktop && sheet === "collapsed") setSheet("half");
             }}
-            className={`flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold transition-all ${
-              sidebarTab === "ai"
+            className={`flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold transition-all ${sidebarTab === "ai"
                 ? "border border-primary/30 bg-primary text-white shadow-xs"
                 : "text-muted hover:bg-surface-soft hover:text-primary"
-            }`}
+              }`}
           >
             <svg
               className={`h-4 w-4 ${sidebarTab === "ai" ? "text-white" : "text-primary"}`}
@@ -363,239 +436,255 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           />
         ) : (
           <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 pb-6 pt-2 md:pt-6">
-          <div className="sr-only md:not-sr-only">
-            <h1>Kapan waktu terbaik berkunjung?</h1>
-            <p className="mt-2 text-sm text-muted">
-              Skor kelayakan per slot 3 jam untuk 20 destinasi di DIY, dari prakiraan BMKG.
-            </p>
-          </div>
+            <div className="sr-only md:not-sr-only">
+              <h1>Kapan waktu terbaik berkunjung?</h1>
+              <p className="mt-2 text-sm text-muted">
+                Skor kelayakan per slot 3 jam untuk 20 destinasi di DIY, dari prakiraan BMKG.
+              </p>
+            </div>
 
-          <div className="relative w-full">
-            <label htmlFor="cari-destinasi" className="sr-only">
-              Cari destinasi wisata
-            </label>
-            <div className="relative flex items-center">
-              <span className="pointer-events-none absolute left-3 text-muted" aria-hidden="true">
-                <MiscIcon name="search" size={18} />
-              </span>
-              <input
-                id="cari-destinasi"
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari wisata, daerah, atau minat (mis. sunset, candi, pantai)…"
-                className="min-h-11 w-full rounded-md border border-border-input bg-canvas pl-9 pr-9 text-base text-ink placeholder:text-muted focus:border-focus"
-              />
-              {searchQuery && (
+            <div className="relative w-full">
+              <label htmlFor="cari-destinasi" className="sr-only">
+                Cari destinasi wisata
+              </label>
+              <div className="relative flex items-center">
+                <span className="pointer-events-none absolute left-3 text-muted" aria-hidden="true">
+                  <MiscIcon name="search" size={18} />
+                </span>
+                <input
+                  id="cari-destinasi"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cari wisata, daerah, atau minat (mis. sunset, candi, pantai)…"
+                  className="min-h-11 w-full rounded-md border border-border-input bg-canvas pl-9 pr-9 text-base text-ink placeholder:text-muted focus:border-focus"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Hapus kata kunci pencarian"
+                    className="absolute right-2 inline-flex size-8 items-center justify-center rounded-pill text-muted hover:bg-surface-soft hover:text-ink"
+                  >
+                    <MiscIcon name="x" size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {source?.isStale && (
+              <StatusBanner kind="stale">
+                Data belum diperbarui.{" "}
+                {source.fetchedAt
+                  ? `Prakiraan terakhir diambil ${formatWibDateTime(source.fetchedAt)}.`
+                  : "Prakiraan belum pernah berhasil diambil."}
+              </StatusBanner>
+            )}
+
+            <div role="tablist" aria-label="Pilih hari" className="flex gap-2">
+              {days.map((day, index) => (
+                <button
+                  key={day}
+                  role="tab"
+                  type="button"
+                  aria-selected={dayIndex === index}
+                  onClick={() => setDayIndex(index)}
+                  className={`min-h-11 flex-1 rounded-md border px-2 py-1 text-sm font-semibold leading-tight ${dayIndex === index
+                      ? "border-surface-dark bg-surface-dark text-on-dark"
+                      : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
+                    }`}
+                >
+                  <span className="block">{relativeDayName(index)}</span>
+                  <span className="block text-[12px] font-normal opacity-90">{formatDayKey(day)}</span>
+                </button>
+              ))}
+            </div>
+
+            <fieldset>
+              <legend className="mb-2 text-sm font-medium text-muted">
+                Jam kunjungan ({relativeDayName(dayIndex).toLowerCase()})
+              </legend>
+              <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Pilih jam kunjungan">
                 <button
                   type="button"
-                  onClick={() => setSearchQuery("")}
-                  aria-label="Hapus kata kunci pencarian"
-                  className="absolute right-2 inline-flex size-8 items-center justify-center rounded-pill text-muted hover:bg-surface-soft hover:text-ink"
+                  role="radio"
+                  aria-checked={selectedHour === null}
+                  onClick={() => setSelectedHour(null)}
+                  className={`inline-flex min-h-9 items-center rounded-pill border px-3 text-[13px] font-medium transition-colors ${selectedHour === null
+                      ? "border-surface-dark bg-surface-dark text-on-dark font-semibold"
+                      : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
+                    }`}
                 >
-                  <MiscIcon name="x" size={16} />
+                  ⭐ Waktu Terbaik
                 </button>
-              )}
-            </div>
-          </div>
+                {STANDARD_HOURS.map((hour) => {
+                  const checked = selectedHour === hour;
+                  return (
+                    <button
+                      key={hour}
+                      type="button"
+                      role="radio"
+                      aria-checked={checked}
+                      onClick={() => setSelectedHour(hour)}
+                      className={`inline-flex min-h-9 items-center rounded-pill border px-2.5 text-[13px] font-medium transition-colors ${checked
+                          ? "border-surface-dark bg-surface-dark text-on-dark font-semibold"
+                          : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
+                        }`}
+                    >
+                      {hour}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
 
-          {source?.isStale && (
-            <StatusBanner kind="stale">
-              Data belum diperbarui.{" "}
-              {source.fetchedAt
-                ? `Prakiraan terakhir diambil ${formatWibDateTime(source.fetchedAt)}.`
-                : "Prakiraan belum pernah berhasil diambil."}
-            </StatusBanner>
-          )}
+            <fieldset>
+              <legend className="mb-2 text-sm font-medium text-muted">Kategori (boleh lebih dari satu)</legend>
+              <div className="flex flex-wrap gap-2">
+                {DEST_CATEGORIES.map((category) => {
+                  const pressed = categories.includes(category);
+                  return (
+                    <button
+                      key={category}
+                      type="button"
+                      aria-pressed={pressed}
+                      onClick={() => toggleCategory(category)}
+                      className={`inline-flex min-h-10 items-center gap-1.5 rounded-pill border px-3 text-sm font-medium ${pressed
+                          ? "border-surface-dark bg-surface-dark text-on-dark"
+                          : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
+                        }`}
+                    >
+                      <CategoryIcon category={category} size={16} />
+                      {CATEGORY_LABEL[category]}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
 
-          <div role="tablist" aria-label="Pilih hari" className="flex gap-2">
-            {days.map((day, index) => (
-              <button
-                key={day}
-                role="tab"
-                type="button"
-                aria-selected={dayIndex === index}
-                onClick={() => setDayIndex(index)}
-                className={`min-h-11 flex-1 rounded-md border px-2 py-1 text-sm font-semibold leading-tight ${
-                  dayIndex === index
-                    ? "border-surface-dark bg-surface-dark text-on-dark"
-                    : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
-                }`}
-              >
-                <span className="block">{relativeDayName(index)}</span>
-                <span className="block text-[12px] font-normal opacity-90">{formatDayKey(day)}</span>
-              </button>
-            ))}
-          </div>
+            <p className="hidden text-sm text-muted md:block" aria-live="polite">
+              {searchQuery
+                ? `${visible.length} destinasi ditemukan untuk "${searchQuery}"`
+                : selectedHour
+                  ? `${visible.length} destinasi, diurutkan untuk ${relativeDayName(dayIndex).toLowerCase()} pukul ${selectedHour} WIB`
+                  : `${visible.length} destinasi, skor terbaik ${relativeDayName(dayIndex).toLowerCase()} lebih dulu`}
+            </p>
 
-          <fieldset>
-            <legend className="mb-2 text-sm font-medium text-muted">
-              Jam kunjungan ({relativeDayName(dayIndex).toLowerCase()})
-            </legend>
-            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Pilih jam kunjungan">
-              <button
-                type="button"
-                role="radio"
-                aria-checked={selectedHour === null}
-                onClick={() => setSelectedHour(null)}
-                className={`inline-flex min-h-9 items-center rounded-pill border px-3 text-[13px] font-medium transition-colors ${
-                  selectedHour === null
-                    ? "border-surface-dark bg-surface-dark text-on-dark font-semibold"
-                    : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
-                }`}
-              >
-                ⭐ Waktu Terbaik
-              </button>
-              {STANDARD_HOURS.map((hour) => {
-                const checked = selectedHour === hour;
-                return (
-                  <button
-                    key={hour}
-                    type="button"
-                    role="radio"
-                    aria-checked={checked}
-                    onClick={() => setSelectedHour(hour)}
-                    className={`inline-flex min-h-9 items-center rounded-pill border px-2.5 text-[13px] font-medium transition-colors ${
-                      checked
-                        ? "border-surface-dark bg-surface-dark text-on-dark font-semibold"
-                        : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
-                    }`}
-                  >
-                    {hour}
-                  </button>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend className="mb-2 text-sm font-medium text-muted">Kategori (boleh lebih dari satu)</legend>
-            <div className="flex flex-wrap gap-2">
-              {DEST_CATEGORIES.map((category) => {
-                const pressed = categories.includes(category);
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    aria-pressed={pressed}
-                    onClick={() => toggleCategory(category)}
-                    className={`inline-flex min-h-10 items-center gap-1.5 rounded-pill border px-3 text-sm font-medium ${
-                      pressed
-                        ? "border-surface-dark bg-surface-dark text-on-dark"
-                        : "border-border-input bg-canvas text-ink hover:bg-surface-soft"
-                    }`}
-                  >
-                    <CategoryIcon category={category} size={16} />
-                    {CATEGORY_LABEL[category]}
-                  </button>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          <p className="hidden text-sm text-muted md:block" aria-live="polite">
-            {searchQuery
-              ? `${visible.length} destinasi ditemukan untuk "${searchQuery}"`
-              : selectedHour
-                ? `${visible.length} destinasi, diurutkan untuk ${relativeDayName(dayIndex).toLowerCase()} pukul ${selectedHour} WIB`
-                : `${visible.length} destinasi, skor terbaik ${relativeDayName(dayIndex).toLowerCase()} lebih dulu`}
-          </p>
-
-          {visible.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-lg bg-surface-card p-6 text-center">
-              <p className="font-semibold text-ink">Tidak ada destinasi ditemukan</p>
-              <p className="mt-1 text-sm text-muted">
-                {searchQuery
-                  ? `Tidak ada wisata yang cocok dengan "${searchQuery}".`
-                  : "Tidak ada wisata yang sesuai dengan filter kategori."}
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchQuery("");
-                  setCategories([]);
-                }}
-                className="mt-3 inline-flex min-h-9 items-center rounded-md border border-border-input bg-canvas px-3 text-sm font-semibold text-ink hover:bg-surface-soft"
-              >
-                Reset pencarian & filter
-              </button>
-            </div>
-          ) : (
-            <ul ref={listRef} className="flex flex-col gap-3">
-              {visible.map((item) => {
-                const evaluation = getItemEvaluation(item);
-                const selected = item.slug === selectedSlug;
-                return (
-                  <li
-                    key={item.slug}
-                    data-slug={item.slug}
-                    className={`rounded-lg bg-surface-card p-4 ${selected ? "outline-2 outline-surface-dark" : ""}`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <h2 className="font-sans text-[17px] font-semibold leading-snug tracking-normal">
-                          <Link href={`/destinasi/${item.slug}`} className="text-ink">
-                            {item.name}
-                          </Link>
-                        </h2>
-                        <p className="mt-0.5 text-[13px] text-muted">
-                          {CATEGORY_LABEL[item.category]} · {item.kabupaten}
-                        </p>
-                        {(() => {
-                          const enrichment = getDestinationEnrichment(item.slug);
-                          if (!enrichment || !enrichment.tags.length) return null;
-                          return (
-                            <div className="mt-1 flex flex-wrap gap-1">
-                              {enrichment.tags.slice(0, 3).map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="rounded bg-surface-soft px-1.5 py-0.5 text-[11px] font-medium text-muted"
-                                >
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          );
-                        })()}
+            {visible.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-lg bg-surface-card p-6 text-center">
+                <p className="font-semibold text-ink">Tidak ada destinasi ditemukan</p>
+                <p className="mt-1 text-sm text-muted">
+                  {searchQuery
+                    ? `Tidak ada wisata yang cocok dengan "${searchQuery}".`
+                    : "Tidak ada wisata yang sesuai dengan filter kategori."}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCategories([]);
+                  }}
+                  className="mt-3 inline-flex min-h-9 items-center rounded-md border border-border-input bg-canvas px-3 text-sm font-semibold text-ink hover:bg-surface-soft"
+                >
+                  Reset pencarian & filter
+                </button>
+              </div>
+            ) : (
+              <ul ref={listRef} className="flex flex-col gap-3">
+                {visible.map((item) => {
+                  const evaluation = getItemEvaluation(item);
+                  const selected = item.slug === selectedSlug;
+                  return (
+                    <li
+                      key={item.slug}
+                      data-slug={item.slug}
+                      className={`rounded-lg bg-surface-card p-4 ${selected ? "outline-2 outline-surface-dark" : ""}`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h2 className="font-sans text-[17px] font-semibold leading-snug tracking-normal">
+                            <Link href={`/destinasi/${item.slug}`} className="text-ink">
+                              {item.name}
+                            </Link>
+                          </h2>
+                          <p className="mt-0.5 text-[13px] text-muted">
+                            {CATEGORY_LABEL[item.category]} · {item.kabupaten}
+                          </p>
+                          {(() => {
+                            const enrichment = getDestinationEnrichment(item.slug);
+                            if (!enrichment || !enrichment.tags.length) return null;
+                            return (
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {enrichment.tags.slice(0, 3).map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="rounded bg-surface-soft px-1.5 py-0.5 text-[11px] font-medium text-muted"
+                                  >
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            );
+                          })()}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => select(item.slug)}
+                          aria-label={`Tampilkan ${item.name} di peta`}
+                          className="-mr-2 -mt-1 inline-flex size-11 shrink-0 items-center justify-center rounded-pill text-body hover:bg-surface-card-strong"
+                        >
+                          <MiscIcon name="mapPin" size={20} />
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => select(item.slug)}
-                        aria-label={`Tampilkan ${item.name} di peta`}
-                        className="-mr-2 -mt-1 inline-flex size-11 shrink-0 items-center justify-center rounded-pill text-body hover:bg-surface-card-strong"
-                      >
-                        <MiscIcon name="mapPin" size={20} />
-                      </button>
-                    </div>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-                      {evaluation.isOpen && evaluation.score !== null ? (
-                        <>
-                          <ScoreChip score={evaluation.score} />
-                          <span className="text-[13px] text-muted">
-                            {evaluation.timeText}
-                            {evaluation.weatherDesc ? ` · ${evaluation.weatherDesc}` : ""}
-                            {evaluation.t !== null ? ` (${Math.round(evaluation.t)}°C)` : ""}
+                      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                        {evaluation.isOpen && evaluation.score !== null ? (
+                          <>
+                            <ScoreChip score={evaluation.score} />
+                            <span className="text-[13px] text-muted">
+                              {evaluation.timeText}
+                              {evaluation.weatherDesc ? ` · ${evaluation.weatherDesc}` : ""}
+                              {evaluation.t !== null ? ` (${Math.round(evaluation.t)}°C)` : ""}
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <ScoreChip score={null} />
+                            <span className="text-[13px] text-muted">{evaluation.timeText}</span>
+                          </>
+                        )}
+                      </div>
+                      {selected && (
+                        <div className="mt-2.5 flex items-center justify-between border-t border-hairline/60 pt-2 text-xs text-muted">
+                          <span className="inline-flex items-center gap-1.5 font-medium text-primary">
+                            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                            {isLoadingFacilities
+                              ? "Memuat fasilitas sekitar..."
+                              : `${nearbyFacilities.length} fasilitas terdekat aktif di peta`}
                           </span>
-                        </>
-                      ) : (
-                        <>
-                          <ScoreChip score={null} />
-                          <span className="text-[13px] text-muted">{evaluation.timeText}</span>
-                        </>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedSlug(null);
+                            }}
+                            className="text-muted hover:text-ink underline underline-offset-2"
+                          >
+                            Sembunyikan
+                          </button>
+                        </div>
                       )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
 
-          <div className="mt-2 border-t border-hairline pt-4">
-            <AttributionBar />
+            <div className="mt-2 border-t border-hairline pt-4">
+              <AttributionBar />
+            </div>
           </div>
-        </div>
-      )}
-    </aside>
+        )}
+      </aside>
 
       {/* Pengatur lebar panel desktop (tarik-geser / draggable splitter) */}
       <div
@@ -614,13 +703,13 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           if (e.key === "ArrowLeft") {
             setSidebarWidth((w) => {
               const next = Math.max(MIN_SIDEBAR_WIDTH, w - 24);
-              try { localStorage.setItem("wistara-sidebar-width", String(next)); } catch {}
+              try { localStorage.setItem("wistara-sidebar-width", String(next)); } catch { }
               return next;
             });
           } else if (e.key === "ArrowRight") {
             setSidebarWidth((w) => {
               const next = Math.min(MAX_SIDEBAR_WIDTH, w + 24);
-              try { localStorage.setItem("wistara-sidebar-width", String(next)); } catch {}
+              try { localStorage.setItem("wistara-sidebar-width", String(next)); } catch { }
               return next;
             });
           }
@@ -637,19 +726,47 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
         <MapView
           className="home-map h-full w-full"
           styleUrl={mapStyleUrl}
-          markers={markers}
+          markers={allMarkers}
           selectedId={selectedSlug}
-          onSelect={(slug) => select(slug, true)}
+          onSelect={(slug) => {
+            if (slug.startsWith("f-")) return;
+            select(slug, true);
+          }}
           fitKey={`${categories.join(",")}-${searchQuery}`}
           getPadding={() =>
             isDesktop
               ? { top: 56, bottom: 56, left: 56, right: 56 }
               : // Sheet setengah-layar menutupi 55% bawah; sisakan ruang agar penanda selatan tetap terlihat.
-                { top: 72, bottom: Math.round(window.innerHeight * 0.55) + 24, left: 40, right: 40 }
+              { top: 72, bottom: Math.round(window.innerHeight * 0.55) + 24, left: 40, right: 40 }
           }
           ariaLabel="Peta destinasi wisata DIY. Semua isi peta juga tersedia di daftar."
         >
           <MapLegend />
+
+          {/* Chip info fasilitas terdekat saat destinasi dipilih */}
+          {selectedItem && (
+            <div className="pointer-events-auto absolute left-3 top-3 z-10 flex max-w-[calc(100%-140px)] items-center gap-2 rounded-full border border-hairline/90 bg-canvas/95 px-3 py-1.5 shadow-md shadow-ink/5 backdrop-blur-md md:left-4 md:top-4 dark:bg-surface-card/95 dark:shadow-black/25">
+              <span className="h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+              <p className="truncate text-xs font-medium text-ink">
+                Fasilitas sekitar <strong className="font-semibold">{selectedItem.name}</strong>{" "}
+                <span className="text-muted">
+                  {isLoadingFacilities
+                    ? "(memuat...)"
+                    : nearbyFacilities.length > 0
+                    ? `(${nearbyFacilities.length} titik)`
+                    : "(tidak ada dalam 1 km)"}
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={() => setSelectedSlug(null)}
+                aria-label="Tutup penanda fasilitas"
+                className="ml-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface-soft hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
+              >
+                <MiscIcon name="x" size={12} />
+              </button>
+            </div>
+          )}
         </MapView>
       </div>
     </div>

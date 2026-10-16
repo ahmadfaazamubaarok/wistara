@@ -449,6 +449,7 @@ export function MapView({
   const markerRefs = useRef<Marker[]>([]);
   const hoverPopupRef = useRef<import("maplibre-gl").Popup | null>(null);
   const maplibreRef = useRef<typeof import("maplibre-gl") | null>(null);
+  const prevSelectedIdRef = useRef<string | null>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -481,6 +482,16 @@ export function MapView({
       mapRef.current = map;
       map.addControl(new maplibre.NavigationControl({ showCompass: false }), "bottom-right");
 
+      // Pastikan info atribusi OSM/OpenFreeMap tertutup (compact) secara default
+      const minimizeAttrib = () => {
+        const attrib = containerRef.current?.querySelector(".maplibregl-ctrl-attrib");
+        if (attrib) {
+          attrib.classList.remove("maplibregl-compact-show");
+          attrib.removeAttribute("open");
+        }
+      };
+      minimizeAttrib();
+
       let loaded = false;
       timer = setTimeout(() => {
         if (!loaded) setFailed(true);
@@ -491,6 +502,7 @@ export function MapView({
         clearTimeout(timer);
         const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
         tintBaseStyle(map, isDark);
+        minimizeAttrib();
         setReady(true);
       });
       // Galat sebelum style termuat = peta dasar tidak tersedia. Daftar tetap bisa dipakai.
@@ -648,12 +660,38 @@ export function MapView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fitKey, ready]);
 
-  // Pusatkan pada penanda terpilih.
+  // Pusatkan dan perbesar (zoom in level 14) pada penanda terpilih, atau zoom out saat dibatalkan
   useEffect(() => {
     const map = mapRef.current;
-    if (!ready || !map || !selectedId) return;
-    const target = markers.find((marker) => marker.id === selectedId);
-    if (target) map.easeTo({ center: [target.lon, target.lat], duration: 350 });
+    const maplibre = maplibreRef.current;
+    if (!ready || !map || !maplibre) return;
+
+    if (selectedId) {
+      const target = markers.find((marker) => marker.id === selectedId);
+      if (target) {
+        map.flyTo({
+          center: [target.lon, target.lat],
+          zoom: 14,
+          duration: 600,
+          essential: true,
+          padding: getPadding?.() ?? { top: 48, bottom: 48, left: 48, right: 48 },
+        });
+      }
+    } else if (prevSelectedIdRef.current) {
+      // Saat dibatalkan (ditekan ulang atau tekan 'x'): zoom out sampai seluruh destinasi terlihat
+      const destinationMarkers = markers.filter((m) => !m.id.startsWith("f-"));
+      if (destinationMarkers.length > 0) {
+        const bounds = new maplibre.LngLatBounds();
+        destinationMarkers.forEach((marker) => bounds.extend([marker.lon, marker.lat]));
+        map.fitBounds(bounds, {
+          padding: getPadding?.() ?? { top: 48, bottom: 48, left: 48, right: 48 },
+          maxZoom: 13,
+          duration: 600,
+        });
+      }
+    }
+
+    prevSelectedIdRef.current = selectedId ?? null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, ready]);
 

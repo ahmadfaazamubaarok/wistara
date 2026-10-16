@@ -11,7 +11,7 @@ type MapLegendProps = {
   defaultExpanded?: boolean;
 };
 
-export function MapLegend({ className = "", defaultExpanded = true }: MapLegendProps) {
+export function MapLegend({ className = "", defaultExpanded = false }: MapLegendProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   return (
