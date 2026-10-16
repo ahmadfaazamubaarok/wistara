@@ -5,7 +5,7 @@ type Props = {
   destinationName: string;
 };
 
-export function DestinationEnrichmentCard({ enrichment, destinationName }: Props) {
+export function DestinationEnrichmentCard({ enrichment }: Props) {
   const { ticketPrice, highlights, tips, tags, bestTimeNote } = enrichment;
 
   return (

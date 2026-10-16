@@ -209,6 +209,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messageSeq = useRef(0);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -219,7 +220,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
     if (!query || isLoading) return;
 
     const userMsg: ChatMessage = {
-      id: `usr-${Date.now()}`,
+      id: `usr-${++messageSeq.current}`,
       role: "user",
       content: query,
       timestamp: formatCurrentTime(),
@@ -246,7 +247,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
       }
 
       const aiMsg: ChatMessage = {
-        id: `ai-${Date.now()}`,
+        id: `ai-${++messageSeq.current}`,
         role: "assistant",
         content: match.answer,
         destinations: match.destinations,

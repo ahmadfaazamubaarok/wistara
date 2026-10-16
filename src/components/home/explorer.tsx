@@ -85,12 +85,14 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
   const [sidebarWidth, setSidebarWidth] = useState<number>(DEFAULT_SIDEBAR_WIDTH);
 
   // Ambil preferensi lebar panel tersimpan dari localStorage setelah mount di client (mencegah hydration mismatch)
+  // Membaca localStorage hanya bisa setelah mount agar HTML server dan klien sama; setState di sini disengaja.
   useEffect(() => {
     try {
       const saved = localStorage.getItem("wistara-sidebar-width");
       if (saved) {
         const parsed = Number(saved);
         if (parsed >= MIN_SIDEBAR_WIDTH && parsed <= MAX_SIDEBAR_WIDTH) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setSidebarWidth(parsed);
         }
       }
