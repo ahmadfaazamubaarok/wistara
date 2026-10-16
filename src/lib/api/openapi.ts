@@ -284,10 +284,10 @@ export function buildOpenApiDocument() {
   return new OpenApiGeneratorV31(registry.definitions).generateDocument({
     openapi: "3.1.0",
     info: {
-      title: "JelajahLokal API",
+      title: "Wistara API",
       version: "1.0.0",
       description:
-        "API publik JelajahLokal: waktu terbaik mengunjungi 20 destinasi di DIY dalam 3 hari ke depan.\n\n" +
+        "API publik Wistara: waktu terbaik mengunjungi 20 destinasi di DIY dalam 3 hari ke depan.\n\n" +
         "**Sumber data.** Prakiraan cuaca: BMKG. Fasilitas dan koordinat: © OpenStreetMap contributors (ODbL). " +
         "Skor adalah rekomendasi berbasis prakiraan, bukan jaminan kondisi di lokasi; ambang dan bobotnya adalah asumsi desain tim.\n\n" +
         "Semua error memakai format `{ \"error\": { \"code\", \"message\" } }`.",

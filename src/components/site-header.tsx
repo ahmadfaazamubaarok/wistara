@@ -25,7 +25,7 @@ export async function SiteHeader() {
               <path d="M16 6a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" fill="#faf9f5" />
               <circle cx="16" cy="13" r="2.6" fill="#9a4f2c" />
             </svg>
-            <span className="font-serif text-lg tracking-tight md:text-xl">JelajahLokal</span>
+            <span className="font-serif text-lg tracking-tight md:text-xl">Wistara</span>
           </Link>
           <span className="hidden h-4 w-px bg-border-input/40 md:inline-block" aria-hidden="true" />
           <span className="hidden text-[13px] text-muted md:inline-block">waktu terbaik wisata</span>

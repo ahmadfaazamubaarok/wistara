@@ -52,6 +52,10 @@ const SHEET_ORDER: Sheet[] = ["collapsed", "half", "full"];
 // Jam acuan standar kunjungan wisata (3-jam): pagi, siang, sore, malam.
 const STANDARD_HOURS = ["06.00", "09.00", "12.00", "15.00", "18.00", "21.00"] as const;
 
+const DEFAULT_SIDEBAR_WIDTH = 440;
+const MIN_SIDEBAR_WIDTH = 360;
+const MAX_SIDEBAR_WIDTH = 720;
+
 function useIsDesktop() {
   return useSyncExternalStore(
     (notify) => {
@@ -73,6 +77,44 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
   const [sheet, setSheet] = useState<Sheet>("half");
   const isDesktop = useIsDesktop();
   const listRef = useRef<HTMLUListElement>(null);
+
+  // Lebar panel samping untuk desktop (bawaan 440px, bisa ditarik-geser antara 360px - 720px)
+  const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("wistara-sidebar-width");
+        if (saved) {
+          const parsed = Number(saved);
+          if (parsed >= MIN_SIDEBAR_WIDTH && parsed <= MAX_SIDEBAR_WIDTH) {
+            return parsed;
+          }
+        }
+      } catch {}
+    }
+    return DEFAULT_SIDEBAR_WIDTH;
+  });
+  const isResizing = useRef(false);
+
+  const startResizing = (e: React.PointerEvent<HTMLDivElement>) => {
+    isResizing.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onResizing = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isResizing.current) return;
+    const maxAllowed = Math.min(MAX_SIDEBAR_WIDTH, Math.round(window.innerWidth * 0.65));
+    const newWidth = Math.max(MIN_SIDEBAR_WIDTH, Math.min(maxAllowed, e.clientX));
+    setSidebarWidth(newWidth);
+  };
+
+  const stopResizing = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isResizing.current) return;
+    isResizing.current = false;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+      localStorage.setItem("wistara-sidebar-width", String(sidebarWidth));
+    } catch {}
+  };
 
   const currentDayKey = days[dayIndex];
 
@@ -217,13 +259,14 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
 
   return (
     <div
-      className="relative overflow-hidden md:grid md:grid-cols-[360px_minmax(0,1fr)] md:grid-rows-[minmax(0,1fr)]"
+      className="relative overflow-hidden md:flex md:flex-row"
       style={{ height: "calc(100dvh - 57px)" }}
     >
       <aside
         data-sheet={sheet}
         aria-label="Daftar destinasi"
-        className="absolute inset-x-0 bottom-0 z-20 flex h-[88px] flex-col rounded-t-xl bg-canvas shadow-[0_-2px_12px_rgba(20,20,19,0.12)] transition-[height] duration-200 data-[sheet=full]:h-[calc(100%-12px)] data-[sheet=half]:h-[55%] md:static md:h-full! md:min-h-0 md:rounded-none md:shadow-none md:border-r md:border-hairline"
+        style={{ width: isDesktop ? `${sidebarWidth}px` : undefined }}
+        className="absolute inset-x-0 bottom-0 z-20 flex h-[88px] flex-col rounded-t-xl bg-canvas shadow-[0_-2px_12px_rgba(20,20,19,0.12)] transition-[height] duration-200 data-[sheet=full]:h-[calc(100%-12px)] data-[sheet=half]:h-[55%] md:static md:h-full! md:min-h-0 md:shrink-0 md:rounded-none md:shadow-none md:border-r md:border-hairline"
       >
         {/* Pegangan bottom sheet (hanya ponsel) */}
         <button
@@ -470,23 +513,61 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
         </div>
       </aside>
 
-      <MapView
-        className="home-map h-full w-full"
-        styleUrl={mapStyleUrl}
-        markers={markers}
-        selectedId={selectedSlug}
-        onSelect={(slug) => select(slug, true)}
-        fitKey={`${categories.join(",")}-${searchQuery}`}
-        getPadding={() =>
-          isDesktop
-            ? { top: 56, bottom: 56, left: 56, right: 56 }
-            : // Sheet setengah-layar menutupi 55% bawah; sisakan ruang agar penanda selatan tetap terlihat.
-              { top: 72, bottom: Math.round(window.innerHeight * 0.55) + 24, left: 40, right: 40 }
-        }
-        ariaLabel="Peta destinasi wisata DIY. Semua isi peta juga tersedia di daftar."
+      {/* Pengatur lebar panel desktop (tarik-geser / draggable splitter) */}
+      <div
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Tarik untuk mengubah lebar panel daftar destinasi"
+        aria-valuenow={sidebarWidth}
+        aria-valuemin={MIN_SIDEBAR_WIDTH}
+        aria-valuemax={MAX_SIDEBAR_WIDTH}
+        tabIndex={0}
+        onPointerDown={startResizing}
+        onPointerMove={onResizing}
+        onPointerUp={stopResizing}
+        onPointerCancel={stopResizing}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") {
+            setSidebarWidth((w) => {
+              const next = Math.max(MIN_SIDEBAR_WIDTH, w - 24);
+              try { localStorage.setItem("wistara-sidebar-width", String(next)); } catch {}
+              return next;
+            });
+          } else if (e.key === "ArrowRight") {
+            setSidebarWidth((w) => {
+              const next = Math.min(MAX_SIDEBAR_WIDTH, w + 24);
+              try { localStorage.setItem("wistara-sidebar-width", String(next)); } catch {}
+              return next;
+            });
+          }
+        }}
+        className="group relative z-30 hidden w-2 shrink-0 cursor-col-resize select-none touch-none items-center justify-center bg-canvas transition-colors hover:bg-surface-soft active:bg-surface-card-strong md:flex"
       >
-        <MapLegend />
-      </MapView>
+        <span
+          className="h-10 w-1 rounded-pill bg-border-input/50 transition-colors group-hover:bg-primary group-active:bg-primary"
+          aria-hidden="true"
+        />
+      </div>
+
+      <div className="relative h-full flex-1 min-w-0">
+        <MapView
+          className="home-map h-full w-full"
+          styleUrl={mapStyleUrl}
+          markers={markers}
+          selectedId={selectedSlug}
+          onSelect={(slug) => select(slug, true)}
+          fitKey={`${categories.join(",")}-${searchQuery}`}
+          getPadding={() =>
+            isDesktop
+              ? { top: 56, bottom: 56, left: 56, right: 56 }
+              : // Sheet setengah-layar menutupi 55% bawah; sisakan ruang agar penanda selatan tetap terlihat.
+                { top: 72, bottom: Math.round(window.innerHeight * 0.55) + 24, left: 40, right: 40 }
+          }
+          ariaLabel="Peta destinasi wisata DIY. Semua isi peta juga tersedia di daftar."
+        >
+          <MapLegend />
+        </MapView>
+      </div>
     </div>
   );
 }

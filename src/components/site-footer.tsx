@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className="mt-12 bg-surface-dark text-on-dark-soft">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 py-8 md:px-8">
         <p className="max-w-[70ch] text-sm leading-relaxed">
-          JelajahLokal memberi rekomendasi waktu kunjungan berdasarkan prakiraan, bukan jaminan kondisi di
+          Wistara memberi rekomendasi waktu kunjungan berdasarkan prakiraan, bukan jaminan kondisi di
           lokasi. Informasi resmi pengelola destinasi tentang penutupan atau keselamatan tetap yang utama.
         </p>
         <AttributionBar tone="dark" />

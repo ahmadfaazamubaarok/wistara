@@ -14,7 +14,7 @@ export type BmkgRssItem = {
 export const DEFAULT_BMKG_ALERTS_RSS_URL = "https://www.bmkg.go.id/alerts/nowcast/id";
 
 const FETCH_TIMEOUT_MS = 10_000;
-const USER_AGENT = "JelajahLokal/0.1 (+https://github.com/alelkohan/wistara)";
+const USER_AGENT = "Wistara/0.1 (+https://github.com/alelkohan/wistara)";
 
 /** Ambil dan uraikan daftar item peringatan dari feed RSS BMKG nowcast. */
 export async function fetchBmkgAlertsRss(

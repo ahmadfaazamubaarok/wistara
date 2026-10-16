@@ -15,7 +15,7 @@ const configuration = JSON.stringify({
   mcp: { disabled: true },
   forceDarkModeState: "light",
   hideDarkModeToggle: true,
-  metaData: { title: "Dokumentasi API · JelajahLokal" },
+  metaData: { title: "Dokumentasi API · Wistara" },
 });
 
 const html = `<!doctype html>
@@ -23,8 +23,8 @@ const html = `<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dokumentasi API · JelajahLokal</title>
-    <meta name="description" content="Dokumentasi interaktif API publik JelajahLokal (OpenAPI 3.1)." />
+    <title>Dokumentasi API · Wistara</title>
+    <meta name="description" content="Dokumentasi interaktif API publik Wistara (OpenAPI 3.1)." />
   </head>
   <body>
     <script id="api-reference" data-url="/api/openapi.json" data-configuration='${configuration}'></script>

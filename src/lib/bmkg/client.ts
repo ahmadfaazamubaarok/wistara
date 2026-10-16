@@ -39,7 +39,7 @@ async function attempt(url: string, timeoutMs: number, fetchImpl: typeof fetch) 
     response = await fetchImpl(url, {
       headers: {
         Accept: "application/json",
-        "User-Agent": "JelajahLokal/0.1 (proyek mahasiswa UINIC 8.0)",
+        "User-Agent": "Wistara/0.1 (proyek mahasiswa UINIC 8.0)",
       },
       signal: AbortSignal.timeout(timeoutMs),
       cache: "no-store",

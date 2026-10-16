@@ -2,7 +2,7 @@
   "name": "jelajahlokal",
   "version": "0.1.0",
   "private": true,
-  "description": "JelajahLokal: waktu terbaik mengunjungi destinasi wisata DIY (MVP UINIC 8.0)",
+  "description": "Wistara: waktu terbaik mengunjungi destinasi wisata DIY (MVP UINIC 8.0)",
   "engines": {
     "node": ">=22.12.0"
   },

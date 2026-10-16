@@ -7,8 +7,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "JelajahLokal",
-    template: "%s · JelajahLokal",
+    default: "Wistara",
+    template: "%s · Wistara",
   },
   description:
     "Waktu terbaik mengunjungi destinasi wisata di DIY dalam 3 hari ke depan, fasilitas di sekitarnya, dan saran saat cuaca buruk.",

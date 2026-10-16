@@ -542,6 +542,20 @@ export function MapView({
     };
   }, [ready]);
 
+  // Sesuaikan kanvas peta otomatis saat kontainer berubah ukuran (mis. panel ditarik-geser)
+  useEffect(() => {
+    const map = mapRef.current;
+    const container = containerRef.current;
+    if (!ready || !map || !container) return;
+
+    const observer = new ResizeObserver(() => {
+      map.resize();
+    });
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, [ready]);
+
   // Tutup tooltip saat peta digeser atau dizoom
   useEffect(() => {
     const map = mapRef.current;
