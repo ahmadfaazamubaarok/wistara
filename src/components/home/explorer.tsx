@@ -11,6 +11,7 @@ import { StatusBanner } from "@/components/ui";
 import { CATEGORY_LABEL, DEST_CATEGORIES, type DestCategory } from "@/lib/categories";
 import { formatDayKey, formatWibDateTime, relativeDayName, slotHour } from "@/lib/format";
 import { bestOverlappingSlot } from "@/lib/forecast/slots";
+import { getDestinationEnrichment } from "@/lib/destination-enrichment";
 import { BAND_COLOR, type ScoreBand } from "@/lib/score-band";
 
 export type HomeSlotItem = {
@@ -181,7 +182,10 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
         const nameMatch = item.name.toLowerCase().includes(q);
         const kabupatenMatch = item.kabupaten.toLowerCase().includes(q);
         const categoryMatch = CATEGORY_LABEL[item.category]?.toLowerCase().includes(q);
-        if (!nameMatch && !kabupatenMatch && !categoryMatch) {
+        const enrichment = getDestinationEnrichment(item.slug);
+        const tagMatch = enrichment?.tags.some((t) => t.toLowerCase().includes(q));
+        const highlightMatch = enrichment?.highlights.some((h) => h.toLowerCase().includes(q));
+        if (!nameMatch && !kabupatenMatch && !categoryMatch && !tagMatch && !highlightMatch) {
           return false;
         }
       }
@@ -316,7 +320,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari wisata, kabupaten, atau kategori…"
+                placeholder="Cari wisata, daerah, atau minat (mis. sunset, candi, pantai)…"
                 className="min-h-11 w-full rounded-md border border-border-input bg-canvas pl-9 pr-9 text-base text-ink placeholder:text-muted focus:border-focus"
               />
               {searchQuery && (
@@ -474,6 +478,22 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                         <p className="mt-0.5 text-[13px] text-muted">
                           {CATEGORY_LABEL[item.category]} · {item.kabupaten}
                         </p>
+                        {(() => {
+                          const enrichment = getDestinationEnrichment(item.slug);
+                          if (!enrichment || !enrichment.tags.length) return null;
+                          return (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {enrichment.tags.slice(0, 3).map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded bg-surface-soft px-1.5 py-0.5 text-[11px] font-medium text-muted"
+                                >
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          );
+                        })()}
                       </div>
                       <button
                         type="button"

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { AttributionBar } from "@/components/attribution-bar";
+import { DestinationEnrichmentCard } from "@/components/destination/destination-enrichment-card";
 import { FacilitiesPanel, PANEL_TYPES } from "@/components/destination/facilities-panel";
 import { SlotExplorer } from "@/components/destination/slot-explorer";
 import { MiscIcon } from "@/components/icons";
@@ -18,6 +19,7 @@ import { slugParams } from "@/lib/api/schemas";
 import { CATEGORY_LABEL } from "@/lib/categories";
 import { createDemoAlert, getActiveAlertsForDestination } from "@/lib/db/alerts";
 import { facilitiesNear, getDestinationBySlug } from "@/lib/db/destinations";
+import { getDestinationEnrichment } from "@/lib/destination-enrichment";
 import { alternativesBySlot, bestOtherSlot, isAlternativeTrigger } from "@/lib/forecast/alternatives";
 import { getDestinationForecast } from "@/lib/forecast/destination-forecast";
 import { formatDistance, formatWibDateTime, relativeDayName, slotHour, summarizeOpenHours } from "@/lib/format";
@@ -101,6 +103,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
   const nearestStasiun = access.find((f) => f.type === "stasiun");
   const hoursLines = destination.openHours ? summarizeOpenHours(destination.openHours) : [];
   const { source } = forecast;
+  const enrichment = getDestinationEnrichment(destination.slug);
 
   return (
     <>
@@ -180,6 +183,13 @@ export default async function DestinationPage({ params, searchParams }: Props) {
               </p>
               <AttributionBar sources={["bmkg"]} />
             </section>
+
+            {enrichment && (
+              <DestinationEnrichmentCard
+                enrichment={enrichment}
+                destinationName={destination.name}
+              />
+            )}
 
             <section aria-labelledby="jam-judul" className="rounded-lg bg-surface-card p-4">
               <h2 id="jam-judul" className="!text-[18px]">
