@@ -16,6 +16,7 @@ import { toSlotDto, type SlotDto } from "@/lib/api/dto";
 import { googleMapsRouteUrl } from "@/lib/api/http";
 import { slugParams } from "@/lib/api/schemas";
 import { CATEGORY_LABEL } from "@/lib/categories";
+import { createDemoAlert, getActiveAlertsForDestination } from "@/lib/db/alerts";
 import { facilitiesNear, getDestinationBySlug } from "@/lib/db/destinations";
 import { alternativesBySlot, bestOtherSlot, isAlternativeTrigger } from "@/lib/forecast/alternatives";
 import { getDestinationForecast } from "@/lib/forecast/destination-forecast";
@@ -28,7 +29,10 @@ const DEFAULT_MAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 /** Halte/stasiun dicari lebih jauh daripada fasilitas lain (impor OSM: halte 1,5 km, stasiun 5 km). */
 const ACCESS_RADIUS_M = 5000;
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ preview_alert?: string; demo_alert?: string }>;
+};
 
 // Satu kali baca per permintaan walau dipanggil oleh generateMetadata dan halaman.
 const loadDestination = cache(async (slug: string) =>
@@ -45,17 +49,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function DestinationPage({ params }: Props) {
-  const { slug } = await params;
+export default async function DestinationPage({ params, searchParams }: Props) {
+  const [resolvedParams, search] = await Promise.all([params, searchParams]);
+  const slug = resolvedParams.slug;
   const destination = await loadDestination(slug);
   if (!destination) notFound();
 
   const now = new Date();
-  const [forecast, nearby, access] = await Promise.all([
+  const allowDemo = process.env.NODE_ENV !== "production";
+  const isDemoAlert = allowDemo && (search?.preview_alert === "1" || search?.demo_alert === "1");
+
+  const [forecast, nearby, access, activeAlerts] = await Promise.all([
     getDestinationForecast(destination, { days: 3, now }),
     facilitiesNear(destination.id, 1000, PANEL_TYPES),
     facilitiesNear(destination.id, ACCESS_RADIUS_M, ["halte", "stasiun"]),
+    getActiveAlertsForDestination(destination, now),
   ]);
+
+  const alerts = isDemoAlert && activeAlerts.length === 0 ? [createDemoAlert(destination, now)] : activeAlerts;
   const altMap = await alternativesBySlot(destination, forecast.slots, now);
 
   // "Simpan ke rencana" (F7): yang belum login diarahkan ke login lalu kembali ke halaman ini.
@@ -108,6 +119,24 @@ export default async function DestinationPage({ params }: Props) {
               </p>
               {destination.description && <p className="mt-2 max-w-[65ch]">{destination.description}</p>}
             </header>
+
+            {/* PRD F10: Banner Peringatan Dini Cuaca Ekstrem BMKG */}
+            {alerts.length > 0 && (
+              <div className="flex flex-col gap-2">
+                {alerts.map((alert) => (
+                  <StatusBanner key={alert.capId} kind="alert">
+                    <div className="flex flex-col gap-1 text-sm">
+                      <strong className="block font-semibold text-ink">{alert.headline || alert.event}</strong>
+                      <p className="leading-relaxed">{alert.description}</p>
+                      {alert.instruction && <p className="text-[12px] opacity-90">{alert.instruction}</p>}
+                      <p className="mt-0.5 text-[12px] opacity-80">
+                        Masa berlaku: {formatWibDateTime(alert.effective)} – {formatWibDateTime(alert.expires)} WIB (Sumber: BMKG)
+                      </p>
+                    </div>
+                  </StatusBanner>
+                ))}
+              </div>
+            )}
 
             {source.isStale && (
               <StatusBanner kind="stale">

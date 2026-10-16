@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>BMKG-20261016-DIY-001</identifier>
+  <sender>warning@bmkg.go.id</sender>
+  <sent>2026-10-16T14:00:00+07:00</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  <info>
+    <category>Met</category>
+    <event>Peringatan Dini Cuaca Ekstrem</event>
+    <urgency>Immediate</urgency>
+    <severity>Severe</severity>
+    <certainty>Observed</certainty>
+    <headline>Peringatan Dini Cuaca DIY: Hujan Lebat Disertai Petir dan Angin Kencang</headline>
+    <description>Berpotensi terjadi hujan dengan intensitas sedang hingga lebat yang dapat disertai kilat/petir dan angin kencang pada pukul 14.30 WIB di Kabupaten Bantul: Kretek, Sanden, Pundong, Bambanglipuro; Kabupaten Gunungkidul: Tepus, Tanjungsari; Kabupaten Sleman: Ngaglik, Depok; Kota Yogyakarta: Kraton.</description>
+    <instruction>Masyarakat dihimbau agar tetap waspada dan berhati-hati terhadap potensi cuaca ekstrem (puting beliung, hujan lebat disertai kilat/petir, angin kencang, dll) dan dampak yang dapat ditimbulkannya seperti banjir, tanah longsor, pohon tumbang, serta jalan licin.</instruction>
+    <effective>2026-10-16T14:30:00+07:00</effective>
+    <expires>2026-10-16T18:00:00+07:00</expires>
+    <area>
+      <areaDesc>Kabupaten Bantul: Kretek, Sanden, Pundong, Bambanglipuro; Kabupaten Gunungkidul: Tepus, Tanjungsari; Kabupaten Sleman: Ngaglik, Depok; Kota Yogyakarta: Kraton</areaDesc>
+      <polygon>-7.98,110.25 -7.95,110.38 -8.02,110.35 -7.98,110.25</polygon>
+      <geocode>
+        <valueName>ADM2</valueName>
+        <value>34.02,34.03,34.04,34.71</value>
+      </geocode>
+    </area>
+  </info>
+</alert>

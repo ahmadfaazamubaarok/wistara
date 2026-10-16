@@ -106,8 +106,8 @@ Asumsi desain yang harus ditulis jujur di proposal: ambang dan bobot skor, jende
 
 ## Status
 
-Sudah: F1–F9 (peta, prakiraan, skor, fasilitas, alternatif hujan, akses, rencana kunjungan + login, transparansi data, API + OpenAPI). Belum: F10 dan F11 (P1).
+Sudah: F1–F11 (peta, prakiraan, skor, fasilitas, alternatif hujan, akses, rencana kunjungan + login, transparansi data, API + OpenAPI, banner peringatan dini BMKG CAP [F10], destinasi terbaik lintas daftar per slot waktu [F11]).
 
-Terverifikasi di Windows 10 + Docker Desktop 4.95: compose, 132 tes unit, 140 tes integrasi, lint, typecheck, build produksi, header CSP produksi, dan alur login → simpan rencana → keluar di browser. **Belum diuji di Ubuntu**, di Lighthouse, dan di Vercel/Supabase sungguhan.
+Terverifikasi di Windows 10 + Docker Desktop 4.95: compose, 146 tes unit, 155 tes integrasi, lint, typecheck, build produksi, header CSP produksi, dan alur login → simpan rencana → keluar di browser. **Belum diuji di Ubuntu**, di Lighthouse, dan di Vercel/Supabase sungguhan.
 
 Data yang perlu tindak lanjut tim: jam buka 20 dari 20 destinasi belum diverifikasi ke pengelola; koordinat Taman Sari, Nglanggeran, dan Pentingsari adalah perkiraan (OSM tak punya objeknya); fasilitas OSM di pantai dan desa wisata jarang; dengan radius alternatif 15 km, pantai di selatan tak akan pernah mendapat saran museum.

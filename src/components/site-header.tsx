@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOutAction } from "@/app/actions/auth";
 import { getPageUser } from "@/lib/auth/session";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_LINK =
   "inline-flex min-h-11 items-center whitespace-nowrap rounded-md px-2 text-sm font-medium text-body no-underline hover:bg-surface-soft hover:text-ink md:px-3";
@@ -25,42 +26,45 @@ export async function SiteHeader() {
           </svg>
           <span className="font-serif text-lg tracking-tight md:text-xl">JelajahLokal</span>
         </Link>
-        <nav aria-label="Navigasi utama">
-          <ul className="flex items-center gap-0.5">
-            <li>
-              <Link href="/" className={`${NAV_LINK} max-sm:hidden`}>
-                Beranda
-              </Link>
-            </li>
-            <li>
-              <Link href="/tentang-data" className={NAV_LINK}>
-                Tentang Data
-              </Link>
-            </li>
-            {user ? (
-              <>
-                <li>
-                  <Link href="/rencana" className={NAV_LINK}>
-                    Rencana
-                  </Link>
-                </li>
-                <li>
-                  <form action={signOutAction}>
-                    <button type="submit" className={NAV_LINK}>
-                      Keluar
-                    </button>
-                  </form>
-                </li>
-              </>
-            ) : (
+        <div className="flex items-center gap-1 sm:gap-2">
+          <nav aria-label="Navigasi utama">
+            <ul className="flex items-center gap-0.5">
               <li>
-                <Link href="/masuk" className={NAV_LINK}>
-                  Masuk
+                <Link href="/" className={`${NAV_LINK} max-sm:hidden`}>
+                  Beranda
                 </Link>
               </li>
-            )}
-          </ul>
-        </nav>
+              <li>
+                <Link href="/tentang-data" className={NAV_LINK}>
+                  Tentang Data
+                </Link>
+              </li>
+              {user ? (
+                <>
+                  <li>
+                    <Link href="/rencana" className={NAV_LINK}>
+                      Rencana
+                    </Link>
+                  </li>
+                  <li>
+                    <form action={signOutAction}>
+                      <button type="submit" className={NAV_LINK}>
+                        Keluar
+                      </button>
+                    </form>
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <Link href="/masuk" className={NAV_LINK}>
+                    Masuk
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

@@ -2,8 +2,10 @@
 
 import { useMemo, useRef, useState } from "react";
 import { AttributionBar } from "@/components/attribution-bar";
+import { FacilityIcon } from "@/components/icons";
 import { MapView, type MapMarker } from "@/components/map/map-view";
-import { FACILITY_LABEL, type DestCategory, type FacilityType } from "@/lib/categories";
+import { CATEGORY_LABEL, FACILITY_LABEL, type DestCategory, type FacilityType } from "@/lib/categories";
+import { FACILITY_COLOR } from "@/lib/icon-data";
 import { formatDistance } from "@/lib/format";
 
 export type FacilityRow = {
@@ -71,17 +73,23 @@ export function FacilitiesPanel({ slug, destination, initialRadius, initialFacil
         lat: destination.lat,
         lon: destination.lon,
         label: `${destination.name} (lokasi destinasi)`,
+        title: destination.name,
+        subtitle: `${CATEGORY_LABEL[destination.category]} (lokasi destinasi)`,
         color: "#9a4f2c",
         glyph: destination.category,
-        size: 34,
+        shape: "pin",
       },
       ...facilities.slice(0, MAX_MAP_DOTS).map((facility) => ({
         id: `f-${facility.id}`,
         lat: facility.lat,
         lon: facility.lon,
         label: `${FACILITY_LABEL[facility.type]}: ${facility.name ?? "tanpa nama"}, ${formatDistance(facility.distanceM)}`,
-        color: "#1e2b45",
-        size: 16,
+        title: FACILITY_LABEL[facility.type],
+        subtitle: `${facility.name ? facility.name + " · " : ""}${formatDistance(facility.distanceM)}`,
+        color: FACILITY_COLOR[facility.type] ?? "#1e2b45",
+        glyph: facility.type,
+        shape: "circle" as const,
+        size: 24,
       })),
     ],
     [destination, facilities],
@@ -139,9 +147,18 @@ export function FacilitiesPanel({ slug, destination, initialRadius, initialFacil
           const shown = open ? rows : rows.slice(0, VISIBLE_BY_DEFAULT);
           return (
             <section key={type} aria-label={FACILITY_LABEL[type]} className="border-t border-hairline py-3 first:border-t-0">
-              <h3 className="font-sans text-[13px] font-semibold uppercase tracking-wide text-muted">
-                {FACILITY_LABEL[type]}
-                {rows.length > 0 && <span className="ml-1 font-normal normal-case">({rows.length})</span>}
+              <h3 className="flex items-center gap-2 font-sans text-[13px] font-semibold uppercase tracking-wide text-muted">
+                <span
+                  className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white"
+                  style={{ backgroundColor: FACILITY_COLOR[type] }}
+                  aria-hidden="true"
+                >
+                  <FacilityIcon type={type} size={11} />
+                </span>
+                <span>
+                  {FACILITY_LABEL[type]}
+                  {rows.length > 0 && <span className="ml-1 font-normal normal-case">({rows.length})</span>}
+                </span>
               </h3>
               {rows.length === 0 ? (
                 <p className="flex min-h-12 items-center text-[15px] italic text-muted">Belum terpetakan di OpenStreetMap</p>

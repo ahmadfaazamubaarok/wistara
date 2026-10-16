@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { errorResponse, withApi } from "@/lib/api/errors";
 import { noStoreJson } from "@/lib/api/http";
 import { getPool } from "@/lib/db";
+import { syncBmkgAlerts } from "@/lib/weather/alerts-sync";
 import { warmRegion } from "@/lib/weather/service";
 
 export const dynamic = "force-dynamic";
@@ -33,6 +34,13 @@ export const GET = withApi(async (request) => {
   if (!authorized(request)) return errorResponse("UNAUTHORIZED", "Tidak berwenang");
 
   const startedAt = Date.now();
+
+  // PRD F10: Sinkronkan peringatan dini cuaca terkini dari BMKG
+  const alertStats = await syncBmkgAlerts().catch((err) => {
+    console.error("[cron] Gagal sinkronisasi peringatan BMKG:", err);
+    return { fetched: 0, synced: 0, errors: 1 };
+  });
+
   const { rows } = await getPool().query<{ adm4_code: string }>(
     `select d.adm4_code
      from (select distinct adm4_code from destinations) d
@@ -50,5 +58,10 @@ export const GET = withApi(async (request) => {
     if (i < rows.length - 1) await new Promise((resolve) => setTimeout(resolve, BMKG_GAP_MS));
   }
 
-  return noStoreJson({ regions: rows.length, ...counts, durationMs: Date.now() - startedAt });
+  return noStoreJson({
+    regions: rows.length,
+    alerts: alertStats,
+    ...counts,
+    durationMs: Date.now() - startedAt,
+  });
 });

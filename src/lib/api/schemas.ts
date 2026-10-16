@@ -74,11 +74,24 @@ export const alternativesQuery = z.object({
     .transform((value) => new Date(value)),
 });
 
+export const recommendationsQuery = z.object({
+  slot: z
+    .string({ error: "slot wajib diisi (ISO 8601, mis. 2026-10-16T15:00:00+07:00)" })
+    .pipe(z.iso.datetime({ offset: true, error: "slot harus berformat ISO 8601, mis. 2026-10-16T15:00:00+07:00" }))
+    .transform((value) => new Date(value)),
+  category: csvOf(DEST_CATEGORIES, "category").optional(),
+});
+
+export const alertsQuery = z.object({
+  destination: z.string().regex(/^[a-z0-9-]{1,80}$/, SLUG_MESSAGE).optional(),
+  demo: z.enum(["1", "true"]).optional(),
+});
+
 /* ----------------------------- respons ----------------------------- */
 
 const categoryEnum = z.enum(DEST_CATEGORIES);
 const bandEnum = z.enum(["good", "mid", "bad", "closed"]);
-const labelEnum = z.enum(["Sangat sesuai", "Cukup sesuai", "Kurang sesuai", "Tutup"]);
+const labelEnum = z.enum(["Sangat sesuai", "Cukup sesuai", "Kurang sesuai", "Tutup", "Tidak ada prakiraan"]);
 const penaltyEnum = z.enum(["rain", "wind", "heat", "vis"]);
 
 export const sourceSchema = z
@@ -277,3 +290,57 @@ export const addedItemSchema = z
     created: z.boolean().openapi({ description: "false bila item yang sama sudah ada (permintaan bersifat idempoten)." }),
   })
   .openapi("AddedItem");
+
+export const recommendationItemSchema = z
+  .object({
+    destination: z.object({
+      slug: z.string(),
+      name: z.string(),
+      category: categoryEnum,
+      isIndoor: z.boolean(),
+      kabupaten: z.string(),
+    }),
+    isOpen: z.boolean(),
+    score: z.number().int().min(0).max(100).nullable(),
+    band: bandEnum,
+    label: labelEnum,
+    weatherDesc: z.string().nullable(),
+    t: z.number().nullable(),
+    reasons: z.array(z.string()).max(3),
+  })
+  .openapi("RecommendationItem");
+
+export const recommendationsResponseSchema = z
+  .object({
+    slot: z.string().openapi({ description: "Slot waktu dalam UTC." }),
+    localTime: z.string().openapi({ description: "Slot waktu dalam WIB." }),
+    total: z.number().int(),
+    recommendations: z.array(recommendationItemSchema),
+  })
+  .openapi("RecommendationsResponse");
+
+export const alertSchema = z
+  .object({
+    capId: z.string(),
+    identifier: z.string(),
+    event: z.string(),
+    headline: z.string().nullable(),
+    description: z.string(),
+    instruction: z.string().nullable(),
+    severity: z.string().nullable(),
+    urgency: z.string().nullable(),
+    effective: z.string().openapi({ description: "Mulai berlaku (ISO 8601)." }),
+    expires: z.string().openapi({ description: "Berakhir (ISO 8601)." }),
+    areaDesc: z.string(),
+    admKecamatan: z.array(z.string()),
+  })
+  .openapi("WeatherAlert");
+
+export const alertListResponseSchema = z
+  .object({
+    total: z.number().int(),
+    alerts: z.array(alertSchema),
+  })
+  .openapi("WeatherAlertList");
+
+

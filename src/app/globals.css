@@ -11,9 +11,11 @@
   --color-surface-soft: #f5f0e8;
   --color-surface-card: #efe9de;
   --color-surface-card-strong: #e8e0d2;
-  --color-surface-dark: #1e2b45; /* nila */
+  --color-surface-dark: #1e2b45;
+  /* nila */
   --color-surface-dark-elevated: #2a3a5a;
-  --color-primary: #9a4f2c; /* soga */
+  --color-primary: #9a4f2c;
+  /* soga */
   --color-primary-active: #7a3d22;
   --color-primary-disabled: #e6dfd8;
   --color-on-primary: #ffffff;
@@ -27,7 +29,8 @@
 
   /* Garis */
   --color-border-input: #8f877b;
-  --color-hairline: #e6dfd8; /* dekoratif saja, bukan batas komponen */
+  --color-hairline: #e6dfd8;
+  /* dekoratif saja, bukan batas komponen */
   --color-focus: #1e2b45;
 
   /* Status skor kelayakan (selalu sebagai chip berlatar muda) */
@@ -59,14 +62,70 @@
   --radius-pill: 9999px;
 }
 
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Merek dan permukaan (Palet Dark Warm Obsidian khas Wistara) */
+  --color-canvas: #141311;
+  --color-surface-soft: #1d1b18;
+  --color-surface-card: #25231f;
+  --color-surface-card-strong: #2f2b26;
+  --color-surface-dark: #2a3a5a;
+  --color-surface-dark-elevated: #36496e;
+  --color-primary: #b5633b;
+  --color-primary-active: #9a4f2c;
+  --color-primary-disabled: #3d3a33;
+  --color-on-primary: #ffffff;
+  --color-on-dark: #faf9f5;
+  --color-on-dark-soft: #c9cdd6;
+
+  /* Teks */
+  --color-ink: #f5f2eb;
+  --color-body: #c7c2b6;
+  --color-muted: #8f897c;
+
+  /* Garis */
+  --color-border-input: #575247;
+  --color-hairline: #2b2822;
+  --color-focus: #b5633b;
+
+  /* Status skor kelayakan (latar gelap kaya kontras tinggi) */
+  --color-score-good-text: #4ade80;
+  --color-score-good-bg: #133821;
+  --color-score-mid-text: #fbbf24;
+  --color-score-mid-bg: #362a12;
+  --color-score-bad-text: #f87171;
+  --color-score-bad-bg: #381615;
+  --color-score-closed-text: #9ca3af;
+  --color-score-closed-bg: #262626;
+
+  /* Banner */
+  --color-banner-stale-text: #fbbf24;
+  --color-banner-stale-bg: #362a12;
+  --color-banner-alert-text: #f87171;
+  --color-banner-alert-bg: #381615;
+}
+
 @layer base {
   html {
     background-color: var(--color-canvas);
     color: var(--color-body);
     font-family: var(--font-sans);
-    font-size: 16px; /* minimal 16px agar input di iOS tidak memicu zoom */
+    font-size: 16px;
+    /* minimal 16px agar input di iOS tidak memicu zoom */
     line-height: 1.55;
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   /* Serif hanya untuk judul halaman dan judul bagian, selalu bobot 400. */
@@ -76,29 +135,35 @@
     font-weight: 400;
     color: var(--color-ink);
   }
+
   h1 {
     font-size: 28px;
     line-height: 1.15;
     letter-spacing: -0.5px;
   }
+
   h2 {
     font-size: 22px;
     line-height: 1.2;
     letter-spacing: -0.3px;
   }
+
   h3 {
     font-size: 17px;
     font-weight: 600;
     line-height: 1.35;
     color: var(--color-ink);
   }
+
   @media (min-width: 1024px) {
     h1 {
       font-size: 40px;
     }
+
     h2 {
       font-size: 28px;
     }
+
     h3 {
       font-size: 18px;
     }
@@ -115,4 +180,138 @@
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
   }
+}
+
+/* Tooltip estetik melayang di atas penanda lokasi wisata (menggantikan tooltip alt/title bawaan OS) */
+.wistara-map-popup {
+  pointer-events: none;
+  z-index: 50;
+}
+
+.wistara-map-popup .maplibregl-popup-content {
+  background: var(--color-surface-soft);
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px -4px rgba(20, 20, 19, 0.16), 0 2px 8px -1px rgba(20, 20, 19, 0.08);
+  border: 1px solid var(--color-hairline);
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  min-width: 140px;
+  max-width: 250px;
+  animation: wistara-popup-in 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .wistara-map-popup .maplibregl-popup-content {
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.6), 0 2px 10px -1px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes wistara-popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.wistara-map-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: var(--color-surface-soft);
+}
+
+.wistara-map-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: var(--color-surface-soft);
+}
+
+.wistara-map-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--color-surface-soft);
+}
+
+.wistara-map-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--color-surface-soft);
+}
+
+.wistara-tooltip-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wistara-tooltip-title {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-ink);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.wistara-tooltip-sub {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-muted);
+  line-height: 1.3;
+}
+
+.wistara-tooltip-status {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-hairline);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.wistara-tooltip-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.wistara-tooltip-chip.wistara-band-good {
+  background-color: var(--color-score-good-bg);
+  color: var(--color-score-good-text);
+}
+
+.wistara-tooltip-chip.wistara-band-mid {
+  background-color: var(--color-score-mid-bg);
+  color: var(--color-score-mid-text);
+}
+
+.wistara-tooltip-chip.wistara-band-bad {
+  background-color: var(--color-score-bad-bg);
+  color: var(--color-score-bad-text);
+}
+
+.wistara-tooltip-chip.wistara-band-closed {
+  background-color: var(--color-score-closed-bg);
+  color: var(--color-score-closed-text);
+}
+
+.wistara-tooltip-weather {
+  font-size: 11px;
+  color: var(--color-muted);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* MapLibre controls dark mode adaptation */
+.dark .maplibregl-ctrl-group {
+  background: var(--color-surface-card);
+  border-color: var(--color-hairline);
+}
+
+.dark .maplibregl-ctrl-group button {
+  border-color: var(--color-hairline);
+}
+
+.dark .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(0.9) hue-rotate(180deg);
 }

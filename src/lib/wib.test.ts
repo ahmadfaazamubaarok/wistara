@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatWibTime, getWibDateKey } from "./wib";
+import { formatWibTime, getWibDateKey, toWibIsoString } from "./wib";
 
 describe("formatWibTime", () => {
   it("mengubah UTC ke WIB (UTC+7)", () => {
@@ -24,3 +24,14 @@ describe("getWibDateKey", () => {
     expect(getWibDateKey(new Date("2026-10-15T16:59:00Z"))).toBe("2026-10-15");
   });
 });
+
+describe("toWibIsoString", () => {
+  it("mengonversi UTC 01:00 ke WIB 08:00 dengan offset +07:00", () => {
+    expect(toWibIsoString(new Date("2026-10-16T01:00:00Z"))).toBe("2026-10-16T08:00:00+07:00");
+  });
+
+  it("mengonversi UTC 08:00 ke WIB 15:00 dengan offset +07:00", () => {
+    expect(toWibIsoString(new Date("2026-10-16T08:00:00Z"))).toBe("2026-10-16T15:00:00+07:00");
+  });
+});
+

@@ -1,5 +1,10 @@
-import type { DestCategory } from "@/lib/categories";
-import { CATEGORY_ICON_PATHS, WEATHER_ICON_PATHS, weatherKind } from "@/lib/icon-data";
+import type { DestCategory, FacilityType } from "@/lib/categories";
+import {
+  CATEGORY_ICON_PATHS,
+  FACILITY_ICON_PATHS,
+  WEATHER_ICON_PATHS,
+  weatherKind,
+} from "@/lib/icon-data";
 
 type IconProps = { size?: number; className?: string };
 
@@ -27,6 +32,10 @@ function Svg({ paths, size = 20, className }: IconProps & { paths: string[] }) {
 
 export function CategoryIcon({ category, ...props }: IconProps & { category: DestCategory }) {
   return <Svg paths={CATEGORY_ICON_PATHS[category]} {...props} />;
+}
+
+export function FacilityIcon({ type, ...props }: IconProps & { type: FacilityType }) {
+  return <Svg paths={FACILITY_ICON_PATHS[type]} {...props} />;
 }
 
 /** Ikon cuaca dekoratif; teks cuacanya harus tersedia di tempat lain untuk pembaca layar. */

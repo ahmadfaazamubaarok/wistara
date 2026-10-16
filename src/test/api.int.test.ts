@@ -4,12 +4,16 @@ import { GET as getFacilities } from "@/app/api/v1/destinations/[slug]/facilitie
 import { GET as getForecast } from "@/app/api/v1/destinations/[slug]/forecast/route";
 import { GET as getDestination } from "@/app/api/v1/destinations/[slug]/route";
 import { GET as listDestinations } from "@/app/api/v1/destinations/route";
+import { GET as getRecommendations } from "@/app/api/v1/recommendations/route";
+import { GET as getAlerts } from "@/app/api/v1/alerts/route";
 import { buildOpenApiDocument } from "@/lib/api/openapi";
 import {
+  alertListResponseSchema,
   destinationListSchema,
   destinationSchema,
   errorSchema,
   facilitiesResponseSchema,
+  recommendationsResponseSchema,
 } from "@/lib/api/schemas";
 import { getPool } from "@/lib/db";
 import { call, withSlug } from "./helpers";
@@ -174,12 +178,14 @@ describe("dokumen OpenAPI", () => {
     expect(doc.openapi).toBe("3.1.0");
     expect(Object.keys(doc.paths ?? {}).sort()).toEqual(
       [
+        "/api/v1/alerts",
         "/api/v1/destinations",
         "/api/v1/destinations/{slug}",
         "/api/v1/destinations/{slug}/alternatives",
         "/api/v1/destinations/{slug}/facilities",
         "/api/v1/destinations/{slug}/forecast",
         "/api/v1/health",
+        "/api/v1/recommendations",
         "/api/v1/trips",
         "/api/v1/trips/{id}",
         "/api/v1/trips/{id}/items",
@@ -200,9 +206,69 @@ describe("dokumen OpenAPI", () => {
   it("parameter query yang didokumentasikan sama dengan yang diterima kode", () => {
     const names = (path: string) =>
       ((doc.paths?.[path] as { get: { parameters: { name: string }[] } }).get.parameters ?? []).map((p) => p.name).sort();
+    expect(names("/api/v1/alerts")).toEqual(["demo", "destination"]);
     expect(names("/api/v1/destinations")).toEqual(["bbox", "category", "include", "q"]);
     expect(names("/api/v1/destinations/{slug}/forecast")).toEqual(["days", "slug"]);
     expect(names("/api/v1/destinations/{slug}/facilities")).toEqual(["radius", "slug", "type"]);
     expect(names("/api/v1/destinations/{slug}/alternatives")).toEqual(["slot", "slug"]);
+    expect(names("/api/v1/recommendations")).toEqual(["category", "slot"]);
+  });
+});
+
+describe("GET /api/v1/recommendations (F11)", () => {
+  it("menolak tanpa parameter slot dengan 400", async () => {
+    expectError(await call(getRecommendations, "/api/v1/recommendations"), 400, "VALIDATION_ERROR");
+  });
+
+  it("mengembalikan 20 destinasi diurutkan skor tertinggi", async () => {
+    const slot = "2026-10-16T15:00:00+07:00";
+    const result = await call(getRecommendations, `/api/v1/recommendations?slot=${encodeURIComponent(slot)}`);
+    expect(result.status).toBe(200);
+    const body = recommendationsResponseSchema.parse(result.json);
+    expect(body.total).toBe(20);
+    expect(body.recommendations).toHaveLength(20);
+    for (let i = 0; i < body.recommendations.length - 1; i++) {
+      const a = body.recommendations[i].score ?? -1;
+      const b = body.recommendations[i + 1].score ?? -1;
+      expect(a).toBeGreaterThanOrEqual(b);
+    }
+  });
+
+  it("dapat disaring dengan parameter category", async () => {
+    const slot = "2026-10-16T15:00:00+07:00";
+    const result = await call(getRecommendations, `/api/v1/recommendations?slot=${encodeURIComponent(slot)}&category=museum`);
+    expect(result.status).toBe(200);
+    const body = recommendationsResponseSchema.parse(result.json);
+    expect(body.recommendations.every((r) => r.destination.category === "museum")).toBe(true);
+  });
+});
+
+describe("GET /api/v1/alerts (F10)", () => {
+  it("mengembalikan daftar alert aktif dengan format valid", async () => {
+    const result = await call(getAlerts, "/api/v1/alerts");
+    expect(result.status).toBe(200);
+    const body = alertListResponseSchema.parse(result.json);
+    expect(Array.isArray(body.alerts)).toBe(true);
+  });
+
+  it("mode demo mengembalikan alert simulasi cuaca ekstrem DIY", async () => {
+    const result = await call(getAlerts, "/api/v1/alerts?demo=1");
+    expect(result.status).toBe(200);
+    const body = alertListResponseSchema.parse(result.json);
+    expect(body.total).toBeGreaterThanOrEqual(1);
+    expect(body.alerts[0].event).toBe("Peringatan Dini Cuaca Ekstrem");
+    expect(body.alerts[0].headline).toContain("Peringatan Dini");
+  });
+
+  it("menolak slug destinasi yang tidak terdaftar dengan 404", async () => {
+    expectError(await call(getAlerts, "/api/v1/alerts?destination=tempat-fiktif"), 404, "NOT_FOUND");
+  });
+
+  it("dapat meminta alert spesifik untuk destinasi dengan mode demo", async () => {
+    const result = await call(getAlerts, "/api/v1/alerts?destination=pantai-parangtritis&demo=1");
+    expect(result.status).toBe(200);
+    const body = alertListResponseSchema.parse(result.json);
+    expect(body.total).toBe(1);
+    expect(body.alerts[0].areaDesc).toContain("Kretek");
   });
 });

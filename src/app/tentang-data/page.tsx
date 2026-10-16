@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { AttributionBar } from "@/components/attribution-bar";
+import { FormulaCalculator } from "@/components/about/formula-calculator";
+import { TableOfContents, type TocItem } from "@/components/about/table-of-contents";
 import { ScoreChip } from "@/components/score-chip";
 import { SiteFooter } from "@/components/site-footer";
 import { BMKG_URL, OPENFREEMAP_URL, OSM_COPYRIGHT_URL } from "@/lib/attribution";
@@ -23,8 +25,9 @@ import { STALE_AFTER_MS } from "@/lib/weather/service";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Tentang Data",
-  description: "Sumber data, lisensi, waktu pembaruan, dan cara skor kelayakan kunjungan dihitung.",
+  title: "Metode & Tentang Data",
+  description:
+    "Bagaimana Wistara menghitung kelayakan kunjungan wisata dari prakiraan BMKG: rumus matematis, empat penalti, bobot kategori, dan contoh perhitungannya.",
 };
 
 const title = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
@@ -47,221 +50,504 @@ async function loadFreshness() {
 
 const fmt = (date: Date | null) => (date ? formatWibDateTime(date.toISOString()) : "belum ada");
 
+const TOC_ITEMS: TocItem[] = [
+  { id: "ringkas", label: "Ringkasnya" },
+  { id: "rumus", label: "Rumusnya & Contoh", number: "01" },
+  { id: "band", label: "Empat Band Skor", number: "02" },
+  { id: "penalti", label: "Penalti Cuaca", number: "03" },
+  { id: "bobot", label: "Bobot Kategori", number: "04" },
+  { id: "jam", label: "Jam Buka & Kunjungan", number: "05" },
+  { id: "sumber", label: "Sumber & Kesegaran", number: "06" },
+  { id: "alternatif", label: "Alternatif Hujan", number: "07" },
+  { id: "fasilitas", label: "Fasilitas OSM", number: "08" },
+];
+
 export default async function AboutDataPage() {
   const [profiles, freshness] = await Promise.all([getScoreProfiles(), loadFreshness()]);
   const staleHours = STALE_AFTER_MS / 3_600_000;
 
-  const th = "py-2 pr-4 text-left text-[13px] font-semibold text-muted";
-  const td = "py-2 pr-4 align-top";
+  const th = "py-2.5 pr-4 text-left text-[13px] font-semibold text-muted";
+  const td = "py-2.5 pr-4 align-top text-body";
 
   return (
     <>
-      <main id="konten" className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-8 md:px-8 md:py-10">
-        <h1>Tentang Data</h1>
-        <p className="mt-3 max-w-[65ch]">
-          Dari mana data JelajahLokal berasal, seberapa baru, dan bagaimana skor kelayakan kunjungan dihitung. Skor adalah
-          rekomendasi berbasis prakiraan, <strong>bukan jaminan kondisi di lokasi</strong>.
-        </p>
+      <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-12 lg:grid lg:grid-cols-[210px_minmax(0,1fr)] lg:gap-14">
+        {/* Navigasi Daftar Isi (Desktop Sidebar & Mobile Bar) */}
+        <TableOfContents items={TOC_ITEMS} />
 
-        <div className="mt-8 flex max-w-[860px] flex-col gap-10">
-          <section aria-labelledby="sumber">
-            <h2 id="sumber">Sumber data</h2>
-            <div className="mt-3 overflow-x-auto">
-              <table className="w-full min-w-[640px] border-collapse text-[15px]">
-                <thead>
-                  <tr className="border-b border-hairline">
-                    <th className={th}>Sumber</th>
-                    <th className={th}>Dipakai untuk</th>
-                    <th className={th}>Lisensi dan syarat</th>
-                    <th className={th}>Pembaruan terakhir</th>
-                  </tr>
-                </thead>
-                <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
-                  <tr>
-                    <td className={td}>
-                      <a href={BMKG_URL} target="_blank" rel="noopener noreferrer">BMKG Prakiraan Cuaca</a>
-                    </td>
-                    <td className={td}>Prakiraan per 3 jam, 3 hari ke depan, tingkat desa/kelurahan</td>
-                    <td className={td}>Wajib mencantumkan BMKG sebagai sumber. Batas 60 permintaan per menit.</td>
-                    <td className={`${td} tabular-nums`}>
-                      Diambil {fmt(freshness.bmkg_last)}
-                      <br />
-                      <span className="text-[13px] text-muted">Diproduksi BMKG {fmt(freshness.bmkg_analysis)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className={td}>
-                      <a href={OSM_COPYRIGHT_URL} target="_blank" rel="noopener noreferrer">OpenStreetMap</a>
-                    </td>
-                    <td className={td}>Koordinat destinasi, toilet, parkir, tempat makan, tempat ibadah, ATM, halte, stasiun</td>
-                    <td className={td}>© OpenStreetMap contributors, lisensi ODbL. Diimpor sekali, bukan dipanggil saat Anda membuka halaman.</td>
-                    <td className={`${td} tabular-nums`}>Diimpor {fmt(freshness.osm_last)}</td>
-                  </tr>
-                  <tr>
-                    <td className={td}>
-                      <a href={OPENFREEMAP_URL} target="_blank" rel="noopener noreferrer">OpenFreeMap</a>
-                    </td>
-                    <td className={td}>Peta dasar</td>
-                    <td className={td}>Gratis dengan atribusi; tanpa jaminan tingkat layanan. Bila peta tidak termuat, daftar tetap bisa dipakai.</td>
-                    <td className={td}>Langsung dari penyedia</td>
-                  </tr>
-                  <tr>
-                    <td className={td}>Kode wilayah Kemendagri</td>
-                    <td className={td}>Memetakan destinasi ke desa/kelurahan yang dipakai BMKG</td>
-                    <td className={td}>Dataset cahyadsn/wilayah (MIT). Setiap kode divalidasi dengan memanggil API BMKG.</td>
-                    <td className={td}>Saat impor data</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-3 text-sm text-muted">
-              Data cuaca dianggap <strong>lama</strong> bila pengambilan terakhir yang berhasil lebih dari {staleHours} jam
-              lalu; halaman akan menampilkan label &ldquo;Data belum diperbarui&rdquo; beserta waktunya. Saat BMKG tidak bisa
-              diakses, data terakhir tetap ditampilkan.
+        {/* Konten Dokumen Utama */}
+        <main id="konten" className="min-w-0 max-w-[72ch] pb-24">
+          <header>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+              Metode · Sistem Penilaian Wistara
             </p>
-          </section>
-
-          <section aria-labelledby="skor">
-            <h2 id="skor">Cara skor dihitung</h2>
-            <p className="mt-3 max-w-[65ch]">
-              Setiap slot 3 jam bernilai 100, dikurangi empat penalti cuaca. Setiap penalti bernilai 0 sampai 100 lalu
-              dikalikan bobot sesuai jenis destinasi, karena angin kencang lebih berbahaya di pantai daripada di museum.
+            <h1 className="mt-3 font-serif text-[clamp(30px,4vw,44px)] font-normal leading-[1.12] tracking-tight text-ink">
+              Bagaimana Wistara menilai kelayakan kunjungan wisata.
+            </h1>
+            <p className="mt-4 text-[17px] leading-[1.65] text-body">
+              Setiap warna dan rekomendasi di peta berasal dari satu perhitungan objektif: nilai dasar
+              100 dikurangi empat penalti cuaca BMKG terbobot. Halaman ini menjelaskan dari mana data
+              berasal, bagaimana rumus menghitungnya, dan contoh nyatanya di berbagai destinasi.
             </p>
-            <pre className="mt-3 overflow-x-auto rounded-md bg-surface-card p-4 font-mono text-sm leading-relaxed text-ink">
-              {`Skor = maks(0, 100 − (w hujan × P hujan + w angin × P angin
-                     + w panas × P panas + w jarak pandang × P jarak pandang))`}
-            </pre>
 
-            <h3 className="mt-6">Penalti</h3>
-            <div className="overflow-x-auto">
-              <table className="mt-2 w-full min-w-[520px] border-collapse text-[15px]">
-                <thead>
-                  <tr className="border-b border-hairline">
-                    <th className={th}>Penalti</th>
-                    <th className={th}>Masukan dari BMKG</th>
-                    <th className={th}>Aturan</th>
-                  </tr>
-                </thead>
-                <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
-                  <tr>
-                    <td className={td}>Hujan</td>
-                    <td className={td}>Kondisi cuaca</td>
-                    <td className={td}>
-                      {Object.entries(RAIN_PENALTY)
-                        .map(([name, value]) => `${title(name)} = ${value}`)
-                        .join(" · ")}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className={td}>Angin</td>
-                    <td className={td}>Kecepatan angin (km/jam)</td>
-                    <td className={td}>
-                      0 bila ≤ {WIND_FREE_KMH}, naik linear sampai 100 pada {WIND_MAX_KMH} km/jam
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className={td}>Panas</td>
-                    <td className={td}>Suhu (°C)</td>
-                    <td className={td}>
-                      0 bila ≤ {HEAT_FREE_C}, naik linear sampai 100 pada {HEAT_MAX_C} °C
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className={td}>Jarak pandang</td>
-                    <td className={td}>Kondisi cuaca</td>
-                    <td className={td}>
-                      {Object.entries(VISIBILITY_PENALTY)
-                        .map(([name, value]) => `${title(name)} = ${value}`)
-                        .join(" · ")}
-                      ; selain itu 0
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            {/* Metadata Bar */}
+            <dl className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-y border-hairline py-3 text-[13px]">
+              <div className="flex gap-1.5">
+                <dt className="text-muted">Prakiraan:</dt>
+                <dd className="font-semibold text-ink">BMKG 3 Hari</dd>
+              </div>
+              <div className="flex gap-1.5">
+                <dt className="text-muted">Cakupan:</dt>
+                <dd className="font-semibold text-ink">20 Destinasi DIY</dd>
+              </div>
+              <div className="flex gap-1.5">
+                <dt className="text-muted">Peta & Fasilitas:</dt>
+                <dd className="font-semibold text-ink">OpenStreetMap (ODbL)</dd>
+              </div>
+              <div className="flex gap-1.5">
+                <dt className="text-muted">Pembaruan:</dt>
+                <dd className="font-semibold text-ink">Otomatis 2× Sehari</dd>
+              </div>
+            </dl>
+          </header>
 
-            <h3 className="mt-6">Bobot per jenis destinasi</h3>
-            <div className="overflow-x-auto">
-              <table className="mt-2 w-full min-w-[420px] border-collapse text-[15px] tabular-nums">
-                <thead>
-                  <tr className="border-b border-hairline">
-                    <th className={th}>Kategori</th>
-                    <th className={th}>Hujan</th>
-                    <th className={th}>Angin</th>
-                    <th className={th}>Panas</th>
-                    <th className={th}>Jarak pandang</th>
-                  </tr>
-                </thead>
-                <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
-                  {DEST_CATEGORIES.map((category) => {
-                    const p = profiles[category];
-                    return (
-                      <tr key={category}>
-                        <td className={td}>{CATEGORY_LABEL[category]}</td>
-                        <td className={td}>{p?.wRain ?? "–"}</td>
-                        <td className={td}>{p?.wWind ?? "–"}</td>
-                        <td className={td}>{p?.wHeat ?? "–"}</td>
-                        <td className={td}>{p?.wVis ?? "–"}</td>
+          <div className="mt-8 flex flex-col gap-8">
+            {/* Ringkasnya */}
+            <section id="ringkas" aria-labelledby="ringkas-h" className="scroll-mt-28">
+              <h2 id="ringkas-h" className="font-serif text-[26px] font-normal text-ink">
+                Ringkasnya
+              </h2>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-hairline bg-surface-card/40 p-4">
+                  <p className="text-[14px] font-bold text-ink">Satu rumus objektif</p>
+                  <p className="mt-1 text-[13.5px] leading-relaxed text-muted">
+                    Skor = 100 dikurangi empat penalti cuaca terbobot. Warna penanda di peta membaca langsung skor ini.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-hairline bg-surface-card/40 p-4">
+                  <p className="text-[14px] font-bold text-ink">Prakiraan resmi BMKG</p>
+                  <p className="mt-1 text-[13.5px] leading-relaxed text-muted">
+                    Data cuaca per 3 jam untuk 3 hari ke depan dari API publik BMKG hingga tingkat desa/kelurahan.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-hairline bg-surface-card/40 p-4">
+                  <p className="text-[14px] font-bold text-ink">Sensitivitas per kategori</p>
+                  <p className="mt-1 text-[13.5px] leading-relaxed text-muted">
+                    Angin kencang dan hujan berbahaya di pantai selatan, namun tidak mengganggu kenyamanan pameran di dalam museum.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-hairline bg-surface-card/40 p-4">
+                  <p className="text-[14px] font-bold text-ink">Keputusan & alternatif</p>
+                  <p className="mt-1 text-[13.5px] leading-relaxed text-muted">
+                    Aplikasi memberi tahu kapan waktu terbaik berangkat, dan langsung menyarankan destinasi indoor saat cuaca buruk.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* 01. Rumusnya & Contoh */}
+            <section id="rumus" aria-labelledby="rumus-h" className="scroll-mt-28">
+              <h2 id="rumus-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  01
+                </span>
+                Rumusnya
+              </h2>
+
+              <div className="mt-4 space-y-4 text-[15.5px] leading-[1.7] text-body">
+                {/* Kotak Formula Besar */}
+                <div className="rounded-xl border border-hairline bg-surface-card p-5 md:p-6 text-ink">
+                  <p className="font-serif text-[clamp(18px,2.2vw,22px)] leading-snug">
+                    Skor = maks(0, 100 − (w<sub>hujan</sub>·P<sub>hujan</sub> + w<sub>angin</sub>·P<sub>angin</sub> + w<sub>panas</sub>·P<sub>panas</sub> + w<sub>pandang</sub>·P<sub>pandang</sub>))
+                  </p>
+                  <p className="mt-2 text-sm text-muted">
+                    Penalti Terbobot = Bobot Kategori (<em>w</em>) × Nilai Penalti Parameter BMKG (<em>P</em>)
+                  </p>
+                </div>
+
+                <p>
+                  Setiap slot 3 jam bermula dari nilai dasar <strong>100 poin</strong>. Nilai ini kemudian
+                  dikurangi oleh empat penalti parameter cuaca dari BMKG (hujan, angin, panas, dan jarak
+                  pandang). Setiap penalti memiliki nilai 0 hingga 100, lalu dikalikan dengan bobot sesuai
+                  jenis destinasi.
+                </p>
+                <p>
+                  Pendekatan ini menjamin bahwa kondisi cuaca yang sama tidak diperlakukan seragam: angin 25 km/jam
+                  di pantai selatan berisiko gelombang tinggi dan pasir terbawa angin, sedangkan angin yang sama
+                  sama sekali tidak mempengaruhi kunjungan ke museum indoor.
+                </p>
+
+                {/* Komponen Contoh Simulasi Ber-tab */}
+                <FormulaCalculator />
+              </div>
+            </section>
+
+            {/* 02. Empat Band Skor */}
+            <section id="band" aria-labelledby="band-h" className="scroll-mt-28">
+              <h2 id="band-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  02
+                </span>
+                Empat Band Skor
+              </h2>
+              <div className="mt-4 space-y-4 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Skor akhir dikelompokkan ke dalam empat band kelayakan. Ambang batas ini merupakan konstanta
+                  desain yang dirancang agar rekomendasi mudah dibaca seketika:
+                </p>
+
+                {/* Visualisasi Spektrum Band */}
+                <div className="pt-2" aria-hidden="true">
+                  <div className="relative h-3.5 overflow-hidden rounded-full border border-hairline flex">
+                    <span className="h-full bg-score-bad-bg border-r border-hairline" style={{ width: "50%" }} />
+                    <span className="h-full bg-score-mid-bg border-r border-hairline" style={{ width: "25%" }} />
+                    <span className="h-full bg-score-good-bg" style={{ width: "25%" }} />
+                  </div>
+                  <div className="relative mt-1.5 h-4 font-mono text-[12px] text-muted">
+                    <span className="absolute left-0">0</span>
+                    <span className="absolute -translate-x-1/2" style={{ left: "50%" }}>
+                      50
+                    </span>
+                    <span className="absolute -translate-x-1/2" style={{ left: "75%" }}>
+                      75
+                    </span>
+                    <span className="absolute right-0">100</span>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[500px] border-collapse text-[14px]">
+                    <caption className="sr-only">Rentang skor dan artinya</caption>
+                    <thead>
+                      <tr className="border-b border-hairline">
+                        <th className={th}>Band Status</th>
+                        <th className={th}>Rentang Skor</th>
+                        <th className={th}>Makna Bagi Wisatawan</th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-3 max-w-[65ch] text-sm text-muted">
-              <strong>Ambang dan bobot ini adalah asumsi desain tim</strong>, bukan standar BMKG atau standar keselamatan
-              wisata. Angkanya disimpan di basis data dan akan disetel setelah uji pengguna.
-            </p>
+                    </thead>
+                    <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
+                      <tr>
+                        <td className={td}>
+                          <ScoreChip score={90} />
+                        </td>
+                        <td className={`${td} font-mono tabular-nums`}>75 – 100</td>
+                        <td className={td}>Kondisi cuaca sangat mendukung aktivitas wisata. Minim atau tanpa penalti.</td>
+                      </tr>
+                      <tr>
+                        <td className={td}>
+                          <ScoreChip score={65} />
+                        </td>
+                        <td className={`${td} font-mono tabular-nums`}>50 – 74</td>
+                        <td className={td}>Masih layak dikunjungi, namun ada faktor cuaca yang mulai terasa (panas siang atau gerimis ringan).</td>
+                      </tr>
+                      <tr>
+                        <td className={td}>
+                          <ScoreChip score={30} />
+                        </td>
+                        <td className={`${td} font-mono tabular-nums`}>0 – 49</td>
+                        <td className={td}>Kurang nyaman atau berisiko. Bila penalti utamanya hujan, sistem memicu alternatif indoor.</td>
+                      </tr>
+                      <tr>
+                        <td className={td}>
+                          <ScoreChip score={null} />
+                        </td>
+                        <td className={`${td} font-mono text-muted`}>–</td>
+                        <td className={td}>Di luar jam operasional resmi destinasi; tidak dinilai kelayakannya.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-            <h3 className="mt-6">Label dan alasan</h3>
-            <ul className="mt-2 flex flex-wrap items-center gap-3">
-              <li><ScoreChip score={90} /> 75 sampai 100</li>
-              <li><ScoreChip score={60} /> 50 sampai 74</li>
-              <li><ScoreChip score={30} /> 0 sampai 49</li>
-              <li><ScoreChip score={null} /> di luar jam buka, tidak dinilai</li>
-            </ul>
-            <p className="mt-3 max-w-[65ch]">
-              Alasan yang ditampilkan adalah penalti berbobot lebih besar dari {REASON_THRESHOLD}, diurutkan dari yang
-              terbesar, maksimal {MAX_REASONS}. Status dibedakan dengan warna, ikon, dan teks sekaligus.
-            </p>
-          </section>
+                <p className="text-[13.5px] text-muted">
+                  Warna status selalu disertai ikon geometris berbeda (lingkaran centang, setengah lingkaran, segitiga peringatan, gembok)
+                  dan teks label, sehingga lulus uji aksesibilitas tanpa bergantung pada warna semata.
+                </p>
+              </div>
+            </section>
 
-          <section aria-labelledby="jam">
-            <h2 id="jam">Jam buka dan slot</h2>
-            <p className="mt-3 max-w-[65ch]">
-              Sebuah slot dianggap buka bila <strong>jam mulainya</strong> berada di dalam jam buka. Slot 06.00 untuk tempat
-              yang baru buka 08.30 dinilai tutup. Destinasi tanpa jam buka tetap (pantai, alam, desa wisata) dinilai pada
-              jendela kunjungan {DEFAULT_VISIT_WINDOW[0].replace(":", ".")}–{DEFAULT_VISIT_WINDOW[1].replace(":", ".")} WIB, yang
-              juga asumsi desain.
-            </p>
-            <p className="mt-3 max-w-[65ch]">
-              Jam buka pada {freshness.unverified} dari {freshness.total} destinasi{" "}
-              <strong>belum diverifikasi ke pengelola</strong>. Selalu cek informasi resmi pengelola tentang penutupan atau
-              keselamatan sebelum berangkat.
-            </p>
-          </section>
+            {/* 03. Penalti Cuaca */}
+            <section id="penalti" aria-labelledby="penalti-h" className="scroll-mt-28">
+              <h2 id="penalti-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  03
+                </span>
+                Penalti Cuaca
+              </h2>
+              <div className="mt-4 space-y-4 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Nilai penalti mentah (0 sampai 100) ditentukan oleh aturan berdasar data parameter resmi BMKG:
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[540px] border-collapse text-[14.5px]">
+                    <thead>
+                      <tr className="border-b border-hairline">
+                        <th className={th}>Parameter</th>
+                        <th className={th}>Input Data BMKG</th>
+                        <th className={th}>Rumus & Aturan Penalti Mentah</th>
+                      </tr>
+                    </thead>
+                    <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>Hujan (P<sub>hujan</sub>)</td>
+                        <td className={td}>Kondisi cuaca (<code>weather_desc</code>)</td>
+                        <td className={td}>
+                          {Object.entries(RAIN_PENALTY)
+                            .map(([name, value]) => `${title(name)} = ${value}`)
+                            .join(" · ")}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>Angin (P<sub>angin</sub>)</td>
+                        <td className={td}>Kecepatan angin (<code>ws</code>, km/jam)</td>
+                        <td className={td}>
+                          0 jika ≤ {WIND_FREE_KMH} km/jam, naik linier hingga 100 pada {WIND_MAX_KMH} km/jam
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>Panas (P<sub>panas</sub>)</td>
+                        <td className={td}>Suhu udara (<code>t</code>, °C)</td>
+                        <td className={td}>
+                          0 jika ≤ {HEAT_FREE_C} °C, naik linier hingga 100 pada {HEAT_MAX_C} °C
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>Jarak Pandang (P<sub>pandang</sub>)</td>
+                        <td className={td}>Deskripsi cuaca / visibilitas</td>
+                        <td className={td}>
+                          {Object.entries(VISIBILITY_PENALTY)
+                            .map(([name, value]) => `${title(name)} = ${value}`)
+                            .join(" · ")}
+                          ; kondisi lain = 0
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
 
-          <section aria-labelledby="alt">
-            <h2 id="alt">Alternatif saat hujan</h2>
-            <p className="mt-3 max-w-[65ch]">
-              Saran muncul bila skor slot di bawah {ALT_TRIGGER_BELOW} dan penalti terbesarnya hujan. Isinya maksimal {ALT_MAX}{" "}
-              destinasi indoor dalam radius {ALT_RADIUS_M / 1000} km yang buka pada slot itu dan berskor minimal {ALT_MIN_SCORE},
-              terdekat lebih dulu. Bila tidak ada, kami menyarankan slot lain di destinasi yang sama.
-            </p>
-          </section>
+            {/* 04. Bobot Kategori */}
+            <section id="bobot" aria-labelledby="bobot-h" className="scroll-mt-28">
+              <h2 id="bobot-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  04
+                </span>
+                Bobot per Jenis Destinasi
+              </h2>
+              <div className="mt-4 space-y-4 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Setiap jenis destinasi memiliki profil kerentanan berbeda yang disimpan di tabel basis data{" "}
+                  <code>score_profiles</code>:
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[500px] border-collapse text-[14.5px] tabular-nums">
+                    <thead>
+                      <tr className="border-b border-hairline">
+                        <th className={th}>Kategori</th>
+                        <th className={th}>Hujan (w<sub>rain</sub>)</th>
+                        <th className={th}>Angin (w<sub>wind</sub>)</th>
+                        <th className={th}>Panas (w<sub>heat</sub>)</th>
+                        <th className={th}>Pandang (w<sub>vis</sub>)</th>
+                        <th className={th}>Pertimbangan Karakteristik</th>
+                      </tr>
+                    </thead>
+                    <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
+                      {DEST_CATEGORIES.map((category) => {
+                        const p = profiles[category];
+                        let desc = "";
+                        if (category === "pantai") desc = "Terbuka penuh, angin kencang berbahaya di pantai selatan";
+                        else if (category === "alam") desc = "Jalur hiking licin saat hujan, pemandangan butuh jarak pandang";
+                        else if (category === "budaya") desc = "Area terbuka luas, terik matahari siang sangat menyengat";
+                        else if (category === "desa_wisata") desc = "Kombinasi aktivitas luar ruang dan pendopo budaya";
+                        else if (category === "museum") desc = "Mayoritas pameran di dalam gedung tertutup ber-AC";
 
-          <section aria-labelledby="osm">
-            <h2 id="osm">Kelengkapan fasilitas</h2>
-            <p className="mt-3 max-w-[65ch]">
-              Fasilitas berasal dari OpenStreetMap yang disunting sukarelawan, sehingga kelengkapannya berbeda-beda: padat di
-              pusat kota, jarang di pantai dan desa. Bila satu tipe tidak ditemukan, kami menulis &ldquo;Belum terpetakan di
-              OpenStreetMap&rdquo;, bukan berarti fasilitasnya pasti tidak ada.
-            </p>
-          </section>
+                        return (
+                          <tr key={category}>
+                            <td className={`${td} font-semibold text-ink`}>{CATEGORY_LABEL[category]}</td>
+                            <td className={td}>{p?.wRain ?? "–"}</td>
+                            <td className={td}>{p?.wWind ?? "–"}</td>
+                            <td className={td}>{p?.wHeat ?? "–"}</td>
+                            <td className={td}>{p?.wVis ?? "–"}</td>
+                            <td className={`${td} font-sans text-[13px] text-muted`}>{desc}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
 
-          <AttributionBar />
-        </div>
-      </main>
+                <div className="rounded-xl border border-hairline bg-surface-card/40 p-4 text-[13.5px] leading-relaxed text-muted">
+                  <p>
+                    <strong>Ambang dan bobot ini adalah asumsi desain tim</strong> yang didasarkan pada karakteristik fisik
+                    kawasan wisata di DIY, bukan standar mutlak BMKG. Nilai-nilai ini dikalibrasi berkala melalui evaluasi respons pengguna.
+                  </p>
+                  <p className="mt-2">
+                    <strong>Alasan yang muncul di kartu:</strong> Penalti berbobot yang nilainya lebih besar dari{" "}
+                    <strong>{REASON_THRESHOLD} poin</strong> ditampilkan sebagai keterangan pendukung (maksimal {MAX_REASONS} alasan
+                    terbesar).
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* 05. Jam Buka & Kunjungan */}
+            <section id="jam" aria-labelledby="jam-h" className="scroll-mt-28">
+              <h2 id="jam-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  05
+                </span>
+                Jam Buka dan Kunjungan
+              </h2>
+              <div className="mt-4 space-y-4 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Sebuah slot 3 jam dianggap buka bila <strong>jam mulainya</strong> berada di dalam rentang operasional destinasi.
+                  Misalnya, slot 06.00 untuk destinasi yang baru dibuka pukul 08.30 dinilai &ldquo;Tutup&rdquo; dan tidak diberi skor.
+                </p>
+                <p>
+                  Destinasi alam terbuka tanpa tiket masuk formal (pantai, gumuk pasir, bukit) dievaluasi pada jendela kunjungan wajar{" "}
+                  <strong>{DEFAULT_VISIT_WINDOW[0].replace(":", ".")}–{DEFAULT_VISIT_WINDOW[1].replace(":", ".")} WIB</strong>.
+                </p>
+                <div className="rounded-xl border border-hairline bg-surface-soft p-4 text-[13.5px] text-muted">
+                  Jam buka pada <strong>{freshness.unverified} dari {freshness.total} destinasi</strong> merupakan hasil kompilasi
+                  terbuka dan belum diverifikasi langsung ke masing-masing pengelola. Wisatawan diimbau selalu mengonfirmasi jam
+                  operasional resmi sebelum bepergian.
+                </div>
+              </div>
+            </section>
+
+            {/* 06. Sumber & Kesegaran Data */}
+            <section id="sumber" aria-labelledby="sumber-h" className="scroll-mt-28">
+              <h2 id="sumber-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  06
+                </span>
+                Sumber Data & Kesegaran
+              </h2>
+              <div className="mt-4 space-y-4 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Seluruh data diambil oleh server, diproses, dan disimpan di basis data internal sebelum disajikan ke pengguna.
+                  Aplikasi mematuhi penuh batas wajar dan lisensi penggunaan data terbuka:
+                </p>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[620px] border-collapse text-[14px]">
+                    <thead>
+                      <tr className="border-b border-hairline">
+                        <th className={th}>Sumber Data</th>
+                        <th className={th}>Penggunaan di Wistara</th>
+                        <th className={th}>Lisensi & Ketentuan</th>
+                        <th className={th}>Pembaruan Terkini</th>
+                      </tr>
+                    </thead>
+                    <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>
+                          <a href={BMKG_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                            BMKG Prakiraan Cuaca
+                          </a>
+                        </td>
+                        <td className={td}>Prakiraan per 3 jam, 3 hari ke depan, tingkat desa/kelurahan</td>
+                        <td className={td}>Hak cipta BMKG, wajib atribusi, batas 60 req/menit</td>
+                        <td className={`${td} font-mono text-[13px] tabular-nums`}>
+                          Diambil {fmt(freshness.bmkg_last)}
+                          <br />
+                          <span className="text-muted">Produksi BMKG: {fmt(freshness.bmkg_analysis)}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>
+                          <a href={OSM_COPYRIGHT_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                            OpenStreetMap
+                          </a>
+                        </td>
+                        <td className={td}>Koordinat wisata & fasilitas (toilet, parkir, ibadah, makan, halte, stasiun)</td>
+                        <td className={td}>© Kontributor OpenStreetMap, lisensi ODbL</td>
+                        <td className={`${td} font-mono text-[13px] tabular-nums`}>Diimpor {fmt(freshness.osm_last)}</td>
+                      </tr>
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>
+                          <a href={OPENFREEMAP_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                            OpenFreeMap
+                          </a>
+                        </td>
+                        <td className={td}>Lapisan peta dasar vektor Positron</td>
+                        <td className={td}>Gratis dengan atribusi otomatis di peta</td>
+                        <td className={td}>Langsung dari server tile</td>
+                      </tr>
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>Kemendagri (Wilayah)</td>
+                        <td className={td}>Pemetaan koordinat destinasi ke kode adm4 desa BMKG</td>
+                        <td className={td}>Dataset cahyadsn/wilayah (MIT) sesuai Kepmendagri</td>
+                        <td className={td}>Saat inisialisasi basis data</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <p className="text-[13.5px] text-muted">
+                  Data cuaca dianggap <strong>kedaluwarsa (stale)</strong> bila pembaruan terakhir yang berhasil lebih dari {staleHours} jam
+                  lalu. Saat hal itu terjadi, sistem menampilkan banner &ldquo;Data belum diperbarui&rdquo; beserta riwayat waktu terakhir
+                  dan tidak memblokir akses pengguna.
+                </p>
+              </div>
+            </section>
+
+            {/* 07. Alternatif Saat Hujan */}
+            <section id="alternatif" aria-labelledby="alt-h" className="scroll-mt-28">
+              <h2 id="alt-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  07
+                </span>
+                Alternatif Saat Cuaca Buruk (F5)
+              </h2>
+              <div className="mt-4 space-y-3 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Saat cuaca buruk, wisatawan membutuhkan jalan keluar nyata, bukan sekadar peringatan pembatalan.
+                  Sistem rekomendasi alternatif (F5) otomatis aktif dengan ketentuan:
+                </p>
+                <ul className="list-disc space-y-1.5 pl-5 text-[15px]">
+                  <li>Skor slot destinasi bernilai <strong>di bawah {ALT_TRIGGER_BELOW} poin</strong> (kategori Kurang sesuai).</li>
+                  <li>Faktor penalti terbesarnya adalah <strong>hujan</strong>.</li>
+                  <li>
+                    Sistem mencari maksimal {ALT_MAX} destinasi dalam ruangan (<code>is_indoor = true</code>) dalam radius{" "}
+                    <strong>{ALT_RADIUS_M / 1000} km</strong> yang sedang buka di slot tersebut dengan skor minimal{" "}
+                    <strong>{ALT_MIN_SCORE} poin</strong>, diurutkan dari jarak terdekat.
+                  </li>
+                  <li>
+                    Bila tidak ada destinasi indoor yang memenuhi syarat di radius tersebut, sistem menyarankan slot waktu lain
+                    di destinasi yang sama yang memiliki skor kelayakan tertinggi.
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            {/* 08. Fasilitas OSM */}
+            <section id="fasilitas" aria-labelledby="fasilitas-h" className="scroll-mt-28">
+              <h2 id="fasilitas-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  08
+                </span>
+                Kelengkapan Fasilitas OSM
+              </h2>
+              <div className="mt-4 space-y-3 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Data fasilitas sekitar (toilet, tempat parkir, tempat makan, tempat ibadah, ATM, halte, dan stasiun) bersumber
+                  dari pemetaan kolaboratif OpenStreetMap.
+                </p>
+                <p>
+                  Tingkat kelengkapan data bervariasi secara geografis: sangat padat di pusat Kota Yogyakarta, dan lebih renggang
+                  di kawasan pesisir pantai atau perbukitan terpencil. Apabila fasilitas tertentu tidak muncul pada radius pencarian,
+                  sistem menampilkan status <em>&ldquo;Belum terpetakan di OpenStreetMap&rdquo;</em>, bukan menyatakan fasilitas tersebut
+                  pasti tidak tersedia di dunia nyata.
+                </p>
+              </div>
+            </section>
+
+            <AttributionBar />
+          </div>
+        </main>
+      </div>
+
       <SiteFooter />
     </>
   );

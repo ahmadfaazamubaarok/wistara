@@ -7,6 +7,7 @@ import { z } from "zod";
 import {
   addedItemSchema,
   addItemBody,
+  alertListResponseSchema,
   alternativesResponseSchema,
   destinationListSchema,
   destinationSchema,
@@ -14,6 +15,7 @@ import {
   facilitiesResponseSchema,
   forecastResponseSchema,
   healthResponseSchema,
+  recommendationsResponseSchema,
   tripBody,
   tripListSchema,
   tripSchema,
@@ -124,6 +126,49 @@ registry.registerPath({
     }),
   },
   responses: { 200: { description: "Alternatif untuk slot.", content: json(alternativesResponseSchema) }, ...COMMON_ERRORS },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/recommendations",
+  tags: ["Prakiraan"],
+  summary: "Destinasi terbaik lintas daftar untuk satu slot (F11)",
+  description:
+    "Mengurutkan seluruh 20 destinasi di DIY berdasarkan skor kelayakan kunjungan tertinggi pada slot waktu yang dipilih. " +
+    "Destinasi yang tutup pada slot tersebut ditempatkan di bagian bawah.",
+  request: {
+    query: z.object({
+      slot: z.string().openapi({ description: "Waktu di dalam slot (ISO 8601).", example: "2026-10-16T15:00:00+07:00" }),
+      category: z.string().optional().openapi({ description: "Filter satu atau beberapa kategori dipisah koma.", example: "pantai,alam" }),
+    }),
+  },
+  responses: {
+    200: { description: "Daftar destinasi terurut skor tertinggi.", content: json(recommendationsResponseSchema) },
+    400: COMMON_ERRORS[400],
+    500: COMMON_ERRORS[500],
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/alerts",
+  tags: ["Prakiraan"],
+  summary: "Peringatan dini cuaca aktif BMKG (F10)",
+  description:
+    "Mengembalikan daftar peringatan dini cuaca ekstrem aktif dari BMKG (CAP). Bila parameter `destination` disertakan, " +
+    "hanya peringatan yang mengenai kecamatan atau wilayah destinasi tersebut yang dikembalikan.",
+  request: {
+    query: z.object({
+      destination: z.string().optional().openapi({ description: "Slug destinasi.", example: "pantai-parangtritis" }),
+      demo: z.enum(["1", "true"]).optional().openapi({ description: "Gunakan data peringatan simulasi bila tidak ada cuaca ekstrem aktif." }),
+    }),
+  },
+  responses: {
+    200: { description: "Daftar peringatan dini aktif.", content: json(alertListResponseSchema) },
+    400: COMMON_ERRORS[400],
+    404: COMMON_ERRORS[404],
+    500: COMMON_ERRORS[500],
+  },
 });
 
 registry.registerPath({

@@ -29,6 +29,16 @@ export default async function Home() {
       bestByDay: (forecast?.bestByDay ?? []).map((best) =>
         best ? { localTime: best.localTime, score: best.score, label: best.label, band: best.band } : null,
       ),
+      slots: (forecast?.slots ?? []).map((slot) => ({
+        validAt: slot.validAt,
+        localTime: slot.localTime,
+        isOpen: slot.isOpen,
+        score: slot.score,
+        label: slot.label,
+        band: slot.band,
+        weatherDesc: slot.weatherDesc,
+        t: slot.t,
+      })),
       hasForecast: (forecast?.slots.length ?? 0) > 0,
     };
   });

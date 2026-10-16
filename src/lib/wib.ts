@@ -24,3 +24,11 @@ export function getWibDateKey(date: Date): string {
   const pick = partsOf(date, { year: "numeric", month: "2-digit", day: "2-digit" });
   return `${pick("year")}-${pick("month")}-${pick("day")}`;
 }
+
+/** Format instan ke string ISO 8601 berzona waktu WIB (+07:00), mis. "2026-10-16T15:00:00+07:00". */
+export function toWibIsoString(date: Date): string {
+  const wibMs = date.getTime() + 7 * 60 * 60 * 1000;
+  const wibDate = new Date(wibMs);
+  return `${wibDate.toISOString().slice(0, 19)}+07:00`;
+}
+
