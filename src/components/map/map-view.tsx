@@ -66,21 +66,67 @@ const BASE_TINT: [layerId: string, property: TintProperty, color: string][] = [
 ];
 
 const DARK_BASE_TINT: [layerId: string, property: TintProperty, color: string][] = [
-  ["background", "background-color", "#161513"],
+  ["background", "background-color", "#1c1b18"],
   ["water", "fill-color", "#1e2838"],
   ["park", "fill-color", "#1a241b"],
   ["landcover_wood", "fill-color", "#1b211a"],
   ["landuse_residential", "fill-color", "#1e1c19"],
   ["building", "fill-color", "#24211d"],
   ["building", "fill-outline-color", "#2f2b26"],
-  ["road_area_pier", "fill-color", "#161513"],
+  ["road_area_pier", "fill-color", "#1c1b18"],
 ];
+
+// Layer garis dan simbol Positron berwarna terang; di mode gelap diwarnai ulang berdasarkan jenisnya.
+const DARK_MAJOR_ROAD = /^(highway_(major|motorway)_(inner|bridge_inner)|highway_motorway_bridge_inner)$/;
+
+// Nilai asli layer garis/simbol, disimpan sebelum diwarnai gelap agar bisa dikembalikan ke mode terang.
+type DarkPaintProperty = "line-color" | "text-color" | "text-halo-color";
+const originalPaint = new WeakMap<MapLibreMap, Map<string, unknown>>();
+
+function setDarkPaint(map: MapLibreMap, saved: Map<string, unknown>, id: string, property: DarkPaintProperty, color: string) {
+  const key = `${id}|${property}`;
+  if (!saved.has(key)) saved.set(key, map.getPaintProperty(id, property));
+  map.setPaintProperty(id, property, color);
+}
+
+function tintDarkLines(map: MapLibreMap) {
+  let saved = originalPaint.get(map);
+  if (!saved) originalPaint.set(map, (saved = new Map()));
+  for (const layer of map.getStyle().layers ?? []) {
+    const id = layer.id;
+    if (layer.type === "line") {
+      let color: string | null = null;
+      if (id.includes("casing")) color = "#1c1b18";
+      else if (id.startsWith("boundary")) color = "#4a4640";
+      else if (id === "waterway") color = "#1e2838";
+      else if (id.startsWith("railway") || id.startsWith("aeroway")) color = "#3a3731";
+      else if (DARK_MAJOR_ROAD.test(id)) color = "#55514a";
+      else if (id.startsWith("highway") || id.startsWith("road") || id.startsWith("tunnel")) color = "#3d3a34";
+      if (color) setDarkPaint(map, saved, id, "line-color", color);
+    } else if (layer.type === "symbol") {
+      setDarkPaint(map, saved, id, "text-color", "#b8b2a6");
+      setDarkPaint(map, saved, id, "text-halo-color", "#1c1b18");
+    }
+  }
+}
+
+function restoreLightLines(map: MapLibreMap) {
+  const saved = originalPaint.get(map);
+  if (!saved) return;
+  for (const [key, value] of saved) {
+    const [id, property] = key.split("|") as [string, DarkPaintProperty];
+    if (map.getLayer(id)) map.setPaintProperty(id, property, value as string | undefined);
+  }
+  saved.clear();
+}
 
 function tintBaseStyle(map: MapLibreMap, isDark: boolean = false) {
   const tint = isDark ? DARK_BASE_TINT : BASE_TINT;
   for (const [layerId, property, color] of tint) {
     if (map.getLayer(layerId)) map.setPaintProperty(layerId, property, color);
   }
+  if (isDark) tintDarkLines(map);
+  else restoreLightLines(map);
 }
 
 const SVG_NS = "http://www.w3.org/2000/svg";
