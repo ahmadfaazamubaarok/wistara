@@ -332,7 +332,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                           <h4 className="font-sans text-[13.5px] font-bold text-ink leading-tight">
                             {msg.itinerary.title}
                           </h4>
-                          <span className="text-[11px] text-muted">{msg.itinerary.dayLabel} · 3 Slot Waktu</span>
+                          <span className="text-[11px] text-muted">{msg.itinerary.dayLabel} · {msg.itinerary.slots.length} destinasi</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <span className="text-[10px] text-muted">Rata-rata:</span>
@@ -343,7 +343,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                       {/* Timeline 3 Slot */}
                       <div className="mt-3 space-y-3">
                         {msg.itinerary.slots.map((slotItem) => (
-                          <div key={slotItem.part} className="relative pl-4 border-l-2 border-primary/30">
+                          <div key={`${slotItem.part}-${slotItem.destination.slug}`} className="relative pl-4 border-l-2 border-primary/30">
                             <span className="absolute -left-[5px] top-1 h-2 w-2 rounded-full bg-primary" />
                             <div className="flex items-center justify-between gap-1">
                               <span className="text-[10px] font-bold uppercase tracking-wider text-primary">

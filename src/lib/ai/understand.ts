@@ -16,6 +16,7 @@ import {
   type Topic,
   type UnsupportedKind,
 } from "./intent";
+import { extractItineraryRequests, type ItineraryRequest } from "./itinerary-request";
 import { closestNames, findMentions, findUnknownPlaces, type CatalogEntry } from "./resolver";
 import { normalize } from "./text";
 import { parseWhen, type ParsedWhen, type Part } from "./when";
@@ -42,6 +43,8 @@ export type Understanding = {
   preferences: Preference[];
   topics: Topic[];
   days: number;
+  /** Untuk rencana: destinasi dan waktu yang disebut pengguna, menurut urutan. */
+  itineraryRequests: ItineraryRequest[];
 };
 
 export type UnderstandContext = {
@@ -128,6 +131,7 @@ export function mergeUnderstanding(query: string, ctx: UnderstandContext, model:
     preferences,
     topics,
     days: Math.max(parseDays(query), model?.days ?? 1),
+    itineraryRequests: intent === "itinerary" ? extractItineraryRequests(query, ctx.catalog, ctx.now) : [],
   };
 }
 

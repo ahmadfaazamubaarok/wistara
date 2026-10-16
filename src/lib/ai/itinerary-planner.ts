@@ -26,7 +26,7 @@ export type PlannerDestinationItem = {
 };
 
 export type PlannedSlotItem = {
-  part: "pagi" | "siang" | "sore";
+  part: "pagi" | "siang" | "sore" | "malam";
   timeLabel: string;
   destination: {
     slug: string;

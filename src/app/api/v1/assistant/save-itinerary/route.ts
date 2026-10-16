@@ -15,16 +15,17 @@ const saveSchema = z.object({
   items: z.array(
     z.object({
       slug: z.string().min(1),
-      part: z.enum(["pagi", "siang", "sore"]),
+      part: z.enum(["pagi", "siang", "sore", "malam"]),
     }),
   ).min(1, "Minimal 1 destinasi dalam rencana"),
 });
 
 // Jam target WIB untuk tiap bagian
-const PART_HOUR_WIB: Record<"pagi" | "siang" | "sore", number> = {
+const PART_HOUR_WIB: Record<"pagi" | "siang" | "sore" | "malam", number> = {
   pagi: 9,
   siang: 12,
   sore: 15,
+  malam: 19,
 };
 
 // POST /api/v1/assistant/save-itinerary

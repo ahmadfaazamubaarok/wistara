@@ -19,6 +19,7 @@ function ask(query: string, items: EngineDestination[], overrides: Partial<Engin
     preferences: u.preferences,
     topics: u.topics,
     days: u.days,
+    requests: u.itineraryRequests,
     isLoggedIn: false,
     items,
     ...overrides,

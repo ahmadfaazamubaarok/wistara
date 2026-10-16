@@ -17,6 +17,7 @@ import { getWibDateKey } from "../wib";
 import { type DestinationAttribute } from "./attributes";
 import type { AssistantIntent, Preference, Topic, UnsupportedKind } from "./intent";
 import { planItinerary, type ItineraryPlan } from "./itinerary-planner";
+import { planRequestedItinerary, type ItineraryRequest } from "./itinerary-request";
 import { closestNames } from "./resolver";
 import { describeWhen, pickSlot, type ParsedWhen, type SlotPick } from "./when";
 
@@ -61,6 +62,8 @@ export type EngineInput = {
   preferences: Preference[];
   topics: Topic[];
   days: number;
+  /** Destinasi dan waktu yang diminta pengguna untuk rencana ("pertama keraton pas siang, ..."). */
+  requests?: ItineraryRequest[];
   isLoggedIn: boolean;
   items: EngineDestination[];
   fetchFacilities?: (destination: EngineDestination) => Promise<NearbyFacility[]>;
@@ -618,6 +621,7 @@ function itinerary(input: EngineInput): EngineResult {
   const dayLabel = DAY_NAMES[dayOffset] ?? "Hari terpilih";
   const notices: string[] = [];
   if (input.days > 1) notices.push("Saat ini rencana yang bisa disusun baru 1 hari; berikut rencana untuk satu hari saja.");
+  if (input.requests && input.requests.length > 0) return requestedItinerary(input, dayOffset, dayKey, dayLabel, notices);
 
   const plannerItems = items.map((d) => ({
     slug: d.slug,
@@ -794,4 +798,49 @@ function rankScore(dest: EngineDestination, slot: ScoredSlot, preferences: Prefe
   if (preferences.includes("foto") && dest.enrichment?.tags.some((t) => /foto/i.test(t))) rank += 3;
   if (preferences.includes("sunset") && dest.attr.isSunsetSpot) rank += 3;
   return rank;
+}
+
+/** Rencana menurut permintaan pengguna: urutan, nama, dan waktu dipakai; konflik dikatakan terus terang. */
+function requestedItinerary(input: EngineInput, dayOffset: number, dayKey: string, dayLabel: string, notices: string[]): EngineResult {
+  const { items, now } = input;
+  const { plan, adjustments } = planRequestedItinerary(items, input.requests ?? [], dayKey, dayLabel, now, {
+    hoursText: (dest) => openHoursText(dest).text,
+    slotRange,
+    slotPhrase: (slot) => slotPhrase(slot, dayOffset),
+  });
+
+  if (!plan) {
+    return emptyResult("itinerary", `Maaf, rencana yang Anda minta belum bisa disusun. ${adjustments.join(" ")}`.trim(), {
+      notices,
+      suggestions: ["Rencana 1 hari untuk besok", "Besok pagi enaknya ke mana?"],
+    });
+  }
+
+  const cards = plan.slots.map((slot) => {
+    const dest = items.find((d) => d.slug === slot.destination.slug)!;
+    return toCard(dest, null, dayOffset, {
+      score: slot.destination.score,
+      weatherDesc: slot.destination.weatherDesc,
+      temp: slot.destination.temp,
+      isOpen: true,
+      reasons: [slot.notes],
+      slotLabel: slot.timeLabel,
+    });
+  });
+  notices.push(...plan.notices, "Perkiraan waktu tempuh memakai jarak garis lurus dikali 1,4 dengan kecepatan 30 km/jam; kondisi lalu lintas sebenarnya bisa berbeda.");
+  const lines = plan.slots.map((s) => `${s.part} ${s.destination.name} (skor ${s.destination.score}, ${s.destination.temp}°C)`);
+  const save = input.isLoggedIn
+    ? "Anda bisa langsung menyimpannya ke Rencana Saya."
+    : "Masuk atau daftar dulu jika ingin menyimpan rencana ini ke akun Anda.";
+  return {
+    type: "itinerary",
+    cards,
+    itinerary: plan,
+    notices,
+    unavailable: [],
+    baseReply: `Rencana 1 hari untuk ${dayLabel.toLowerCase()} sesuai permintaan Anda: ${lines.join("; ")}. ${adjustments.join(" ")} ${save}`.replace(/\s+/g, " ").trim(),
+    allowRewrite: adjustments.length === 0,
+    suggestions: ["Kalau hujan ke mana?", `Info ${cards[0].name}`],
+    focus: cards.map((c) => c.slug),
+  };
 }

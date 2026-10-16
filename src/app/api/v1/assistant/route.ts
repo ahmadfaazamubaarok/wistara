@@ -134,6 +134,7 @@ export const POST = withApi(async (request) => {
     preferences: understanding.preferences,
     topics: understanding.topics,
     days: understanding.days,
+    requests: understanding.itineraryRequests,
     isLoggedIn: Boolean(user),
     items,
     fetchFacilities: (dest) => facilitiesNear(dest.id, 1000, ["toilet", "parkir", "makan", "ibadah", "atm"]),
