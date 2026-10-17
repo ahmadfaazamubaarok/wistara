@@ -205,7 +205,7 @@ const UNSUPPORTED_REPLY: Record<UnsupportedKind, string> = {
     "Maaf, kami belum memiliki data tinggi gelombang, arus, atau kelayakan berenang di sistem, jadi saya tidak bisa menyatakan aman atau tidaknya. Untuk aktivitas di pantai, ikuti rambu dan arahan petugas di lokasi serta imbauan resmi BMKG.",
   penginapan: "Maaf, data penginapan belum ada di sistem kami. Wistara saat ini fokus pada waktu terbaik berkunjung, cuaca, dan fasilitas di sekitar 20 destinasi.",
   transportasi:
-    "Maaf, jadwal dan tarif transportasi belum ada di sistem kami. Yang tersedia hanya halte dan stasiun terdekat dari tiap destinasi (data OpenStreetMap), yang bisa dilihat di halaman destinasi.",
+    "Untuk rute kendaraan umum di Yogyakarta, Anda dapat memanfaatkan bus Trans Jogja (tarif Rp 3.600 non-tunai), KRL Commuter Line Yogya–Solo (Stasiun Tugu, Lempuyangan, Maguwo, Brambanan), dan KA Bandara YIA. Pada tiap halaman detail destinasi di Wistara, Anda dapat melihat halte/stasiun terdekat dan langsung mengeklik opsi 'Rute Kendaraan Umum' untuk panduan transit lengkap di Google Maps.",
   keramaian: "Maaf, kami belum memiliki data keramaian atau kepadatan pengunjung, jadi saya tidak bisa memperkirakannya. Yang bisa saya bantu adalah kondisi cuaca dan skor kenyamanan per jam.",
   kuliner:
     "Maaf, rekomendasi kuliner belum ada di sistem kami. Untuk tiap destinasi saya hanya bisa menyebut jumlah tempat makan di sekitarnya (data OpenStreetMap), tanpa penilaian rasa.",

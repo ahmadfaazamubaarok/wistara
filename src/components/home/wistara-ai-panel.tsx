@@ -48,6 +48,9 @@ const SUGGESTED_PROMPTS = [
   { label: "Komparasi Prambanan vs Ratu Boko", query: "Lebih recommended Candi Prambanan atau Candi Ratu Boko sore nanti?" },
 ] as const;
 
+const CHAT_STORAGE_KEY = "wistara_chat_messages";
+const SAVED_PLANS_KEY = "wistara_saved_plans_map";
+
 function formatCurrentTime(): string {
   const now = new Date();
   return `${now.getHours().toString().padStart(2, "0")}.${now.getMinutes().toString().padStart(2, "0")}`;
@@ -67,16 +70,27 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const messageSeq = useRef(0);
+  const isInitialMount = useRef(true);
   const router = useRouter();
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  // Cek apakah ada rencana tersimpan sementara di sessionStorage dari tamu yang baru saja login
+  // Muat riwayat chat & rencana tersimpan dari sessionStorage saat pertama kali dibuka di sesi browser
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
+      const stored = sessionStorage.getItem(CHAT_STORAGE_KEY);
+      let initialMsgs: ChatMessage[] = [];
+      if (stored) {
+        const parsed: ChatMessage[] = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          initialMsgs = parsed;
+        }
+      }
+
+      // Cek apakah ada rencana tersimpan sementara dari tamu yang baru saja login
       const pendingRaw = sessionStorage.getItem("wistara_pending_itinerary");
       if (pendingRaw) {
         const pending: ItineraryPlan = JSON.parse(pendingRaw);
@@ -88,15 +102,51 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
           canSave: true,
           timestamp: formatCurrentTime(),
         };
-        // Membaca sessionStorage hanya bisa setelah mount (agar HTML server dan klien sama); setState di sini disengaja.
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMessages((prev) => [...prev, restoredMsg]);
+        initialMsgs.push(restoredMsg);
         sessionStorage.removeItem("wistara_pending_itinerary");
       }
+
+      if (initialMsgs.length > 0) {
+        // Membaca sessionStorage hanya bisa setelah mount; setState di sini disengaja.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setMessages(initialMsgs);
+        messageSeq.current = initialMsgs.length;
+      }
+
+      const storedPlans = sessionStorage.getItem(SAVED_PLANS_KEY);
+      if (storedPlans) {
+        setSavedPlanMap(JSON.parse(storedPlans));
+      }
     } catch {
-      // abaikan bila JSON rusak
+      // abaikan bila format rusak
     }
   }, []);
+
+  // Simpan riwayat chat ke sessionStorage tiap kali pesan berubah
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    try {
+      if (messages.length > 0) {
+        sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+      } else {
+        sessionStorage.removeItem(CHAT_STORAGE_KEY);
+      }
+    } catch {
+      // abaikan jika kuota penyimpanan penuh
+    }
+  }, [messages]);
+
+  // Simpan peta rencana tersimpan ke sessionStorage
+  useEffect(() => {
+    try {
+      if (Object.keys(savedPlanMap).length > 0) {
+        sessionStorage.setItem(SAVED_PLANS_KEY, JSON.stringify(savedPlanMap));
+      }
+    } catch { }
+  }, [savedPlanMap]);
 
   const handleSend = async (textToSend?: string) => {
     const query = (textToSend ?? input).trim();
@@ -209,6 +259,11 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
 
   const resetChat = () => {
     setMessages([]);
+    setInput("");
+    try {
+      sessionStorage.removeItem(CHAT_STORAGE_KEY);
+      sessionStorage.removeItem(SAVED_PLANS_KEY);
+    } catch { }
     inputRef.current?.focus();
   };
 
@@ -429,9 +484,9 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                             {/* Indikator Perpindahan Transit */}
                             {slotItem.transitFromPrevious && (
                               <div className="mt-2 flex items-center gap-1.5 rounded-md bg-surface-soft px-2 py-1 text-[10.5px] text-muted">
-                                <span>🚗</span>
+                                <span className="font-medium text-ink">Transit:</span>
                                 <span>
-                                  Perkiraan transit: ~{slotItem.transitFromPrevious.estimatedMinutes} menit ({slotItem.transitFromPrevious.distanceKm} km)
+                                  ~{slotItem.transitFromPrevious.estimatedMinutes} menit ({slotItem.transitFromPrevious.distanceKm} km)
                                 </span>
                                 {slotItem.transitFromPrevious.isFar && (
                                   <span className="text-amber-600 font-semibold">(Cukup jauh)</span>
@@ -444,9 +499,9 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
 
                       {/* Notifikasi / Peringatan Rute */}
                       {msg.itinerary.notices.length > 0 && (
-                        <div className="mt-3 rounded-md bg-amber-500/10 p-2 text-[11px] text-amber-800 dark:text-amber-200">
+                        <div className="mt-3 rounded-md bg-amber-500/10 p-2.5 text-[11px] leading-relaxed text-amber-800 dark:text-amber-200">
                           {msg.itinerary.notices.map((n, i) => (
-                            <p key={i}>⚠️ {n}</p>
+                            <p key={i}>{n}</p>
                           ))}
                         </div>
                       )}
@@ -455,7 +510,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                       <div className="mt-3.5 pt-3 border-t border-hairline">
                         {savedPlanMap[msg.itinerary.title] ? (
                           <div className="flex items-center justify-between rounded-lg bg-emerald-500/10 px-3 py-2 text-emerald-800 dark:text-emerald-200">
-                            <span className="text-xs font-semibold">✓ Tersimpan di Rencana Anda</span>
+                            <span className="text-xs font-semibold">Tersimpan di Rencana Anda</span>
                             <Link
                               href="/rencana"
                               className="text-xs font-bold text-emerald-700 dark:text-emerald-300 underline"
@@ -473,10 +528,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                             {savingPlanTitle === msg.itinerary.title ? (
                               <span>Menyimpan ke akun...</span>
                             ) : (
-                              <>
-                                <span>💾</span>
-                                <span>Simpan ke Rencana Saya</span>
-                              </>
+                              <span>Simpan ke Rencana Saya</span>
                             )}
                           </button>
                         ) : (
@@ -485,7 +537,6 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                             onClick={() => handleGuestRedirect(msg.itinerary!)}
                             className="flex w-full min-h-9 items-center justify-center gap-1.5 rounded-lg bg-surface-dark px-3 py-1.5 text-xs font-bold text-on-dark hover:opacity-90 transition-opacity"
                           >
-                            <span>🔑</span>
                             <span>Masuk / Daftar untuk Simpan Rencana</span>
                           </button>
                         )}

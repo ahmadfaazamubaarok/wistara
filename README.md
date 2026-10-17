@@ -7,6 +7,7 @@ Aplikasi web yang memberi tahu wisatawan **kapan waktu terbaik** mengunjungi 20 
 Dokumen acuan:
 [PRD](<PRD JelajahLokal (MVP UINIC 8.0).md>) ·
 [Rancangan Teknis](<Rancangan Teknis JelajahLokal (MVP UINIC 8.0).md>) ·
+[Keunggulan Wistara vs Platform Lain](KEUNGGULAN_WISTARA.md) ·
 [Sistem desain](DESIGN-jelajahlokal.md) ·
 [Rancangan Wistara AI](<Rancangan Wistara AI (Asisten Rencana).md>)
 

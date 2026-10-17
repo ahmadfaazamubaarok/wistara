@@ -81,7 +81,7 @@ export function DestinationEnrichmentCard({ enrichment }: Props) {
       {tips.length > 0 && (
         <div className="flex flex-col gap-2 rounded-lg border border-hairline bg-surface-soft/60 p-3.5">
           <div className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
-            <span aria-hidden="true">💡</span> Tips Praktis Berkunjung
+            <span>Tips Praktis Berkunjung</span>
           </div>
           <ul className="flex flex-col gap-1.5 text-[12px] leading-relaxed text-body">
             {tips.map((tip, index) => (

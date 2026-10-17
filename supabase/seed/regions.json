@@ -12,6 +12,18 @@
     "kabupaten": "Kulon Progo"
   },
   {
+    "adm4Code": "34.01.11.2005",
+    "desa": "Gerbosari",
+    "kecamatan": "Samigaluh",
+    "kabupaten": "Kulon Progo"
+  },
+  {
+    "adm4Code": "34.02.02.2001",
+    "desa": "Gadingsari",
+    "kecamatan": "Sanden",
+    "kabupaten": "Bantul"
+  },
+  {
     "adm4Code": "34.02.03.2002",
     "desa": "Parangtritis",
     "kecamatan": "Kretek",
@@ -20,6 +32,18 @@
   {
     "adm4Code": "34.02.11.2001",
     "desa": "Mangunan",
+    "kecamatan": "Dlingo",
+    "kabupaten": "Bantul"
+  },
+  {
+    "adm4Code": "34.02.11.2002",
+    "desa": "Muntuk",
+    "kecamatan": "Dlingo",
+    "kabupaten": "Bantul"
+  },
+  {
+    "adm4Code": "34.02.11.2005",
+    "desa": "Terong",
     "kecamatan": "Dlingo",
     "kabupaten": "Bantul"
   },
@@ -48,8 +72,32 @@
     "kabupaten": "Gunungkidul"
   },
   {
+    "adm4Code": "34.03.07.2005",
+    "desa": "Purwodadi",
+    "kecamatan": "Tepus",
+    "kabupaten": "Gunungkidul"
+  },
+  {
+    "adm4Code": "34.03.09.2001",
+    "desa": "Bejiharjo",
+    "kecamatan": "Karangmojo",
+    "kabupaten": "Gunungkidul"
+  },
+  {
+    "adm4Code": "34.03.16.2002",
+    "desa": "Jepitu",
+    "kecamatan": "Girisubo",
+    "kabupaten": "Gunungkidul"
+  },
+  {
     "adm4Code": "34.03.17.2003",
     "desa": "Kemadang",
+    "kecamatan": "Tanjungsari",
+    "kabupaten": "Gunungkidul"
+  },
+  {
+    "adm4Code": "34.03.17.2004",
+    "desa": "Banjarejo",
     "kecamatan": "Tanjungsari",
     "kabupaten": "Gunungkidul"
   },
@@ -60,9 +108,27 @@
     "kabupaten": "Sleman"
   },
   {
+    "adm4Code": "34.04.09.2004",
+    "desa": "Sambirejo",
+    "kecamatan": "Prambanan",
+    "kabupaten": "Sleman"
+  },
+  {
     "adm4Code": "34.04.09.2006",
     "desa": "Bokoharjo",
     "kecamatan": "Prambanan",
+    "kabupaten": "Sleman"
+  },
+  {
+    "adm4Code": "34.04.10.2001",
+    "desa": "Purwomartani",
+    "kecamatan": "Kalasan",
+    "kabupaten": "Sleman"
+  },
+  {
+    "adm4Code": "34.04.11.2003",
+    "desa": "Widodomartani",
+    "kecamatan": "Ngemplak",
     "kabupaten": "Sleman"
   },
   {
@@ -99,6 +165,18 @@
     "adm4Code": "34.71.10.1001",
     "desa": "Ngupasan",
     "kecamatan": "Gondomanan",
+    "kabupaten": "Kota Yogyakarta"
+  },
+  {
+    "adm4Code": "34.71.12.1003",
+    "desa": "Brontokusuman",
+    "kecamatan": "Mergangsan",
+    "kabupaten": "Kota Yogyakarta"
+  },
+  {
+    "adm4Code": "34.71.13.1004",
+    "desa": "Warungboto",
+    "kecamatan": "Umbulharjo",
     "kabupaten": "Kota Yogyakarta"
   }
 ]

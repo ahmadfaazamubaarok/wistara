@@ -5,6 +5,7 @@ import { cache } from "react";
 import { AttributionBar } from "@/components/attribution-bar";
 import { DestinationEnrichmentCard } from "@/components/destination/destination-enrichment-card";
 import { FacilitiesPanel, PANEL_TYPES } from "@/components/destination/facilities-panel";
+import { GoogleMapsPlaceCard } from "@/components/destination/google-maps-place-card";
 import { SlotExplorer } from "@/components/destination/slot-explorer";
 import { MiscIcon } from "@/components/icons";
 import { ScoreChip } from "@/components/score-chip";
@@ -20,6 +21,7 @@ import { CATEGORY_LABEL } from "@/lib/categories";
 import { createDemoAlert, getActiveAlertsForDestination } from "@/lib/db/alerts";
 import { facilitiesNear, getDestinationBySlug } from "@/lib/db/destinations";
 import { getDestinationEnrichment } from "@/lib/destination-enrichment";
+import { getGoogleMapsTransitUrl } from "@/lib/google-maps";
 import { alternativesBySlot, bestOtherSlot, isAlternativeTrigger } from "@/lib/forecast/alternatives";
 import { getDestinationForecast } from "@/lib/forecast/destination-forecast";
 import { formatDistance, formatWibDateTime, relativeDayName, slotHour, summarizeOpenHours } from "@/lib/format";
@@ -223,6 +225,17 @@ export default async function DestinationPage({ params, searchParams }: Props) {
           </div>
 
           <div className="flex min-w-0 flex-col gap-8">
+            <GoogleMapsPlaceCard
+              destination={{
+                slug: destination.slug,
+                name: destination.name,
+                lat: destination.lat,
+                lon: destination.lon,
+                kabupaten: destination.region.kabupaten,
+              }}
+              routeUrl={googleMapsRouteUrl(destination.lat, destination.lon)}
+            />
+
             <FacilitiesPanel
               slug={destination.slug}
               destination={{ name: destination.name, lat: destination.lat, lon: destination.lon, category: destination.category }}
@@ -232,7 +245,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
             />
 
             <section aria-labelledby="akses-judul" className="flex flex-col gap-3">
-              <h2 id="akses-judul">Akses</h2>
+              <h2 id="akses-judul">Akses & Kendaraan Umum</h2>
               <dl className="flex flex-col">
                 <div className="flex min-h-12 items-center justify-between gap-3 border-b border-hairline">
                   <dt className="shrink-0 text-[15px] text-muted">Halte terdekat</dt>
@@ -261,16 +274,32 @@ export default async function DestinationPage({ params, searchParams }: Props) {
                   </dd>
                 </div>
               </dl>
-              <a
-                className={`${buttonClass.primary} w-full`}
-                href={googleMapsRouteUrl(destination.lat, destination.lon)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Buka rute di Google Maps
-                <MiscIcon name="externalLink" size={16} />
-                <span className="sr-only">(tab baru)</span>
-              </a>
+
+              {/* Tombol Rute Kendaraan Umum & Kendaraan Pribadi */}
+              <div className="flex flex-col gap-2">
+                <a
+                  className={`${buttonClass.primary} w-full justify-center`}
+                  href={getGoogleMapsTransitUrl(destination.lat, destination.lon)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Rute Kendaraan Umum (Trans Jogja / KRL)
+                  <MiscIcon name="externalLink" size={16} />
+                  <span className="sr-only">(tab baru)</span>
+                </a>
+
+                <a
+                  className={`${buttonClass.secondary} w-full justify-center`}
+                  href={googleMapsRouteUrl(destination.lat, destination.lon)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Petunjuk Arah Kendaraan Pribadi
+                  <MiscIcon name="externalLink" size={16} />
+                  <span className="sr-only">(tab baru)</span>
+                </a>
+              </div>
+
               <SaveToTrip
                 destinationId={destination.id}
                 slug={destination.slug}
