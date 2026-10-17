@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { ScoreChip } from "@/components/score-chip";
 import { CATEGORY_LABEL, type DestCategory } from "@/lib/categories";
 import { getDestinationEnrichment } from "@/lib/destination-enrichment";
@@ -114,7 +115,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
 
     try {
       const lastFocus = [...messages].reverse().find((m) => m.role === "assistant" && m.focus && m.focus.length > 0)?.focus ?? [];
-      const history = messages.slice(-6).map((m) => ({ role: m.role, content: m.content.slice(0, 600) }));
+      const history = messages.slice(-6).map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
       const res = await fetch("/api/v1/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -322,7 +323,44 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                       : "bg-surface-card border border-hairline text-body rounded-bl-xs"
                   }`}
                 >
-                  <p className="whitespace-pre-line">{msg.content}</p>
+                  {msg.role === "user" ? (
+                    <p className="whitespace-pre-line">{msg.content}</p>
+                  ) : (
+                    <div className="text-[13px] leading-relaxed text-body">
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
+                          strong: ({ children }) => <strong className="font-semibold text-ink">{children}</strong>,
+                          em: ({ children }) => <em className="italic">{children}</em>,
+                          ul: ({ children }) => <ul className="my-2 ml-4 list-disc space-y-1">{children}</ul>,
+                          ol: ({ children }) => <ol className="my-2 ml-4 list-decimal space-y-1">{children}</ol>,
+                          li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                          code: ({ children }) => (
+                            <code className="rounded bg-surface-soft px-1.5 py-0.5 font-mono text-[11.5px] text-primary">
+                              {children}
+                            </code>
+                          ),
+                          a: ({ href, children }) => (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="font-medium text-primary underline hover:text-primary/80"
+                            >
+                              {children}
+                            </a>
+                          ),
+                          blockquote: ({ children }) => (
+                            <blockquote className="my-2 border-l-2 border-primary/40 pl-3 italic text-muted">
+                              {children}
+                            </blockquote>
+                          ),
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  )}
 
                   {/* TAMPILAN RENCANA PERJALANAN (ITINERARY 3 SLOT) */}
                   {msg.itinerary && (

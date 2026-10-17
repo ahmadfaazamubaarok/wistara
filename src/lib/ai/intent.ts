@@ -34,7 +34,10 @@ export function detectUnsupported(query: string): UnsupportedKind | null {
   if (has(t, /\b(tinggi gelombang|gelombang|ombak|arus balik|rip current|pasang surut|berenang|renang|snorkeling|selancar|surfing)\b/)) {
     return "gelombang";
   }
-  if (has(t, /\b(hotel|penginapan|homestay|villa|hostel|menginap|tidur di mana)\b/)) return "penginapan";
+  if (
+    has(t, /\b(hotel|penginapan|homestay|villa|hostel|menginap|tidur di mana)\b/) &&
+    !has(t, /\b(di hotel|di penginapan|di homestay|di villa|di hostel|dari hotel|dari penginapan)\b/)
+  ) return "penginapan";
   if (has(t, /\b(trans jogja|transjogja|jadwal kereta|tiket kereta|tiket pesawat|bandara|travel|ojek online|gojek|grab)\b/)) {
     return "transportasi";
   }
@@ -73,7 +76,7 @@ export function detectTopics(query: string): Topic[] {
     topics.push("fasilitas");
   }
   if (has(t, /\b(cuaca|suhu|temperatur|prakiraan|angin)\b/) && !has(t, /\bkalau hujan\b/)) topics.push("cuaca");
-  if (has(t, /\b(tips|saran|sebaiknya bawa|perlu bawa|bawa apa|pakai apa|pakaian)\b/)) topics.push("tips");
+  if (has(t, /\b(tips|sebaiknya bawa|perlu bawa|bawa apa|pakai apa|pakaian|persiapan berkunjung)\b/)) topics.push("tips");
   if (has(t, /\b(ada apa|apa saja|ngapain|bisa ngapain|kegiatan|aktivitas|daya tarik|keunikan|highlight|spot|menarik)\b/)) topics.push("sorotan");
   if (has(t, /\b(jarak|berapa km|berapa kilo|rute|naik apa|berapa lama|perjalanan dari)\b/)) topics.push("jarak");
   return topics;
@@ -170,8 +173,12 @@ export function detectIntent(query: string, mentionCount: number, hasFocus: bool
   if (has(t, /\b(alternatif|pengganti|kalau hujan|jika hujan|saat hujan|pas hujan|kehujanan|rainy)\b/)) {
     return { intent: "alternative", unsupported: null };
   }
-  if (topics.length > 0 && mentionCount === 0) {
-    // Pertanyaan topik tanpa destinasi jelas ("buka jam berapa?"): perlu ditanyakan balik, bukan ditebak.
+  const destinationSpecificTopics = topics.filter((top) =>
+    ["jam_buka", "tiket", "fasilitas", "cuaca", "jarak"].includes(top),
+  );
+
+  if (destinationSpecificTopics.length > 0 && mentionCount === 0) {
+    // Pertanyaan topik spesifik tanpa destinasi jelas ("buka jam berapa?", "tiketnya berapa?"): perlu ditanyakan balik, bukan ditebak.
     return { intent: "info", unsupported: null };
   }
   if (

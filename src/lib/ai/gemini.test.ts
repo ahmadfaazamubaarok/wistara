@@ -91,4 +91,50 @@ describe("klien Gemini", () => {
     expect(logged).not.toContain("kunci-uji-rahasia");
     expect(logged).toContain("500");
   });
+
+  it("chatWithGemini mengirim percakapan multi-turn dengan peran user/model yang valid", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(geminiResponse("Halo Farrel, ada yang bisa kubantu?"));
+    vi.stubGlobal("fetch", fetchMock);
+    const { chatWithGemini } = await import("./gemini");
+
+    const reply = await chatWithGemini({
+      query: "Tadi namaku siapa?",
+      history: [
+        { role: "user", content: "Halo namaku Farrel" },
+        { role: "assistant", content: "Halo Farrel! Senang kenalan denganmu." },
+      ],
+      catalog: CATALOG_ENTRIES,
+      focus: ["candi-prambanan"],
+    });
+
+    expect(reply).toBe("Halo Farrel, ada yang bisa kubantu?");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [, init] = fetchMock.mock.calls[0];
+    const body = JSON.parse((init as RequestInit).body as string);
+    expect(body.contents).toHaveLength(3);
+    expect(body.contents[0]).toEqual({ role: "user", parts: [{ text: "Halo namaku Farrel" }] });
+    expect(body.contents[1]).toEqual({ role: "model", parts: [{ text: "Halo Farrel! Senang kenalan denganmu." }] });
+    expect(body.contents[2]).toEqual({ role: "user", parts: [{ text: "Tadi namaku siapa?" }] });
+    expect(body.generationConfig.temperature).toBe(0.7);
+  });
+
+  it("formatHistoryToContents menggabungkan pesan berturut-turut dari peran yang sama dan memastikan diawali user", async () => {
+    const { formatHistoryToContents } = await import("./gemini");
+    const contents = formatHistoryToContents(
+      [
+        { role: "assistant", content: "Pesan sambutan pembuka" },
+        { role: "user", content: "Halo" },
+        { role: "user", content: "Aku mau tanya" },
+        { role: "assistant", content: "Iya silakan" },
+      ],
+      "Tempat sejuk di Jogja apa ya?",
+    );
+
+    expect(contents[0].role).toBe("user");
+    expect(contents[0].parts[0].text).toContain("Halo\nAku mau tanya");
+    expect(contents[1].role).toBe("model");
+    expect(contents[1].parts[0].text).toBe("Iya silakan");
+    expect(contents[2].role).toBe("user");
+    expect(contents[2].parts[0].text).toBe("Tempat sejuk di Jogja apa ya?");
+  });
 });

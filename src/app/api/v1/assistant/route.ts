@@ -11,7 +11,8 @@ import { ALT_MAX, ALT_MIN_SCORE, ALT_RADIUS_M, type Alternative } from "@/lib/fo
 import { bestOverlappingSlot } from "@/lib/forecast/slots";
 import { getDestinationAttribute } from "@/lib/ai/attributes";
 import { runEngine, type EngineDestination } from "@/lib/ai/engine";
-import { isAiAvailable, rewriteWithGemini, understandWithGemini } from "@/lib/ai/gemini";
+import { chatWithGemini, isAiAvailable, rewriteWithGemini, understandWithGemini } from "@/lib/ai/gemini";
+import { detectGreeting } from "@/lib/ai/intent";
 import { mergeUnderstanding } from "@/lib/ai/understand";
 import { validateReply } from "@/lib/ai/validator";
 import { getWibDateKey } from "@/lib/wib";
@@ -24,7 +25,7 @@ const requestSchema = z.object({
   message: z.string().trim().min(1, "Pertanyaan tidak boleh kosong").max(500, "Pertanyaan maksimal 500 karakter"),
   /** Percakapan sebelumnya (maks. 6 giliran) untuk pertanyaan lanjutan. */
   history: z
-    .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(600) }))
+    .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(4000) }))
     .max(6)
     .optional()
     .default([]),
@@ -92,14 +93,16 @@ export const POST = withApi(async (request) => {
   const todayLabel = `${WEEKDAYS[new Date(`${todayKey}T00:00:00Z`).getUTCDay()]}, ${todayKey} (WIB)`;
   // Model dipanggil hanya bila deteksi kode belum yakin (hemat kuota dan lebih cepat).
   let understanding = mergeUnderstanding(message, { now, catalog, focus }, null);
+  const isGreeting = detectGreeting(message);
   const uncertain =
-    understanding.intent === "clarify" ||
-    (understanding.intent === "recommend" &&
-      understanding.slugs.length === 0 &&
-      understanding.preferences.length === 0 &&
-      understanding.categories.length === 0 &&
-      understanding.when.dayOffset === null &&
-      understanding.when.part === null);
+    !isGreeting &&
+    (understanding.intent === "clarify" ||
+      (understanding.intent === "recommend" &&
+        understanding.slugs.length === 0 &&
+        understanding.preferences.length === 0 &&
+        understanding.categories.length === 0 &&
+        understanding.when.dayOffset === null &&
+        understanding.when.part === null));
   const modelUnderstanding = uncertain && isAiAvailable()
     ? await understandWithGemini(message, { todayLabel, catalog, history, focus })
     : null;
@@ -162,15 +165,44 @@ export const POST = withApi(async (request) => {
     },
   });
 
-  // Penjelasan: model boleh merapikan kalimat, tetapi hanya bila lolos validator.
+  // Penjelasan: model boleh merapikan kalimat atau membalas percakapan santai.
   let reply = result.baseReply;
   let source: "model" | "template" = "template";
   let rejected: string | null = null;
-  if (result.allowRewrite && isAiAvailable()) {
-    const rewritten = await rewriteWithGemini({ query: message, baseReply: result.baseReply, cards: result.cards, notices: result.notices });
+
+  const isConversational =
+    result.type === "clarify" ||
+    result.type === "out_of_scope" ||
+    (result.type === "app_help" && /\b(siapa kamu|kamu siapa|kamu bisa apa|apa itu wistara)\b/i.test(message));
+
+  if (isAiAvailable() && isConversational) {
+    const conversationalReply = await chatWithGemini({
+      query: message,
+      history,
+      catalog,
+      focus: understanding.slugs.length > 0 ? understanding.slugs : focus,
+    });
+    if (conversationalReply) {
+      reply = conversationalReply;
+      source = "model";
+    }
+  } else if (result.allowRewrite && isAiAvailable()) {
+    const rewritten = await rewriteWithGemini({
+      query: message,
+      baseReply: result.baseReply,
+      cards: result.cards,
+      notices: result.notices,
+      history,
+    });
     if (rewritten) {
       const verdict = validateReply(rewritten, {
-        allowedText: [result.baseReply, JSON.stringify(result.cards), result.notices.join(" "), message].join(" "),
+        allowedText: [
+          result.baseReply,
+          JSON.stringify(result.cards),
+          result.notices.join(" "),
+          message,
+          history.map((h) => h.content).join(" "),
+        ].join(" "),
         catalog,
         allowedSlugs: [...result.cards.map((c) => c.slug), ...understanding.slugs],
       });

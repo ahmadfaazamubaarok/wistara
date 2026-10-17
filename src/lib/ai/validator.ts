@@ -14,7 +14,7 @@ export type ValidationContext = {
   allowedSlugs: string[];
 };
 
-const MAX_LENGTH = 900;
+const MAX_LENGTH = 1500;
 const MIN_LENGTH = 15;
 
 function digitGroups(text: string): Set<string> {
