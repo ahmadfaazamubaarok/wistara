@@ -26,7 +26,7 @@ describe("injeksi SQL dan input berbahaya", () => {
 
   it("tabel utuh setelah semua payload dicoba", async () => {
     const all = await call(listDestinations, "/api/v1/destinations");
-    expect((all.json as { destinations: unknown[] }).destinations).toHaveLength(20);
+    expect((all.json as { destinations: unknown[] }).destinations).toHaveLength(365);
   });
 
   it.each(payloads)("slug berbahaya ditolak 400 sebelum menyentuh database: %s", async (payload) => {
@@ -54,7 +54,7 @@ describe("hak akses basis data (RLS dan GRANT)", () => {
       const { rows } = await c.query("select count(*)::int as n from destinations");
       return rows[0].n;
     });
-    expect(count).toBe(20);
+    expect(count).toBe(365);
   });
 
   // Anon key Supabase publik di browser dan PostgREST membuka skema public dengannya,

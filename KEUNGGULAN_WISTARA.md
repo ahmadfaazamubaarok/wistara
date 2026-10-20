@@ -11,7 +11,7 @@ Banyak wisatawan mengandalkan Google Maps untuk mencari tempat dan petunjuk arah
 2. **AI Chatbot Generik (ChatGPT / Gemini)** sering mengalami **halusinasi spasial**: merekomendasikan rute yang tidak logis, jarak tempuh yang salah, atau tempat yang sedang tutup/berbahaya.
 3. **Platform OTA (Traveloka / TripAdvisor)** bersifat komersial dan berfokus pada penjualan tiket/hotel, bukan optimasi keputusan waktu berkunjung di lapangan.
 
-**Wistara memposisikan diri bukan sebagai kompetitor langsung yang menggantikan Google Maps, melainkan sebagai *Intelligent Decision Layer* (Mesin Pengambil Keputusan Cerdas)** yang menggabungkan data cuaca mikro resmi BMKG, basis data spasial lokal 485+ destinasi & 1.337 fasilitas DIY, serta mengintegrasikan Google Maps untuk navigasi dan foto secara mulus.
+**Wistara memposisikan diri bukan sebagai kompetitor langsung yang menggantikan Google Maps, melainkan sebagai *Intelligent Decision Layer* (Mesin Pengambil Keputusan Cerdas)** yang menggabungkan data cuaca mikro resmi BMKG, basis data spasial lokal 365+ destinasi & 1.337 fasilitas DIY, serta mengintegrasikan Google Maps untuk navigasi dan foto secara mulus.
 
 ---
 
@@ -25,7 +25,7 @@ Banyak wisatawan mengandalkan Google Maps untuk mencari tempat dan petunjuk arah
 | **Kelengkapan Fasilitas Mikro Sekitar (Toilet, Parkir, Musala)** | ⚠️ Tersebar / harus dicari satu per satu | ❌ Tidak tahu titik fasilitas mikro | ❌ Hanya fasilitas berbayar/hotel | **✅ Terpetakan per radius (82 toilet publik, 1.330+ fasilitas DIY)** |
 | **Perencanaan Rute Transit Multi-Titik Realistis** | ⚠️ Titik per titik manual | ⚠️ Jam dan urutan sering tidak realistis | ❌ Hanya paket tur komersial | **✅ Ter-grounding jam buka, cuaca, & estimasi transit logis** |
 | **Rute Kendaraan Umum Lokal (Trans Jogja, KRL, Bandara)** | ⚠️ Harus buka tab transit tersendiri | ❌ Rute bus sering fiktif | ❌ Tidak ada | **✅ 1-klik tautan langsung ke Google Maps Transit Mode** |
-| **Katalog Wisata DIY Mendalam** | ⚠️ Populer saja yang muncul atas | ⚠️ Hanya 10–20 destinasi terkenal | ⚠️ Terbatas pada mitra berbayar | **✅ 485 destinasi di 5 kab/kota (candi, pantai, desa wisata, alam)** |
+| **Katalog Wisata DIY Mendalam** | ⚠️ Populer saja yang muncul atas | ⚠️ Hanya 10–20 destinasi terkenal | ⚠️ Terbatas pada mitra berbayar | **✅ 365 destinasi di 5 kab/kota (candi, pantai, desa wisata, alam)** |
 | **Privasi & Pengalaman Pengguna (UX)** | ⚠️ Penuh iklan lokasi bersponsor | ⚠️ Teks panjang tanpa peta interaktif | ⚠️ Penuh banner promo/afiliasi | **✅ Bersih, cepat, tanpa iklan, bebas AI slop / emoji berlebih** |
 
 ---

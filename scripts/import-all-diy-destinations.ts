@@ -43,6 +43,21 @@ function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number): num
   return 2 * 6371 * Math.asin(Math.sqrt(h));
 }
 
+function pointInPolygon(point: [number, number], vs: number[][]): boolean {
+  const x = point[0];
+  const y = point[1];
+  let inside = false;
+  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+    const xi = vs[i][0];
+    const yi = vs[i][1];
+    const xj = vs[j][0];
+    const yj = vs[j][1];
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
 function slugify(name: string): string {
   const slug = name
     .toLowerCase()
@@ -155,12 +170,23 @@ async function run() {
   const elements: OverpassElement[] = await overpass(query);
   console.log(`Ditemukan ${elements.length} objek wisata mentah dari OSM.`);
 
-  // Muat data daerah dan destinasi saat ini
+  // Muat data daerah, poligon batas DIY, dan destinasi saat ini
   const regionsFile = path.join(SEED_DIR, "regions.json");
   const destFile = path.join(SEED_DIR, "destinations.json");
+  const boundaryFile = path.join(SEED_DIR, "diy-boundary.json");
 
   const regions: RegionItem[] = JSON.parse(await readFile(regionsFile, "utf8"));
   const existingDest: DestinationItem[] = JSON.parse(await readFile(destFile, "utf8"));
+  const diyBoundary = JSON.parse(await readFile(boundaryFile, "utf8"));
+
+  const isInsideDiy = (lon: number, lat: number): boolean => {
+    if (diyBoundary.type === "Polygon") {
+      return pointInPolygon([lon, lat], diyBoundary.coordinates[0]);
+    } else if (diyBoundary.type === "MultiPolygon") {
+      return diyBoundary.coordinates.some((poly: number[][][]) => pointInPolygon([lon, lat], poly[0]));
+    }
+    return false;
+  };
 
   // Perkiraan titik pusat per region dari destinasi yang sudah terdaftar
   const regionCoords = new Map<string, { lat: number; lon: number }>();
@@ -195,8 +221,9 @@ async function run() {
     const lon = e.lon ?? e.center?.lon;
     if (!lat || !lon) continue;
 
-    // Batas koordinat DIY yang wajar
+    // Batas koordinat DIY yang wajar dan poligon resmi wilayah DIY
     if (lat > -7.52 || lat < -8.23 || lon < 110.0 || lon > 110.85) continue;
+    if (!isInsideDiy(lon, lat)) continue;
 
     // Tentukan wilayah adm4_code terdekat
     let bestRegion = regions[0];
