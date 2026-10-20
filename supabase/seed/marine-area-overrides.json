@@ -3,10 +3,5 @@
     "slug": "pantai-parangtritis",
     "marineAreaCode": "P.N.02",
     "reason": "Parangtritis berada di Kecamatan Kretek, Kabupaten Bantul. Skrip memberi null karena titiknya dekat batas poligon P.N.02 dan P.N.03."
-  },
-  {
-    "slug": "pantai-sembukan",
-    "marineAreaCode": null,
-    "reason": "Kemungkinan berada di Paranggupito, Wonogiri (Jawa Tengah), di luar DIY. Perlu verifikasi tim sebelum diberi wilayah perairan."
   }
 ]

@@ -148,6 +148,16 @@ export async function loadSeed(client: Client): Promise<SeedCounts> {
       );
     }
 
+    const seedSlugs = destinations.map((d) => d.slug);
+    await client.query(
+      `delete from trip_items where destination_id in (select id from destinations where not (slug = any($1::text[])))`,
+      [seedSlugs],
+    );
+    await client.query(
+      `delete from destinations where not (slug = any($1::text[]))`,
+      [seedSlugs],
+    );
+
     for (let i = 0; i < facilities.length; i += BATCH) {
       const chunk = facilities.slice(i, i + BATCH);
       await client.query(

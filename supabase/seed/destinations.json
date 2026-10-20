@@ -315,45 +315,6 @@
     "verifiedAt": "2026-10-15"
   },
   {
-    "slug": "borobudur",
-    "name": "Borobudur",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.608,
-    "lon": 110.2038,
-    "openHours": null,
-    "description": "Destinasi wisata alam Borobudur dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/122741626",
-    "verifiedAt": null
-  },
-  {
-    "slug": "borobudur-nirwana-sunrise",
-    "name": "Borobudur Nirwana Sunrise",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6071,
-    "lon": 110.1776,
-    "openHours": null,
-    "description": "Destinasi wisata alam Borobudur Nirwana Sunrise dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/1711057152",
-    "verifiedAt": null
-  },
-  {
-    "slug": "bukit-barede",
-    "name": "Bukit Barede",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6065,
-    "lon": 110.1846,
-    "openHours": null,
-    "description": "Destinasi wisata alam Bukit Barede dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/4766762822",
-    "verifiedAt": null
-  },
-  {
     "slug": "bukit-bintang",
     "name": "Bukit Bintang",
     "category": "alam",
@@ -442,19 +403,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Bukit Paralayang Watuguprit dengan panorama asri dan udara segar di Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/6954551494",
-    "verifiedAt": null
-  },
-  {
-    "slug": "bukit-rhema-chicken-church",
-    "name": "Bukit Rhema (Chicken Church)",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6056,
-    "lon": 110.1806,
-    "openHours": null,
-    "description": "Destinasi wisata alam Bukit Rhema (Chicken Church) dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9409502531",
     "verifiedAt": null
   },
   {
@@ -549,32 +497,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "cagar-budaya-plengkung-pitu",
-    "name": "Cagar Budaya Plengkung Pitu",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.5963,
-    "lon": 110.1384,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Cagar Budaya Plengkung Pitu yang kaya akan nilai historis di Kulon Progo, Yogyakarta.",
-    "osmRef": "node/12768831624",
-    "verifiedAt": null
-  },
-  {
-    "slug": "cagar-budaya-watu-sigong",
-    "name": "Cagar Budaya Watu Sigong",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.6607,
-    "lon": 110.5754,
-    "openHours": null,
-    "description": "Destinasi wisata alam Cagar Budaya Watu Sigong dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/10113315217",
-    "verifiedAt": null
-  },
-  {
     "slug": "candi",
     "name": "Candi",
     "category": "budaya",
@@ -627,19 +549,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "candi-bubrah",
-    "name": "Candi Bubrah",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7465,
-    "lon": 110.493,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Bubrah yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/721434227",
-    "verifiedAt": null
-  },
-  {
     "slug": "candi-gampingan",
     "name": "Candi Gampingan",
     "category": "budaya",
@@ -653,19 +562,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "candi-gana",
-    "name": "Candi Gana",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.744,
-    "lon": 110.4961,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Gana yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/2075166979",
-    "verifiedAt": null
-  },
-  {
     "slug": "candi-gebang",
     "name": "Candi Gebang",
     "category": "budaya",
@@ -676,19 +572,6 @@
     "openHours": null,
     "description": "Situs warisan sejarah dan cagar budaya Candi Gebang yang kaya akan nilai historis di Sleman, Yogyakarta.",
     "osmRef": "node/2076069019",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-gunung-wukir",
-    "name": "Candi Gunung Wukir",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.13.2004",
-    "lat": -7.6342,
-    "lon": 110.2968,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Gunung Wukir yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/2965701493",
     "verifiedAt": null
   },
   {
@@ -782,32 +665,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "candi-lumbung",
-    "name": "Candi Lumbung",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7481,
-    "lon": 110.4929,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Lumbung yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/721434223",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-mendut",
-    "name": "Candi Mendut",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6048,
-    "lon": 110.23,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Mendut yang kaya akan nilai historis di Kulon Progo, Yogyakarta.",
-    "osmRef": "way/474496339",
-    "verifiedAt": null
-  },
-  {
     "slug": "candi-miri",
     "name": "Candi Miri",
     "category": "budaya",
@@ -834,32 +691,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "candi-ngawen",
-    "name": "Candi Ngawen",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6041,
-    "lon": 110.2725,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Ngawen yang kaya akan nilai historis di Kulon Progo, Yogyakarta.",
-    "osmRef": "way/1264573803",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-nggenuk",
-    "name": "Candi Nggenuk",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5275,
-    "lon": 110.6213,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Nggenuk yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/1160835047",
-    "verifiedAt": null
-  },
-  {
     "slug": "candi-palgading",
     "name": "Candi Palgading",
     "category": "budaya",
@@ -870,45 +701,6 @@
     "openHours": null,
     "description": "Situs warisan sejarah dan cagar budaya Candi Palgading yang kaya akan nilai historis di Sleman, Yogyakarta.",
     "osmRef": "node/2076080314",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-pawon",
-    "name": "Candi Pawon",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6061,
-    "lon": 110.2196,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Pawon yang kaya akan nilai historis di Kulon Progo, Yogyakarta.",
-    "osmRef": "way/570627810",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-plaosan-kidul",
-    "name": "Candi Plaosan Kidul",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7427,
-    "lon": 110.5047,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Plaosan Kidul yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/2075177840",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-plaosan-lor",
-    "name": "Candi Plaosan Lor",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7406,
-    "lon": 110.5046,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Plaosan Lor yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/2075178494",
     "verifiedAt": null
   },
   {
@@ -1034,19 +826,6 @@
     "verifiedAt": "2026-10-15"
   },
   {
-    "slug": "candi-sangharaja-mendut-monastery",
-    "name": "Candi Sangharaja, Mendut Monastery",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6054,
-    "lon": 110.2292,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Sangharaja, Mendut Monastery yang kaya akan nilai historis di Kulon Progo, Yogyakarta.",
-    "osmRef": "way/1472988295",
-    "verifiedAt": null
-  },
-  {
     "slug": "candi-sari",
     "name": "Candi Sari",
     "category": "budaya",
@@ -1057,32 +836,6 @@
     "openHours": null,
     "description": "Situs warisan sejarah dan cagar budaya Candi Sari yang kaya akan nilai historis di Sleman, Yogyakarta.",
     "osmRef": "node/4832034854",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-sewu",
-    "name": "Candi Sewu",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7439,
-    "lon": 110.4929,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Sewu yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/256997594",
-    "verifiedAt": null
-  },
-  {
-    "slug": "candi-sojiwan",
-    "name": "Candi Sojiwan",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7609,
-    "lon": 110.4961,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Candi Sojiwan yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/2965717627",
     "verifiedAt": null
   },
   {
@@ -1122,32 +875,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di De Mata Trick Eye Museum, Kota Yogyakarta, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/6320439722",
-    "verifiedAt": null
-  },
-  {
-    "slug": "de-tjolomadoe",
-    "name": "De Tjolomadoe",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5343,
-    "lon": 110.7492,
-    "openHours": null,
-    "description": "Destinasi wisata alam De Tjolomadoe dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/329246064",
-    "verifiedAt": null
-  },
-  {
-    "slug": "delanggu-eco-park",
-    "name": "Delanggu Eco Park",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.6196,
-    "lon": 110.7078,
-    "openHours": null,
-    "description": "Destinasi wisata alam Delanggu Eco Park dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1456208328",
     "verifiedAt": null
   },
   {
@@ -1268,19 +995,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "eks-hks-purworejo",
-    "name": "Eks HKS Purworejo",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.01.08.2003",
-    "lat": -7.7187,
-    "lon": 110.0055,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Eks HKS Purworejo yang kaya akan nilai historis di Kulon Progo, Yogyakarta.",
-    "osmRef": "node/12730138801",
-    "verifiedAt": null
-  },
-  {
     "slug": "eks-stasiun-beran",
     "name": "Eks Stasiun Beran",
     "category": "budaya",
@@ -1372,19 +1086,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "gapura-makuta",
-    "name": "Gapura Makuta",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5466,
-    "lon": 110.7779,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Gapura Makuta yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/3320385685",
-    "verifiedAt": null
-  },
-  {
     "slug": "gapura-pathok",
     "name": "Gapura Pathok",
     "category": "budaya",
@@ -1421,19 +1122,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Gedung Boediarjo, Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/613354731",
-    "verifiedAt": null
-  },
-  {
-    "slug": "gereja-ayam",
-    "name": "Gereja Ayam",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6057,
-    "lon": 110.1811,
-    "openHours": null,
-    "description": "Destinasi wisata alam Gereja Ayam dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1339058491",
     "verifiedAt": null
   },
   {
@@ -1583,19 +1271,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "gunung-kunir",
-    "name": "Gunung Kunir",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.632,
-    "lon": 110.126,
-    "openHours": null,
-    "description": "Destinasi wisata alam Gunung Kunir dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/8901400200",
-    "verifiedAt": null
-  },
-  {
     "slug": "gunung-lanang",
     "name": "Gunung Lanang",
     "category": "alam",
@@ -1606,19 +1281,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Gunung Lanang dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/3623170401",
-    "verifiedAt": null
-  },
-  {
-    "slug": "gunung-merapi",
-    "name": "Gunung Merapi",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5399,
-    "lon": 110.4473,
-    "openHours": null,
-    "description": "Destinasi wisata alam Gunung Merapi dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/6246377788",
     "verifiedAt": null
   },
   {
@@ -1674,19 +1336,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "hollywood-boyolali",
-    "name": "Hollywood Boyolali",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.533,
-    "lon": 110.6055,
-    "openHours": null,
-    "description": "Destinasi wisata alam Hollywood Boyolali dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9502823728",
-    "verifiedAt": null
-  },
-  {
     "slug": "hutan-pinus-asri",
     "name": "Hutan Pinus Asri",
     "category": "alam",
@@ -1710,19 +1359,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Hutan Pinus Becici dengan panorama asri dan udara segar di Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/4953861122",
-    "verifiedAt": null
-  },
-  {
-    "slug": "hutan-pinus-kalilo",
-    "name": "Hutan Pinus Kalilo",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.08.2003",
-    "lat": -7.7502,
-    "lon": 110.1184,
-    "openHours": null,
-    "description": "Destinasi wisata alam Hutan Pinus Kalilo dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9605201479",
     "verifiedAt": null
   },
   {
@@ -1807,19 +1443,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "jembatan-keris",
-    "name": "Jembatan Keris",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5518,
-    "lon": 110.8215,
-    "openHours": null,
-    "description": "Destinasi wisata alam Jembatan Keris dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/10557749430",
-    "verifiedAt": null
-  },
-  {
     "slug": "jogja-national-museum",
     "name": "Jogja National Museum",
     "category": "museum",
@@ -1830,19 +1453,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Jogja National Museum, Kota Yogyakarta, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/10774607747",
-    "verifiedAt": null
-  },
-  {
-    "slug": "kabupaten-klaten",
-    "name": "Kabupaten Klaten",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2004",
-    "lat": -7.7147,
-    "lon": 110.5901,
-    "openHours": null,
-    "description": "Destinasi wisata alam Kabupaten Klaten dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9824985138",
     "verifiedAt": null
   },
   {
@@ -1869,19 +1479,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Kali Opak 7 Bulan dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/9989782453",
-    "verifiedAt": null
-  },
-  {
-    "slug": "kali-talang",
-    "name": "Kali Talang",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5824,
-    "lon": 110.4613,
-    "openHours": null,
-    "description": "Destinasi wisata alam Kali Talang dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12638401718",
     "verifiedAt": null
   },
   {
@@ -1934,19 +1531,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Karaton Ngayogyakarta Hadiningrat, Kota Yogyakarta, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/542298637",
-    "verifiedAt": null
-  },
-  {
-    "slug": "karaton-surakarta",
-    "name": "Karaton Surakarta",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5782,
-    "lon": 110.8274,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Karaton Surakarta yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/345926163",
     "verifiedAt": null
   },
   {
@@ -2025,32 +1609,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Kedung Parangan dengan panorama asri dan udara segar di Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/13812936483",
-    "verifiedAt": null
-  },
-  {
-    "slug": "keraton-kasunanan",
-    "name": "keraton kasunanan",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5779,
-    "lon": 110.8272,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya keraton kasunanan yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/12920726927",
-    "verifiedAt": null
-  },
-  {
-    "slug": "keraton-surakarta-hadiningrat",
-    "name": "Keraton Surakarta Hadiningrat",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.578,
-    "lon": 110.8273,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Keraton Surakarta Hadiningrat, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12840197797",
     "verifiedAt": null
   },
   {
@@ -2135,19 +1693,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "klenteng-tien-kok-sie",
-    "name": "Klenteng Tien Kok Sie",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5697,
-    "lon": 110.8313,
-    "openHours": null,
-    "description": "Destinasi wisata alam Klenteng Tien Kok Sie dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/361688018",
-    "verifiedAt": null
-  },
-  {
     "slug": "kompleks-candi-gebang",
     "name": "Kompleks candi gebang",
     "category": "budaya",
@@ -2158,19 +1703,6 @@
     "openHours": null,
     "description": "Situs warisan sejarah dan cagar budaya Kompleks candi gebang yang kaya akan nilai historis di Sleman, Yogyakarta.",
     "osmRef": "way/537202833",
-    "verifiedAt": null
-  },
-  {
-    "slug": "kraton-kasunanan",
-    "name": "Kraton Kasunanan",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5775,
-    "lon": 110.828,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Kraton Kasunanan yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/345873524",
     "verifiedAt": null
   },
   {
@@ -2265,32 +1797,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "mongkrong-hill-view",
-    "name": "Mongkrong Hill View",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6345,
-    "lon": 110.1745,
-    "openHours": null,
-    "description": "Destinasi wisata alam Mongkrong Hill View dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/5147370321",
-    "verifiedAt": null
-  },
-  {
-    "slug": "monumen-45",
-    "name": "Monumen 45",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5604,
-    "lon": 110.8264,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen 45, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/2341421634",
-    "verifiedAt": null
-  },
-  {
     "slug": "monumen-adipura",
     "name": "Monumen Adipura",
     "category": "museum",
@@ -2317,19 +1823,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "monumen-batik-kleco",
-    "name": "Monumen Batik Kleco",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5573,
-    "lon": 110.7793,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Batik Kleco, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/3320255952",
-    "verifiedAt": null
-  },
-  {
     "slug": "monumen-burung-garuda",
     "name": "MOnumen Burung Garuda",
     "category": "museum",
@@ -2353,32 +1846,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Monumen Dero, Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/5203790263",
-    "verifiedAt": null
-  },
-  {
-    "slug": "monumen-gapensi",
-    "name": "Monumen Gapensi",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5585,
-    "lon": 110.8207,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Gapensi, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/4129665259",
-    "verifiedAt": null
-  },
-  {
-    "slug": "monumen-jagung-boyolali",
-    "name": "Monumen Jagung Boyolali",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5423,
-    "lon": 110.613,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Jagung Boyolali, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9502823755",
     "verifiedAt": null
   },
   {
@@ -2434,32 +1901,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "monumen-peringatan-aja-nusul-aku",
-    "name": "Monumen peringatan \"aja nusul aku\"",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5333,
-    "lon": 110.6298,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen peringatan \"aja nusul aku\", Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9723320067",
-    "verifiedAt": null
-  },
-  {
-    "slug": "monumen-pers-nasional",
-    "name": "Monumen Pers Nasional",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5648,
-    "lon": 110.8184,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Pers Nasional, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/1407107238",
-    "verifiedAt": null
-  },
-  {
     "slug": "monumen-pesawat",
     "name": "Monumen Pesawat",
     "category": "museum",
@@ -2499,19 +1940,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "monumen-popda",
-    "name": "Monumen POPDA",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5204,
-    "lon": 110.749,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen POPDA, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9766306672",
-    "verifiedAt": null
-  },
-  {
     "slug": "monumen-satu-abad-muhammadiyah",
     "name": "Monumen Satu Abad Muhammadiyah",
     "category": "museum",
@@ -2522,19 +1950,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Monumen Satu Abad Muhammadiyah, Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/818719578",
-    "verifiedAt": null
-  },
-  {
-    "slug": "monumen-slamet-riyadi",
-    "name": "Monumen Slamet Riyadi",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5724,
-    "lon": 110.8293,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Slamet Riyadi, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/3361826859",
     "verifiedAt": null
   },
   {
@@ -2577,32 +1992,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "monumen-sukarno",
-    "name": "Monumen Sukarno",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.09.2004",
-    "lat": -7.592,
-    "lon": 110.8168,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Sukarno, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/3320182963",
-    "verifiedAt": null
-  },
-  {
-    "slug": "monumen-susu-tumpah",
-    "name": "Monumen Susu Tumpah",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5345,
-    "lon": 110.6012,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Susu Tumpah, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/1543703064",
-    "verifiedAt": null
-  },
-  {
     "slug": "monumen-tentara-keamanan-rakyat",
     "name": "Monumen Tentara Keamanan Rakyat",
     "category": "museum",
@@ -2613,19 +2002,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Monumen Tentara Keamanan Rakyat, Gunungkidul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/13356946491",
-    "verifiedAt": null
-  },
-  {
-    "slug": "monumen-tugu-lilin",
-    "name": "Monumen Tugu Lilin",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5686,
-    "lon": 110.8056,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Monumen Tugu Lilin, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/1407114331",
     "verifiedAt": null
   },
   {
@@ -2788,19 +2164,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-alam-marmer-indonesia",
-    "name": "Museum Alam Marmer Indonesia",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6353,
-    "lon": 110.1596,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Alam Marmer Indonesia, Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/14114101361",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-anaia-dan-alisha",
     "name": "Museum Anaia dan Alisha",
     "category": "museum",
@@ -2811,19 +2174,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Museum Anaia dan Alisha, Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/14211235381",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-arca-sonokridanggo",
-    "name": "Museum Arca Sonokridanggo",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5311,
-    "lon": 110.5966,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Arca Sonokridanggo, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1124324092",
     "verifiedAt": null
   },
   {
@@ -2850,19 +2200,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Museum Bantul Masa Belanda, Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/612884365",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-batik-danar-hadi",
-    "name": "Museum Batik Danar Hadi",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5688,
-    "lon": 110.8164,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Batik Danar Hadi, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/534552566",
     "verifiedAt": null
   },
   {
@@ -2917,32 +2254,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-borobudur",
-    "name": "Museum Borobudur",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6041,
-    "lon": 110.2046,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Borobudur, Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1190185642",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-budaya-sains-dan-teknologi-bengawan-solo",
-    "name": "Museum Budaya, Sains, dan Teknologi Bengawan Solo",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5557,
-    "lon": 110.8495,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Budaya, Sains, dan Teknologi Bengawan Solo, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/536387793",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-candi-kimpulan",
     "name": "Museum Candi kimpulan",
     "category": "museum",
@@ -2953,19 +2264,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Museum Candi kimpulan, Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/5203673024",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-dan-kampung-seni-borobudur",
-    "name": "Museum dan Kampung Seni Borobudur",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6032,
-    "lon": 110.1973,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum dan Kampung Seni Borobudur, Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1322466733",
     "verifiedAt": null
   },
   {
@@ -3047,19 +2345,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-gula",
-    "name": "Museum Gula",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7212,
-    "lon": 110.5615,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Gula, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9797929920",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-gumuk-pasir-parangtritis",
     "name": "Museum Gumuk Pasir Parangtritis",
     "category": "museum",
@@ -3111,19 +2396,6 @@
     "verifiedAt": "2026-10-15"
   },
   {
-    "slug": "museum-hamong-wardoyo",
-    "name": "Museum Hamong Wardoyo",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5388,
-    "lon": 110.6168,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Hamong Wardoyo, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1025449689",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-historia-24249",
     "name": "Museum Historia 24249",
     "category": "museum",
@@ -3147,19 +2419,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Museum Istana Yogyakarta, Kota Yogyakarta, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/11341202005",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-jawi-sukoharjo",
-    "name": "Museum Jawi Sukoharjo",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.03.09.2001",
-    "lat": -7.7257,
-    "lon": 110.8255,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Jawi Sukoharjo, Gunungkidul, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1124569005",
     "verifiedAt": null
   },
   {
@@ -3189,32 +2448,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-kapal-samudraraksa",
-    "name": "Museum Kapal Samudraraksa",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6048,
-    "lon": 110.2034,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Kapal Samudraraksa, Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/191260616",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-karst-indonesia",
-    "name": "Museum Karst Indonesia",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.03.16.2002",
-    "lat": -8.0414,
-    "lon": 110.7832,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Karst Indonesia, Gunungkidul, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1093800993",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-kayu-wanagama",
     "name": "Museum Kayu Wanagama",
     "category": "museum",
@@ -3241,19 +2474,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-keraton-surakarta",
-    "name": "Museum Keraton Surakarta",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5786,
-    "lon": 110.8285,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Keraton Surakarta, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12833754997",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-kereta-karaton",
     "name": "Museum Kereta Karaton",
     "category": "museum",
@@ -3264,19 +2484,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Museum Kereta Karaton, Kota Yogyakarta, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/122965970",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-keris-nusantara",
-    "name": "Museum Keris Nusantara",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.569,
-    "lon": 110.8109,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Keris Nusantara, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1124570118",
     "verifiedAt": null
   },
   {
@@ -3303,19 +2510,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Museum Memorial HM Soeharto, Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/340887673",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-mini-didi-kempot",
-    "name": "Museum Mini Didi Kempot",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5482,
-    "lon": 110.8081,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Mini Didi Kempot, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1124572691",
     "verifiedAt": null
   },
   {
@@ -3448,45 +2642,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-prambanan",
-    "name": "Museum Prambanan",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7494,
-    "lon": 110.4934,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Prambanan, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/542316518",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-pura-mangkunegaran",
-    "name": "Museum Pura Mangkunegaran",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.566,
-    "lon": 110.8231,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Pura Mangkunegaran, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/10283142694",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-pusaka-tempurharjo",
-    "name": "Museum Pusaka Tempurharjo",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.03.09.2001",
-    "lat": -7.9086,
-    "lon": 110.8044,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Pusaka Tempurharjo, Gunungkidul, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1124774927",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-pusat-tni-ad-dharma-wiratama",
     "name": "Museum Pusat TNI AD \"Dharma Wiratama\"",
     "category": "museum",
@@ -3526,19 +2681,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-radya-pustaka",
-    "name": "Museum Radya Pustaka",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5687,
-    "lon": 110.8144,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Radya Pustaka, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/336013168",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-rs-mata-dr-yap-prawirohusodo",
     "name": "Museum RS Mata Dr Yap Prawirohusodo",
     "category": "museum",
@@ -3562,19 +2704,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Museum Rumah Garuda, Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/1124789070",
-    "verifiedAt": null
-  },
-  {
-    "slug": "museum-samanhoedi",
-    "name": "Museum Samanhoedi",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5667,
-    "lon": 110.7973,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Samanhoedi, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/580015639",
     "verifiedAt": null
   },
   {
@@ -3746,19 +2875,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museum-sultan-agung-hanyokro-kusumo",
-    "name": "Museum Sultan Agung Hanyokro Kusumo",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.03.09.2001",
-    "lat": -7.706,
-    "lon": 110.7721,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museum Sultan Agung Hanyokro Kusumo, Gunungkidul, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1124569137",
-    "verifiedAt": null
-  },
-  {
     "slug": "museum-tani-jawa-indonesia",
     "name": "Museum Tani Jawa Indonesia",
     "category": "museum",
@@ -3862,19 +2978,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "museun-macan",
-    "name": "Museun Macan",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5675,
-    "lon": 110.8271,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Museun Macan, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/648355812",
-    "verifiedAt": null
-  },
-  {
     "slug": "musper",
     "name": "MusPer",
     "category": "alam",
@@ -3941,45 +3044,6 @@
     "osmRef": "way/579978500",
     "verifiedAt": null,
     "marineAreaCode": "P.N.03"
-  },
-  {
-    "slug": "omah-lowo-rumah-kelelawar",
-    "name": "Omah Lowo ( Rumah Kelelawar )",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.564,
-    "lon": 110.7994,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Omah Lowo ( Rumah Kelelawar ) yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/1407122288",
-    "verifiedAt": null
-  },
-  {
-    "slug": "oud-klaten-stoommachine-te-tjepper-suikerfabriek",
-    "name": "Oud Klatén , Stoommachine te Tjepper Suikerfabriek",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2004",
-    "lat": -7.677,
-    "lon": 110.6719,
-    "openHours": null,
-    "description": "Destinasi wisata alam Oud Klatén , Stoommachine te Tjepper Suikerfabriek dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12538654085",
-    "verifiedAt": null
-  },
-  {
-    "slug": "pabrik-gula-colomadu",
-    "name": "Pabrik Gula Colomadu",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5345,
-    "lon": 110.7498,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Pabrik Gula Colomadu, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/665015803",
-    "verifiedAt": null
   },
   {
     "slug": "pacak-suji",
@@ -4483,20 +3547,6 @@
     "marineAreaCode": "P.N.03"
   },
   {
-    "slug": "pantai-sembukan",
-    "name": "Pantai Sembukan",
-    "category": "pantai",
-    "isIndoor": false,
-    "adm4Code": "34.03.16.2002",
-    "lat": -8.2034,
-    "lon": 110.8421,
-    "openHours": null,
-    "description": "Wisata pantai Pantai Sembukan berpanorama pesisir samudra Hindia di Gunungkidul, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/8401225030",
-    "verifiedAt": null,
-    "marineAreaCode": null
-  },
-  {
     "slug": "pantai-sepanjang",
     "name": "Pantai Sepanjang",
     "category": "pantai",
@@ -4692,19 +3742,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "pasar-triwindu",
-    "name": "Pasar Triwindu",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5692,
-    "lon": 110.8225,
-    "openHours": null,
-    "description": "Destinasi wisata alam Pasar Triwindu dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/336013170",
-    "verifiedAt": null
-  },
-  {
     "slug": "pathok-negoro",
     "name": "Pathok negoro",
     "category": "alam",
@@ -4715,19 +3752,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Pathok negoro dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/5202337990",
-    "verifiedAt": null
-  },
-  {
-    "slug": "patung-bunderan",
-    "name": "Patung Bunderan",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5803,
-    "lon": 110.8145,
-    "openHours": null,
-    "description": "Destinasi wisata alam Patung Bunderan dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/3318815629",
     "verifiedAt": null
   },
   {
@@ -4757,19 +3781,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "patung-jendral-sudirman",
-    "name": "Patung Jendral Sudirman",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5414,
-    "lon": 110.6088,
-    "openHours": null,
-    "description": "Destinasi wisata alam Patung Jendral Sudirman dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9502843730",
-    "verifiedAt": null
-  },
-  {
     "slug": "patung-kembara-uny",
     "name": "Patung Kembara UNY",
     "category": "alam",
@@ -4796,19 +3807,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "patung-soekarno",
-    "name": "Patung Soekarno",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5389,
-    "lon": 110.6138,
-    "openHours": null,
-    "description": "Destinasi wisata alam Patung Soekarno dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9454980746",
-    "verifiedAt": null
-  },
-  {
     "slug": "pelataran-arca",
     "name": "Pelataran Arca",
     "category": "budaya",
@@ -4819,32 +3817,6 @@
     "openHours": null,
     "description": "Situs warisan sejarah dan cagar budaya Pelataran Arca yang kaya akan nilai historis di Kota Yogyakarta, Yogyakarta.",
     "osmRef": "node/11341202001",
-    "verifiedAt": null
-  },
-  {
-    "slug": "pemandian-air-panas-ngasinan",
-    "name": "Pemandian Air Panas Ngasinan",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.5687,
-    "lon": 110.1876,
-    "openHours": null,
-    "description": "Destinasi wisata alam Pemandian Air Panas Ngasinan dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9793877615",
-    "verifiedAt": null
-  },
-  {
-    "slug": "pemandian-air-panas-tirta-madu-barokah",
-    "name": "Pemandian Air Panas Tirta Madu Barokah",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.5696,
-    "lon": 110.1875,
-    "openHours": null,
-    "description": "Destinasi wisata alam Pemandian Air Panas Tirta Madu Barokah dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9793877613",
     "verifiedAt": null
   },
   {
@@ -4861,19 +3833,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "peringatan-lima-tahun-merdeka",
-    "name": "Peringatan Lima Tahun Merdeka",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.08.2003",
-    "lat": -7.7122,
-    "lon": 110.0097,
-    "openHours": null,
-    "description": "Destinasi wisata alam Peringatan Lima Tahun Merdeka dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1264843104",
-    "verifiedAt": null
-  },
-  {
     "slug": "pesanggrahan-ambarukmo",
     "name": "Pesanggrahan Ambarukmo",
     "category": "museum",
@@ -4884,32 +3843,6 @@
     "openHours": null,
     "description": "Pusat edukasi dan preservasi seni budaya di Pesanggrahan Ambarukmo, Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/362197954",
-    "verifiedAt": null
-  },
-  {
-    "slug": "pesanggrahan-langenharjo",
-    "name": "Pesanggrahan Langenharjo",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2004",
-    "lat": -7.6162,
-    "lon": 110.8132,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Pesanggrahan Langenharjo yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/347533087",
-    "verifiedAt": null
-  },
-  {
-    "slug": "pesangrahan-pracimoharjo",
-    "name": "Pesangrahan Pracimoharjo",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5232,
-    "lon": 110.5396,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Pesangrahan Pracimoharjo yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/152290356",
     "verifiedAt": null
   },
   {
@@ -4949,19 +3882,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Pinnus Pengger dengan panorama asri dan udara segar di Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/4977885324",
-    "verifiedAt": null
-  },
-  {
-    "slug": "plasa-rowo-jombor",
-    "name": "Plasa Rowo Jombor",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.03.04.2008",
-    "lat": -7.7563,
-    "lon": 110.6349,
-    "openHours": null,
-    "description": "Destinasi wisata alam Plasa Rowo Jombor dengan panorama asri dan udara segar di Gunungkidul, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1224015103",
     "verifiedAt": null
   },
   {
@@ -5069,32 +3989,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "prahu-agustus",
-    "name": "Prahu Agustus",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2004",
-    "lat": -7.6704,
-    "lon": 110.7212,
-    "openHours": null,
-    "description": "Destinasi wisata alam Prahu Agustus dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1385685043",
-    "verifiedAt": null
-  },
-  {
-    "slug": "prambanan-entrance",
-    "name": "Prambanan entrance",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7542,
-    "lon": 110.4953,
-    "openHours": null,
-    "description": "Destinasi wisata alam Prambanan entrance dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/11795216273",
-    "verifiedAt": null
-  },
-  {
     "slug": "prambanan-temple-compounds",
     "name": "Prambanan Temple Compounds",
     "category": "budaya",
@@ -5118,19 +4012,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Prasasti Tapak Presiden dengan panorama asri dan udara segar di Kota Yogyakarta, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/6611458949",
-    "verifiedAt": null
-  },
-  {
-    "slug": "preparation-area-temple-access",
-    "name": "Preparation area Temple access",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.607,
-    "lon": 110.2079,
-    "openHours": null,
-    "description": "Destinasi wisata alam Preparation area Temple access dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12989136501",
     "verifiedAt": null
   },
   {
@@ -5294,45 +4175,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "punthuk-setumbu-reforestation-project",
-    "name": "Punthuk Setumbu Reforestation Project",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6072,
-    "lon": 110.1776,
-    "openHours": null,
-    "description": "Destinasi wisata alam Punthuk Setumbu Reforestation Project dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/5317661098",
-    "verifiedAt": null
-  },
-  {
-    "slug": "pura-mangkunegaran",
-    "name": "Pura Mangkunegaran",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5663,
-    "lon": 110.823,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Pura Mangkunegaran yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "way/256692376",
-    "verifiedAt": null
-  },
-  {
-    "slug": "pura-mangkunegaran-surakarta",
-    "name": "Pura Mangkunegaran Surakarta",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5663,
-    "lon": 110.8231,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Pura Mangkunegaran Surakarta yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/12842247694",
-    "verifiedAt": null
-  },
-  {
     "slug": "pura-pakualaman",
     "name": "Pura Pakualaman",
     "category": "budaya",
@@ -5356,32 +4198,6 @@
     "openHours": null,
     "description": "Situs warisan sejarah dan cagar budaya Purawisata yang kaya akan nilai historis di Kota Yogyakarta, Yogyakarta.",
     "osmRef": "way/188171415",
-    "verifiedAt": null
-  },
-  {
-    "slug": "rasamadu-heritage",
-    "name": "Rasamadu Heritage",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5549,
-    "lon": 110.755,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Rasamadu Heritage, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/327001636",
-    "verifiedAt": null
-  },
-  {
-    "slug": "rasamadu-herritage",
-    "name": "Rasamadu Herritage",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5552,
-    "lon": 110.7551,
-    "openHours": null,
-    "description": "Destinasi wisata alam Rasamadu Herritage dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/11421919969",
     "verifiedAt": null
   },
   {
@@ -5515,19 +4331,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "saturday-night-market-ngarsopuro",
-    "name": "Saturday night market Ngarsopuro",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5686,
-    "lon": 110.8223,
-    "openHours": null,
-    "description": "Destinasi wisata alam Saturday night market Ngarsopuro dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/10965465805",
-    "verifiedAt": null
-  },
-  {
     "slug": "sawah-kerjo",
     "name": "Sawah Kerjo",
     "category": "alam",
@@ -5590,19 +4393,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Seribu Batu Rumah Hobbit dengan panorama asri dan udara segar di Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/8070504232",
-    "verifiedAt": null
-  },
-  {
-    "slug": "simpang-solidaritas",
-    "name": "Simpang Solidaritas",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5318,
-    "lon": 110.6172,
-    "openHours": null,
-    "description": "Destinasi wisata alam Simpang Solidaritas dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9502705836",
     "verifiedAt": null
   },
   {
@@ -5778,19 +4568,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "soekarno-hatta",
-    "name": "Soekarno-Hatta",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6006,
-    "lon": 110.2237,
-    "openHours": null,
-    "description": "Destinasi wisata alam Soekarno-Hatta dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/2379127346",
-    "verifiedAt": null
-  },
-  {
     "slug": "songgo-langit",
     "name": "Songgo Langit",
     "category": "alam",
@@ -5856,45 +4633,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "sunset-temple-viewpoint",
-    "name": "Sunset Temple Viewpoint",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7502,
-    "lon": 110.4931,
-    "openHours": null,
-    "description": "Destinasi wisata alam Sunset Temple Viewpoint dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/5467416621",
-    "verifiedAt": null
-  },
-  {
-    "slug": "sunset-viewpoint",
-    "name": "Sunset viewpoint",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.11.2005",
-    "lat": -7.6134,
-    "lon": 110.2155,
-    "openHours": null,
-    "description": "Destinasi wisata alam Sunset viewpoint dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/5713275121",
-    "verifiedAt": null
-  },
-  {
-    "slug": "swing",
-    "name": "Swing",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.7501,
-    "lon": 110.4933,
-    "openHours": null,
-    "description": "Destinasi wisata alam Swing dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/5467416622",
-    "verifiedAt": null
-  },
-  {
     "slug": "taman",
     "name": "Taman",
     "category": "alam",
@@ -5905,19 +4643,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Taman dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/536271996",
-    "verifiedAt": null
-  },
-  {
-    "slug": "taman-berseri",
-    "name": "Taman Berseri",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5586,
-    "lon": 110.8205,
-    "openHours": null,
-    "description": "Destinasi wisata alam Taman Berseri dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/411243924",
     "verifiedAt": null
   },
   {
@@ -5970,19 +4695,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam taman kecil dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "way/535644947",
-    "verifiedAt": null
-  },
-  {
-    "slug": "taman-keprabon",
-    "name": "Taman Keprabon",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5656,
-    "lon": 110.8263,
-    "openHours": null,
-    "description": "Destinasi wisata alam Taman Keprabon dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/4072929632",
     "verifiedAt": null
   },
   {
@@ -6122,19 +4834,6 @@
     "verifiedAt": "2026-10-15"
   },
   {
-    "slug": "tebing-gunung-gajah",
-    "name": "Tebing Gunung Gajah",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.01.08.2003",
-    "lat": -7.7769,
-    "lon": 110.1077,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tebing Gunung Gajah dengan panorama asri dan udara segar di Kulon Progo, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/13999923709",
-    "verifiedAt": null
-  },
-  {
     "slug": "tegaldowo",
     "name": "Tegaldowo",
     "category": "alam",
@@ -6255,19 +4954,6 @@
     "verifiedAt": "2026-10-15"
   },
   {
-    "slug": "tugu-adipura",
-    "name": "Tugu Adipura",
-    "category": "budaya",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5444,
-    "lon": 110.8112,
-    "openHours": null,
-    "description": "Situs warisan sejarah dan cagar budaya Tugu Adipura yang kaya akan nilai historis di Sleman, Yogyakarta.",
-    "osmRef": "node/3318565980",
-    "verifiedAt": null
-  },
-  {
     "slug": "tugu-ayam-murangan",
     "name": "tugu ayam murangan",
     "category": "alam",
@@ -6291,32 +4977,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Tugu batas Stan 1940 dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/10012513456",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-boto",
-    "name": "Tugu Boto",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5329,
-    "lon": 110.7916,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Boto dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/3318386493",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-cembengan",
-    "name": "Tugu Cembengan",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5577,
-    "lon": 110.8475,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Cembengan dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/7256996749",
     "verifiedAt": null
   },
   {
@@ -6359,32 +5019,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "tugu-ikan-ponggok",
-    "name": "Tugu Ikan Ponggok",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.6127,
-    "lon": 110.6363,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Ikan Ponggok dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12920518311",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-jam",
-    "name": "Tugu Jam",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5694,
-    "lon": 110.8312,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Jam dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/5572391978",
-    "verifiedAt": null
-  },
-  {
     "slug": "tugu-jam-uii",
     "name": "Tugu Jam UII",
     "category": "alam",
@@ -6424,19 +5058,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "tugu-kartasura",
-    "name": "Tugu Kartasura",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5504,
-    "lon": 110.7368,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Kartasura dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/3337125716",
-    "verifiedAt": null
-  },
-  {
     "slug": "tugu-kasongan",
     "name": "Tugu Kasongan",
     "category": "alam",
@@ -6447,84 +5068,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Tugu Kasongan dengan panorama asri dan udara segar di Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/9805402323",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-keris",
-    "name": "Tugu Keris",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5524,
-    "lon": 110.6255,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Keris dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/9771145586",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-lilin",
-    "name": "Tugu Lilin",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5677,
-    "lon": 110.7838,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Lilin dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/1195755415",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-lilin-baturan",
-    "name": "Tugu Lilin Baturan",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5445,
-    "lon": 110.7842,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Lilin Baturan dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/11230487544",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-lilin-kaligawe",
-    "name": "Tugu Lilin Kaligawe",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2004",
-    "lat": -7.669,
-    "lon": 110.7139,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Lilin Kaligawe dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12472977455",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-mangkok-pancasila",
-    "name": "Tugu Mangkok Pancasila",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5296,
-    "lon": 110.7758,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Mangkok Pancasila dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/11188879537",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-marmer-plesungan",
-    "name": "Tugu Marmer Plesungan",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5285,
-    "lon": 110.8484,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Marmer Plesungan dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/11184948029",
     "verifiedAt": null
   },
   {
@@ -6551,32 +5094,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Tugu Pal Putih Yogyakarta dengan panorama asri dan udara segar di Gunungkidul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/5380216213",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-pandawa",
-    "name": "Tugu Pandawa",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.09.2006",
-    "lat": -7.6899,
-    "lon": 110.6029,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Pandawa dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1380486471",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-pemandengan",
-    "name": "Tugu Pemandengan",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5695,
-    "lon": 110.8303,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Pemandengan dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/10735672484",
     "verifiedAt": null
   },
   {
@@ -6632,19 +5149,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "tugu-simpang-lima",
-    "name": "Tugu Simpang Lima",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.03.04.2008",
-    "lat": -7.6898,
-    "lon": 110.7529,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Simpang Lima dengan panorama asri dan udara segar di Gunungkidul, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/7223269636",
-    "verifiedAt": null
-  },
-  {
     "slug": "tugu-sleman-sembada",
     "name": "Tugu Sleman Sembada",
     "category": "alam",
@@ -6658,19 +5162,6 @@
     "verifiedAt": null
   },
   {
-    "slug": "tugu-tani-kleben",
-    "name": "Tugu Tani Kleben",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5265,
-    "lon": 110.7767,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Tani Kleben dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/11188881881",
-    "verifiedAt": null
-  },
-  {
     "slug": "tugu-tobong-gamping-bunderan-siyono",
     "name": "Tugu Tobong Gamping Bunderan Siyono",
     "category": "alam",
@@ -6681,45 +5172,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Tugu Tobong Gamping Bunderan Siyono dengan panorama asri dan udara segar di Gunungkidul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/9852935540",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tugu-wisnu",
-    "name": "Tugu Wisnu",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.554,
-    "lon": 110.7993,
-    "openHours": null,
-    "description": "Destinasi wisata alam Tugu Wisnu dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/3361040467",
-    "verifiedAt": null
-  },
-  {
-    "slug": "tumurun-private-museum",
-    "name": "Tumurun Private Museum",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5703,
-    "lon": 110.8162,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Tumurun Private Museum, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "node/12842310017",
-    "verifiedAt": null
-  },
-  {
-    "slug": "umbul-susuhan",
-    "name": "Umbul Susuhan",
-    "category": "alam",
-    "isIndoor": false,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.644,
-    "lon": 110.5981,
-    "openHours": null,
-    "description": "Destinasi wisata alam Umbul Susuhan dengan panorama asri dan udara segar di Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/1509780521",
     "verifiedAt": null
   },
   {
@@ -6866,19 +5318,6 @@
     "openHours": null,
     "description": "Destinasi wisata alam Wisata Watu Goyang dengan panorama asri dan udara segar di Bantul, Daerah Istimewa Yogyakarta.",
     "osmRef": "node/5045546524",
-    "verifiedAt": null
-  },
-  {
-    "slug": "wisma-persis",
-    "name": "Wisma Persis",
-    "category": "museum",
-    "isIndoor": true,
-    "adm4Code": "34.04.17.2005",
-    "lat": -7.5652,
-    "lon": 110.8186,
-    "openHours": null,
-    "description": "Pusat edukasi dan preservasi seni budaya di Wisma Persis, Sleman, Daerah Istimewa Yogyakarta.",
-    "osmRef": "way/535521374",
     "verifiedAt": null
   },
   {
