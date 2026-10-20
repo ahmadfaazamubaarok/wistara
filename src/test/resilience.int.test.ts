@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { GET as getForecast } from "@/app/api/v1/destinations/[slug]/forecast/route";
 import { GET as getHealth } from "@/app/api/v1/health/route";
+import { GET as getSea } from "@/app/api/v1/destinations/[slug]/sea/route";
 import { BmkgError } from "@/lib/bmkg/client";
 import type { ParsedForecast } from "@/lib/bmkg/parser";
-import { forecastResponseSchema, healthResponseSchema } from "@/lib/api/schemas";
+import { forecastResponseSchema, healthResponseSchema, seaResponseSchema } from "@/lib/api/schemas";
 import { getPool } from "@/lib/db";
 import { getRegionForecast, REFRESH_AFTER_MS, STALE_AFTER_MS } from "@/lib/weather/service";
-import { call, clearForecasts, setFetchState, setForecast, tomorrowKey, withSlug } from "./helpers";
+import { call, clearForecasts, setFetchState, setForecast, setMarineFetchState, tomorrowKey, withSlug } from "./helpers";
 
 const PARANGTRITIS = "34.02.03.2002";
 const day = tomorrowKey();
@@ -127,12 +128,23 @@ describe("API saat BMKG tidak bisa diakses (uji ketahanan di Rancangan Teknis)",
     expect(body.slots).toEqual([]);
     expect(body.source).toMatchObject({ isStale: true, fetchedAt: null });
   });
+
+  it("sea tetap 200 dengan source.isStale = true saat BMKG maritim gagal", async () => {
+    const result = await call(getSea, "/x", withSlug("pantai-glagah"));
+    expect(result.status).toBe(200);
+    const body = seaResponseSchema.parse(result.json);
+    expect(body.source.isStale).toBe(true);
+    expect(body.destination.slug).toBe("pantai-glagah");
+    expect(body.destination.marineAreaCode).toBe("P.N.01");
+  });
 });
 
 describe("GET /api/v1/health", () => {
   async function freshenAll(hoursAgo: number) {
     const { rows } = await getPool().query<{ adm4_code: string }>("select distinct adm4_code from destinations");
     for (const row of rows) await setFetchState(row.adm4_code, { fetchedHoursAgo: hoursAgo });
+    const { rows: marineRows } = await getPool().query<{ code: string }>("select code from marine_areas");
+    for (const row of marineRows) await setMarineFetchState(row.code, { fetchedHoursAgo: hoursAgo });
   }
 
   it("ok saat database hidup dan semua data BMKG segar", async () => {
@@ -142,7 +154,8 @@ describe("GET /api/v1/health", () => {
     const body = healthResponseSchema.parse(result.json);
     expect(body.status).toBe("ok");
     expect(body.database.status).toBe("up");
-    expect(body.bmkg).toMatchObject({ regions: 17, staleRegions: 0 });
+    expect(body.bmkg?.staleRegions).toBe(0);
+    expect(body.marine?.staleAreas).toBe(0);
     expect(result.headers.get("cache-control")).toBe("no-store");
   });
 

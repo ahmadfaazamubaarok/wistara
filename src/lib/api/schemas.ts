@@ -223,6 +223,15 @@ export const healthResponseSchema = z
         oldestSuccessAt: z.string().nullable(),
       })
       .nullable(),
+    marine: z
+      .object({
+        areas: z.number().int(),
+        staleAreas: z.number().int().openapi({ description: "Wilayah maritim yang belum pernah berhasil atau terakhir berhasil > 24 jam lalu." }),
+        lastSuccessAt: z.string().nullable(),
+        oldestSuccessAt: z.string().nullable(),
+      })
+      .nullable()
+      .optional(),
   })
   .openapi("Health");
 
@@ -342,5 +351,69 @@ export const alertListResponseSchema = z
     alerts: z.array(alertSchema),
   })
   .openapi("WeatherAlertList");
+
+/* ------------------------------ maritim & keselamatan pantai ------------------------------ */
+
+export const seaStatusEnum = z.enum(["perhatian", "waspada", "bahaya", "informasi_terbatas"]);
+
+export const seaSlotSchema = z
+  .object({
+    validAt: z.string().openapi({ description: "Awal slot dalam UTC (ISO 8601).", example: "2026-10-19T02:00:00Z" }),
+    localTime: z.string().openapi({ description: "Awal slot dalam WIB.", example: "2026-10-19T09:00:00+07:00" }),
+    status: seaStatusEnum.openapi({ description: "Status kelayakan laut per slot." }),
+    waveCat: z.string().nullable().openapi({ example: "Tinggi" }),
+    waveHeightMax: z.number().nullable().openapi({ description: "Tinggi gelombang maksimum dalam meter.", example: 2.5 }),
+    windGustMaxKmh: z.number().nullable().openapi({ description: "Hembusan angin maksimum dalam km/jam.", example: 37 }),
+    currentSpeedMaxKmh: z.number().nullable().openapi({ description: "Kecepatan arus maksimum dalam km/jam.", example: 1.7 }),
+    pointCount: z.number().int().openapi({ description: "Jumlah titik maritim beririsan.", example: 1 }),
+  })
+  .openapi("SeaSlot");
+
+export const seaResponseSchema = z
+  .object({
+    destination: z.object({
+      slug: z.string().openapi({ example: "pantai-baron" }),
+      marineAreaCode: z.string().nullable().openapi({ example: "P.N.03" }),
+    }),
+    source: z.object({
+      provider: z.literal("BMKG"),
+      areaName: z.string().nullable().openapi({ example: "Perairan Gunungkidul" }),
+      stationName: z.string().nullable().openapi({ example: "STASIUN METEOROLOGI KELAS II YOGYAKARTA" }),
+      issuedAt: z.string().nullable().openapi({ example: "2026-10-17T12:00:00Z" }),
+      fetchedAt: z.string().nullable().openapi({ example: "2026-10-18T00:05:00Z" }),
+      isStale: z.boolean(),
+    }),
+    notice: z.string().openapi({
+      example: "Status berlaku untuk wilayah perairan, bukan jaminan kondisi di bibir pantai. Ikuti arahan petugas di lokasi.",
+    }),
+    slots: z.array(seaSlotSchema),
+  })
+  .openapi("SeaResponse");
+
+export const beachSafetyDataSchema = z
+  .object({
+    swimStatus: z.enum(["dilarang", "zona_terbatas", "belum_diverifikasi"]),
+    hazards: z.array(z.string()),
+    sarPostName: z.string().nullable(),
+    sarPostLocation: z.object({ lat: z.number(), lon: z.number() }).nullable(),
+    guardHours: z.record(z.string(), z.array(z.string())).nullable(),
+    emergencyContact: z.string().nullable(),
+    notes: z.string().nullable(),
+    incidentRefs: z.array(z.unknown()),
+    sourceUrl: z.string(),
+    verifiedAt: z.string(),
+  })
+  .openapi("BeachSafetyData");
+
+export const beachSafetyResponseSchema = z
+  .object({
+    destination: z.object({
+      slug: z.string().openapi({ example: "pantai-baron" }),
+    }),
+    verified: z.boolean(),
+    data: beachSafetyDataSchema.nullable(),
+  })
+  .openapi("BeachSafetyResponse");
+
 
 

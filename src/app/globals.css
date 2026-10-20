@@ -49,6 +49,16 @@
   --color-banner-alert-text: #b3261e;
   --color-banner-alert-bg: #f7dcd8;
 
+  /* Status laut (DESIGN-wistara v0.2). Tidak ada varian hijau. */
+  --color-sea-info-text: #1e2b45;
+  --color-sea-info-bg: #e4e9f2;
+  --color-sea-caution-text: #8a5a00;
+  --color-sea-caution-bg: #f6e7c8;
+  --color-sea-danger-text: #b3261e;
+  --color-sea-danger-bg: #f7dcd8;
+  --color-sea-unknown-text: #66635c;
+  --color-sea-unknown-bg: #efe9de;
+
   /* Tipografi: font dimuat dari paket @fontsource-variable (lihat layout.tsx) */
   --font-serif: "Fraunces Variable", "Source Serif 4", Georgia, serif;
   --font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
@@ -108,6 +118,16 @@
   --color-banner-stale-bg: #362a12;
   --color-banner-alert-text: #f87171;
   --color-banner-alert-bg: #381615;
+
+  /* Status laut */
+  --color-sea-info-text: #a9bce0;
+  --color-sea-info-bg: #1c2638;
+  --color-sea-caution-text: #fbbf24;
+  --color-sea-caution-bg: #362a12;
+  --color-sea-danger-text: #f87171;
+  --color-sea-danger-bg: #381615;
+  --color-sea-unknown-text: #9ca3af;
+  --color-sea-unknown-bg: #262626;
 }
 
 @layer base {
@@ -357,6 +377,31 @@
 .wistara-tooltip-chip.wistara-band-closed {
   background-color: var(--color-score-closed-bg);
   color: var(--color-score-closed-text);
+}
+
+.wistara-tooltip-chip.wistara-sea-chip {
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.wistara-tooltip-chip.wistara-sea-perhatian {
+  background-color: var(--color-sea-info-bg);
+  color: var(--color-sea-info-text);
+}
+
+.wistara-tooltip-chip.wistara-sea-waspada {
+  background-color: var(--color-sea-caution-bg);
+  color: var(--color-sea-caution-text);
+}
+
+.wistara-tooltip-chip.wistara-sea-bahaya {
+  background-color: var(--color-sea-danger-bg);
+  color: var(--color-sea-danger-text);
+}
+
+.wistara-tooltip-chip.wistara-sea-informasi_terbatas {
+  background-color: var(--color-sea-unknown-bg);
+  color: var(--color-sea-unknown-text);
 }
 
 .wistara-tooltip-weather {

@@ -60,6 +60,7 @@ export async function setup() {
   // Pengaman: tes tidak boleh pernah memanggil BMKG sungguhan. Port 9 tertutup, jadi
   // pengambilan yang tidak disengaja gagal cepat (dan justru menguji jalur "BMKG gagal").
   process.env.BMKG_API_BASE_URL = "http://127.0.0.1:9/bmkg-uji";
+  process.env.BMKG_MARINE_BASE_URL = "http://127.0.0.1:9/bmkg-marine-uji";
 }
 
 export async function teardown() {

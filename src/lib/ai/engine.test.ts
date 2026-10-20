@@ -100,8 +100,10 @@ describe("tempat di luar katalog dan topik yang tidak didukung", () => {
   it("keselamatan pantai tidak pernah dinyatakan aman atau tidak", async () => {
     const r = await ask("boleh berenang di parangtritis?", [makeDest("pantai-parangtritis")]);
     expect(r.type).toBe("unsupported");
-    expect(r.baseReply).toContain("belum memiliki data");
-    expect(r.baseReply).not.toMatch(/\baman\b.*\bberenang\b.*\bboleh\b/);
+    expect(r.baseReply).toContain("prakiraan gelombang BMKG");
+    expect(r.baseReply).toContain("belum memiliki data arus balik");
+    expect(r.baseReply).not.toMatch(/\baman\b/i);
+    expect(r.baseReply).not.toMatch(/belum memiliki data tinggi gelombang/);
     expect(r.cards).toEqual([]);
   });
 

@@ -4,6 +4,7 @@ import { noStoreJson } from "@/lib/api/http";
 import { getPool } from "@/lib/db";
 import { syncBmkgAlerts } from "@/lib/weather/alerts-sync";
 import { warmRegion } from "@/lib/weather/service";
+import { warmMarineRegion } from "@/lib/weather/marine-service";
 
 export const dynamic = "force-dynamic";
 // Batas fungsi Vercel Hobby 60 detik.
@@ -41,6 +42,21 @@ export const GET = withApi(async (request) => {
     return { fetched: 0, synced: 0, errors: 1 };
   });
 
+  // Panaskan 3 wilayah perairan maritim DIY sebelum wilayah darat (jeda 1,1 dtk)
+  const marineCounts = { refreshed: 0, failed: 0, skipped: 0 };
+  const marineCodes = ["P.N.01", "P.N.02", "P.N.03"];
+  for (let i = 0; i < marineCodes.length; i += 1) {
+    if (Date.now() - startedAt > START_BUDGET_MS) break;
+    try {
+      const res = await warmMarineRegion(marineCodes[i]);
+      marineCounts[res] += 1;
+    } catch (err) {
+      console.error(`[cron] Gagal pemanasan maritim ${marineCodes[i]}:`, err);
+      marineCounts.failed += 1;
+    }
+    await new Promise((resolve) => setTimeout(resolve, BMKG_GAP_MS));
+  }
+
   const { rows } = await getPool().query<{ adm4_code: string }>(
     `select d.adm4_code
      from (select distinct adm4_code from destinations) d
@@ -61,6 +77,7 @@ export const GET = withApi(async (request) => {
   return noStoreJson({
     regions: rows.length,
     alerts: alertStats,
+    marine: marineCounts,
     ...counts,
     durationMs: Date.now() - startedAt,
   });

@@ -2,8 +2,10 @@
 
 export const OSM_ATTRIBUTION = "© OpenStreetMap contributors (ODbL)";
 export const BMKG_ATTRIBUTION = "Data cuaca BMKG";
+export const BMKG_MARINE_ATTRIBUTION = "Data maritim BMKG";
 export const OPENFREEMAP_ATTRIBUTION = "Peta OpenFreeMap";
 
 export const OSM_COPYRIGHT_URL = "https://www.openstreetmap.org/copyright";
 export const BMKG_URL = "https://data.bmkg.go.id/prakiraan-cuaca/";
+export const BMKG_MARINE_URL = "https://maritim.bmkg.go.id/";
 export const OPENFREEMAP_URL = "https://openfreemap.org/";

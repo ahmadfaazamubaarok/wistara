@@ -1,0 +1,92 @@
+{
+  "code": "P.N.03",
+  "name": "Perairan Gunungkidul",
+  "no_surat": "B/ME.01.02/CP/017/YIA/X/2026",
+  "nama_prakirawan": "ANANG ARIANE",
+  "nama_stasiun": "STASIUN METEOROLOGI KELAS II YOGYAKARTA",
+  "issued": "2026-10-17 12:00 UTC",
+  "valid_from": "2026-10-18 00:00 UTC",
+  "valid_to": "2026-10-21 00:00 UTC",
+  "forecast_day1": [
+    {
+      "time": "2026-10-18 00:00 UTC",
+      "weather": "Berawan Tebal",
+      "temp_avg": 24,
+      "rh_avg": 91,
+      "wind_from": "Timur Laut",
+      "wind_speed": 2,
+      "wind_gust": 14,
+      "wave_cat": "Sedang",
+      "wave_height": 1.5,
+      "current_to": "Barat",
+      "current_speed": 0.86
+    },
+    {
+      "time": "2026-10-18 01:00 UTC",
+      "weather": "Berawan Tebal",
+      "temp_avg": 24,
+      "rh_avg": 90,
+      "wind_from": "Timur Laut",
+      "wind_speed": 2,
+      "wind_gust": 16,
+      "wave_cat": "Sedang",
+      "wave_height": 1.6,
+      "current_to": "Barat",
+      "current_speed": 0.84
+    },
+    {
+      "time": "2026-10-18 02:00 UTC",
+      "weather": "Berawan Tebal",
+      "temp_avg": 24,
+      "rh_avg": 91,
+      "wind_from": "Utara",
+      "wind_speed": 5,
+      "wind_gust": 17,
+      "wave_cat": "Sedang",
+      "wave_height": 1.6,
+      "current_to": "Barat",
+      "current_speed": 0.8
+    }
+  ],
+  "forecast_day2-4": [
+    {
+      "time": "2026-10-18 02:00 UTC",
+      "weather": "Berawan Tebal (Duplikat Resolusi 180)",
+      "temp_avg": 24,
+      "rh_avg": 91,
+      "wind_from": "Utara",
+      "wind_speed": 5,
+      "wind_gust": 17,
+      "wave_cat": "Sedang",
+      "wave_height": 1.6,
+      "current_to": "Barat",
+      "current_speed": 0.8
+    },
+    {
+      "time": "2026-10-19 00:00 UTC",
+      "weather": "Berawan",
+      "temp_avg": 25,
+      "rh_avg": 92,
+      "wind_from": "Timur",
+      "wind_speed": 7,
+      "wind_gust": 12,
+      "wave_cat": "Sedang",
+      "wave_height": 2.4,
+      "current_to": "Barat",
+      "current_speed": 0.92
+    },
+    {
+      "time": "2026-10-19 03:00 UTC",
+      "weather": "Cerah Berawan",
+      "temp_avg": 25,
+      "rh_avg": 91,
+      "wind_from": "Timur",
+      "wind_speed": 7,
+      "wind_gust": 20,
+      "wave_cat": "Tinggi",
+      "wave_height": 2.5,
+      "current_to": "Barat",
+      "current_speed": 0.88
+    }
+  ]
+}

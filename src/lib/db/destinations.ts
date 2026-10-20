@@ -21,6 +21,7 @@ export type Destination = {
   /** Tanggal jam buka terakhir diverifikasi ke pengelola; null = belum. */
   verifiedAt: string | null;
   region: { desa: string; kecamatan: string; kabupaten: string };
+  marineAreaCode: string | null;
 };
 
 type DestinationRow = {
@@ -39,6 +40,7 @@ type DestinationRow = {
   desa: string;
   kecamatan: string;
   kabupaten: string;
+  marine_area_code: string | null;
 };
 
 const SELECT = `
@@ -47,7 +49,8 @@ const SELECT = `
          extensions.st_x(d.location::extensions.geometry) as lon,
          d.open_hours, d.description, d.osm_ref,
          to_char(d.verified_at, 'YYYY-MM-DD') as verified_at,
-         r.desa, r.kecamatan, r.kabupaten
+         r.desa, r.kecamatan, r.kabupaten,
+         d.marine_area_code
   from destinations d
   join regions r on r.adm4_code = d.adm4_code`;
 
@@ -66,6 +69,60 @@ function mapDestination(row: DestinationRow): Destination {
     osmRef: row.osm_ref,
     verifiedAt: row.verified_at,
     region: { desa: row.desa, kecamatan: row.kecamatan, kabupaten: row.kabupaten },
+    marineAreaCode: row.marine_area_code ?? null,
+  };
+}
+
+export type BeachSafety = {
+  swimStatus: "dilarang" | "zona_terbatas" | "belum_diverifikasi";
+  hazards: string[];
+  sarPostName: string | null;
+  sarPostLocation: { lat: number; lon: number } | null;
+  guardHours: Record<string, string[]> | null;
+  emergencyContact: string | null;
+  notes: string | null;
+  incidentRefs: unknown[];
+  sourceUrl: string;
+  verifiedAt: string;
+};
+
+export async function getBeachSafety(destinationId: string): Promise<BeachSafety | null> {
+  const { rows } = await getPool().query<{
+    swim_status: "dilarang" | "zona_terbatas" | "belum_diverifikasi";
+    hazards: string[];
+    sar_post_name: string | null;
+    sar_lat: number | null;
+    sar_lon: number | null;
+    guard_hours: Record<string, string[]> | null;
+    emergency_contact: string | null;
+    notes: string | null;
+    incident_refs: unknown[];
+    source_url: string;
+    verified_at: string;
+  }>(
+    `select swim_status, hazards, sar_post_name,
+            extensions.st_y(sar_post_location::extensions.geometry) as sar_lat,
+            extensions.st_x(sar_post_location::extensions.geometry) as sar_lon,
+            guard_hours, emergency_contact, notes, incident_refs, source_url,
+            to_char(verified_at, 'YYYY-MM-DD') as verified_at
+     from beach_safety
+     where destination_id = $1`,
+    [destinationId],
+  );
+  const row = rows[0];
+  if (!row) return null;
+  return {
+    swimStatus: row.swim_status,
+    hazards: row.hazards ?? [],
+    sarPostName: row.sar_post_name,
+    sarPostLocation:
+      row.sar_lat !== null && row.sar_lon !== null ? { lat: row.sar_lat, lon: row.sar_lon } : null,
+    guardHours: row.guard_hours,
+    emergencyContact: row.emergency_contact,
+    notes: row.notes,
+    incidentRefs: row.incident_refs ?? [],
+    sourceUrl: row.source_url,
+    verifiedAt: row.verified_at,
   };
 }
 

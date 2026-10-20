@@ -16,6 +16,8 @@ import { getDestinationEnrichment } from "@/lib/destination-enrichment";
 import { getGoogleMapsPlaceUrl } from "@/lib/google-maps";
 import { WistaraAiPanel } from "./wistara-ai-panel";
 import { BAND_COLOR, type ScoreBand } from "@/lib/score-band";
+import { SeaBadge } from "@/components/sea-badge";
+import { seaRecommendationRank, type SeaStatus } from "@/lib/marine/sea-status";
 
 export type HomeSlotItem = {
   validAt: string;
@@ -26,6 +28,9 @@ export type HomeSlotItem = {
   band: ScoreBand;
   weatherDesc: string | null;
   t: number | null;
+  seaStatus?: SeaStatus | null;
+  waveHeightMax?: number | null;
+  waveCat?: string | null;
 };
 
 export type HomeItem = {
@@ -35,8 +40,17 @@ export type HomeItem = {
   lat: number;
   lon: number;
   kabupaten: string;
+  marineAreaCode?: string | null;
   /** Selaras dengan `days`; null = tidak ada slot buka pada hari itu. */
-  bestByDay: ({ localTime: string; score: number; label: string; band: ScoreBand } | null)[];
+  bestByDay: ({
+    localTime: string;
+    score: number;
+    label: string;
+    band: ScoreBand;
+    seaStatus?: SeaStatus | null;
+    waveHeightMax?: number | null;
+    waveCat?: string | null;
+  } | null)[];
   /** Seluruh slot 3-jam untuk pengurutan jam spesifik (F11). */
   slots?: HomeSlotItem[];
   /** False bila prakiraan BMKG belum pernah tersimpan untuk destinasi ini. */
@@ -215,6 +229,9 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           weatherDesc: null,
           t: null,
           sortScore: best?.score ?? -1,
+          seaStatus: best?.seaStatus ?? null,
+          waveHeightMax: best?.waveHeightMax ?? null,
+          waveCat: best?.waveCat ?? null,
         };
       }
 
@@ -233,6 +250,9 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           weatherDesc: null,
           t: null,
           sortScore: -1,
+          seaStatus: null,
+          waveHeightMax: null,
+          waveCat: null,
         };
       }
 
@@ -245,6 +265,9 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
         weatherDesc: slot.weatherDesc,
         t: slot.t,
         sortScore: slot.isOpen && slot.score !== null ? slot.score : -1,
+        seaStatus: slot.seaStatus ?? null,
+        waveHeightMax: slot.waveHeightMax ?? null,
+        waveCat: slot.waveCat ?? null,
       };
     },
     [selectedHour, currentDayKey, dayIndex],
@@ -314,6 +337,9 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           band: evaluation.band,
           badgeText: evaluation.isOpen ? undefined : evaluation.label,
           weatherText: evaluation.isOpen ? weatherParts.join(" · ") : evaluation.timeText,
+          seaStatus: item.category === "pantai" ? evaluation.seaStatus : null,
+          waveHeightMax: item.category === "pantai" ? evaluation.waveHeightMax : null,
+          waveCat: item.category === "pantai" ? evaluation.waveCat : null,
         };
       }),
     [visible, getItemEvaluation, selectedHour, dayIndex],
@@ -356,10 +382,18 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           timeText: best ? `pukul ${slotHour(best.localTime)}` : "Tutup",
           weatherDesc: bestSlot?.weatherDesc ?? null,
           t: bestSlot?.t ?? null,
+          seaStatus: best?.seaStatus ?? null,
+          waveHeightMax: best?.waveHeightMax ?? null,
+          waveCat: best?.waveCat ?? null,
         };
       })
       .filter((entry) => entry.score > 0)
-      .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name, "id"))
+      .sort(
+        (a, b) =>
+          seaRecommendationRank(a.seaStatus) - seaRecommendationRank(b.seaStatus) ||
+          b.score - a.score ||
+          a.item.name.localeCompare(b.item.name, "id"),
+      )
       .slice(0, 3);
   }, [items]);
 
@@ -599,7 +633,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  {topPicksToday.map(({ item, score, timeText, weatherDesc, t }) => {
+                  {topPicksToday.map(({ item, score, timeText, weatherDesc, t, seaStatus, waveHeightMax, waveCat }) => {
                     const selected = item.slug === selectedSlug;
                     const mapsUrl = getGoogleMapsPlaceUrl(item.name, item.kabupaten);
                     return (
@@ -659,8 +693,16 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                         </div>
 
                             <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-hairline/60 pt-1.5 text-xs">
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 <ScoreChip score={score} size="sm" />
+                                {item.category === "pantai" && seaStatus && (
+                                  <SeaBadge
+                                    status={seaStatus}
+                                    waveHeight={waveHeightMax}
+                                    waveCat={waveCat}
+                                    size="sm"
+                                  />
+                                )}
                                 <span className="text-[11px] font-medium text-muted">{timeText}</span>
                               </div>
                               {weatherDesc && (
@@ -1087,10 +1129,17 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                                 </div>
                               </div>
 
-                              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                              <div className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
                                 {evaluation.isOpen && evaluation.score !== null ? (
                                   <>
                                     <ScoreChip score={evaluation.score} />
+                                    {item.category === "pantai" && evaluation.seaStatus && (
+                                      <SeaBadge
+                                        status={evaluation.seaStatus}
+                                        waveHeight={evaluation.waveHeightMax}
+                                        waveCat={evaluation.waveCat}
+                                      />
+                                    )}
                                     <span className="text-[13px] text-muted">
                                       {evaluation.timeText}
                                       {evaluation.weatherDesc ? ` · ${evaluation.weatherDesc}` : ""}
@@ -1100,6 +1149,13 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                                 ) : (
                                   <>
                                     <ScoreChip score={null} />
+                                    {item.category === "pantai" && evaluation.seaStatus && (
+                                      <SeaBadge
+                                        status={evaluation.seaStatus}
+                                        waveHeight={evaluation.waveHeightMax}
+                                        waveCat={evaluation.waveCat}
+                                      />
+                                    )}
                                     <span className="text-[13px] text-muted">{evaluation.timeText}</span>
                                   </>
                                 )}

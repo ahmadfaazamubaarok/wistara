@@ -202,7 +202,7 @@ const CAPABILITY_SUGGESTIONS = [
 
 const UNSUPPORTED_REPLY: Record<UnsupportedKind, string> = {
   gelombang:
-    "Maaf, kami belum memiliki data tinggi gelombang, arus, atau kelayakan berenang di sistem, jadi saya tidak bisa menyatakan aman atau tidaknya. Untuk aktivitas di pantai, ikuti rambu dan arahan petugas di lokasi serta imbauan resmi BMKG.",
+    "Wistara menampilkan prakiraan gelombang BMKG untuk wilayah perairan di halaman detail pantai (lihat badge kondisi laut), tetapi itu bukan kondisi di titik pantai tertentu. Kami belum memiliki data arus balik atau kelayakan berenang per pantai, jadi saya tidak bisa menyatakan boleh atau tidaknya berenang. Ikuti rambu dan arahan petugas di lokasi serta imbauan resmi BMKG.",
   penginapan: "Maaf, data penginapan belum ada di sistem kami. Wistara saat ini fokus pada waktu terbaik berkunjung, cuaca, dan fasilitas di sekitar 20 destinasi.",
   transportasi:
     "Untuk rute kendaraan umum di Yogyakarta, Anda dapat memanfaatkan bus Trans Jogja (tarif Rp 3.600 non-tunai), KRL Commuter Line Yogya–Solo (Stasiun Tugu, Lempuyangan, Maguwo, Brambanan), dan KA Bandara YIA. Pada tiap halaman detail destinasi di Wistara, Anda dapat melihat halte/stasiun terdekat dan langsung mengeklik opsi 'Rute Kendaraan Umum' untuk panduan transit lengkap di Google Maps.",

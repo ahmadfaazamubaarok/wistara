@@ -1,5 +1,6 @@
 "use client";
 
+import { SEA_STATUS_HINT, seaBadgeFullText } from "@/lib/marine/sea-labels";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState } from "react";
 import type { Map as MapLibreMap, Marker } from "maplibre-gl";
@@ -34,6 +35,12 @@ export type MapMarker = {
   badgeText?: string;
   /** Detail cuaca/waktu (misal: "pukul 12.00 · Cerah Berawan (29°C)"). */
   weatherText?: string;
+  /** Status kondisi laut khusus kategori pantai (perhatian, waspada, bahaya, informasi_terbatas). */
+  seaStatus?: import("@/lib/marine/sea-status").SeaStatus | null;
+  /** Tinggi gelombang laut maksimum (meter). */
+  waveHeightMax?: number | null;
+  /** Kategori gelombang BMKG terburuk pada slot (mis. "Sedang"). */
+  waveCat?: string | null;
   /** Bila true, penanda adalah destinasi utama (Hero Marker) yang tampil lebih mencolok dengan beacon radar & label nama mengambang. */
   isHero?: boolean;
   /** Teks label permanen di atas pin hero (biasanya nama destinasi, misal "Candi Prambanan"). */
@@ -166,6 +173,15 @@ function createPopupContent(marker: MapMarker): HTMLElement {
     chip.textContent = `★ ${marker.score}${marker.scoreLabel ? ` · ${marker.scoreLabel}` : ""}`;
     statusRow.appendChild(chip);
 
+    if (marker.seaStatus) {
+      const seaChip = document.createElement("span");
+      seaChip.className = `wistara-tooltip-chip wistara-sea-chip wistara-sea-${marker.seaStatus}`;
+      const label = seaBadgeFullText(marker.seaStatus, marker.waveCat, marker.waveHeightMax);
+      seaChip.textContent = `Laut · ${label}`;
+      seaChip.title = `${label}. ${SEA_STATUS_HINT[marker.seaStatus]}`;
+      statusRow.appendChild(seaChip);
+    }
+
     if (marker.weatherText) {
       const weather = document.createElement("span");
       weather.className = "wistara-tooltip-weather";
@@ -183,6 +199,15 @@ function createPopupContent(marker: MapMarker): HTMLElement {
     chip.className = `wistara-tooltip-chip wistara-band-${band}`;
     chip.textContent = marker.badgeText ?? "Tutup";
     statusRow.appendChild(chip);
+
+    if (marker.seaStatus) {
+      const seaChip = document.createElement("span");
+      seaChip.className = `wistara-tooltip-chip wistara-sea-chip wistara-sea-${marker.seaStatus}`;
+      const label = seaBadgeFullText(marker.seaStatus, marker.waveCat, marker.waveHeightMax);
+      seaChip.textContent = `Laut · ${label}`;
+      seaChip.title = `${label}. ${SEA_STATUS_HINT[marker.seaStatus]}`;
+      statusRow.appendChild(seaChip);
+    }
 
     if (marker.weatherText) {
       const weather = document.createElement("span");

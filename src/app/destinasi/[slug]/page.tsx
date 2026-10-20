@@ -3,12 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { AttributionBar } from "@/components/attribution-bar";
+import { BeachMaritimeCard, type SeaWorstSlot } from "@/components/destination/beach-maritime-card";
 import { DestinationEnrichmentCard } from "@/components/destination/destination-enrichment-card";
 import { FacilitiesPanel, PANEL_TYPES } from "@/components/destination/facilities-panel";
 import { GoogleMapsPlaceCard } from "@/components/destination/google-maps-place-card";
 import { SlotExplorer } from "@/components/destination/slot-explorer";
 import { MiscIcon } from "@/components/icons";
 import { ScoreChip } from "@/components/score-chip";
+import { SeaBadge } from "@/components/sea-badge";
 import { SiteFooter } from "@/components/site-footer";
 import { SaveToTrip } from "@/components/trips/save-to-trip";
 import { buttonClass, StatusBanner } from "@/components/ui";
@@ -19,13 +21,16 @@ import { googleMapsRouteUrl } from "@/lib/api/http";
 import { slugParams } from "@/lib/api/schemas";
 import { CATEGORY_LABEL } from "@/lib/categories";
 import { createDemoAlert, getActiveAlertsForDestination } from "@/lib/db/alerts";
-import { facilitiesNear, getDestinationBySlug } from "@/lib/db/destinations";
+import { facilitiesNear, getBeachSafety, getDestinationBySlug } from "@/lib/db/destinations";
 import { getDestinationEnrichment } from "@/lib/destination-enrichment";
 import { getGoogleMapsTransitUrl } from "@/lib/google-maps";
 import { alternativesBySlot, bestOtherSlot, isAlternativeTrigger } from "@/lib/forecast/alternatives";
 import { getDestinationForecast } from "@/lib/forecast/destination-forecast";
 import { formatDistance, formatWibDateTime, relativeDayName, slotHour, summarizeOpenHours } from "@/lib/format";
+import { formatWaveHeight } from "@/lib/marine/sea-labels";
+import { evaluateSeaSlot } from "@/lib/marine/sea-status";
 import { DEFAULT_VISIT_WINDOW } from "@/lib/scoring/open-hours";
+import { getAreaForecast } from "@/lib/weather/marine-service";
 
 export const dynamic = "force-dynamic";
 
@@ -63,11 +68,17 @@ export default async function DestinationPage({ params, searchParams }: Props) {
   const allowDemo = process.env.NODE_ENV !== "production";
   const isDemoAlert = allowDemo && (search?.preview_alert === "1" || search?.demo_alert === "1");
 
-  const [forecast, nearby, access, activeAlerts] = await Promise.all([
+  const [forecast, nearby, access, activeAlerts, marineForecast, beachSafety] = await Promise.all([
     getDestinationForecast(destination, { days: 3, now }),
     facilitiesNear(destination.id, 1000, PANEL_TYPES),
     facilitiesNear(destination.id, ACCESS_RADIUS_M, ["halte", "stasiun"]),
     getActiveAlertsForDestination(destination, now),
+    destination.category === "pantai" && destination.marineAreaCode
+      ? getAreaForecast(destination.marineAreaCode, { now }).catch(() => null)
+      : Promise.resolve(null),
+    destination.category === "pantai"
+      ? getBeachSafety(destination.id).catch(() => null)
+      : Promise.resolve(null),
   ]);
 
   const alerts = isDemoAlert && activeAlerts.length === 0 ? [createDemoAlert(destination, now)] : activeAlerts;
@@ -106,6 +117,35 @@ export default async function DestinationPage({ params, searchParams }: Props) {
   const hoursLines = destination.openHours ? summarizeOpenHours(destination.openHours) : [];
   const { source } = forecast;
   const enrichment = getDestinationEnrichment(destination.slug);
+
+  // Status laut dinilai pada slot yang sama dengan "waktu terbaik" cuaca darat,
+  // dan label slotnya ditampilkan agar pengguna tahu jam berapa yang dinilai.
+  const seaOptions = {
+    isStale: marineForecast?.isStale ?? true,
+    marineAreaCode: destination.marineAreaCode,
+  };
+  const slotWhen = (localTime: string) => {
+    const dayIndex = forecast.dayKeys.indexOf(localTime.slice(0, 10));
+    return `${dayIndex >= 0 ? relativeDayName(dayIndex) : localTime.slice(0, 10)} ${slotHour(localTime)} WIB`;
+  };
+  const seaEvaluation =
+    destination.category === "pantai"
+      ? evaluateSeaSlot(overall ? overall.localTime : now.toISOString(), marineForecast?.rows ?? [], seaOptions)
+      : null;
+  const seaSlotLabel = overall ? `${slotWhen(overall.localTime)}, waktu terbaik cuaca darat` : null;
+
+  // Status terberat di seluruh slot prakiraan, untuk peringatan di kartu dan banner.
+  const SEA_RANK = { informasi_terbatas: 0, perhatian: 1, waspada: 2, bahaya: 3 } as const;
+  let seaWorst: SeaWorstSlot | null = null;
+  if (destination.category === "pantai" && marineForecast) {
+    for (const slot of forecast.slots) {
+      if (new Date(slot.validAt).getTime() + 3 * 60 * 60 * 1000 <= now.getTime()) continue;
+      const ev = evaluateSeaSlot(slot.validAt, marineForecast.rows, seaOptions);
+      if (!seaWorst || SEA_RANK[ev.status] > SEA_RANK[seaWorst.status]) {
+        seaWorst = { status: ev.status, waveCat: ev.waveCat, waveHeightMax: ev.waveHeightMax, when: slotWhen(slot.localTime) };
+      }
+    }
+  }
 
   return (
     <>
@@ -146,6 +186,16 @@ export default async function DestinationPage({ params, searchParams }: Props) {
               </div>
             )}
 
+            {/* Banner gelombang tinggi: muncul bila ada slot berstatus Bahaya dalam rentang prakiraan */}
+            {seaWorst?.status === "bahaya" && (
+              <StatusBanner kind="alert">
+                <strong className="font-semibold">Gelombang tinggi diprakirakan {seaWorst.when}</strong>
+                {marineForecast?.areaName ? ` di ${marineForecast.areaName}` : ""}
+                {seaWorst.waveHeightMax !== null ? `, hingga ${formatWaveHeight(seaWorst.waveHeightMax)}` : ""}. Jangan bermain air.
+                Sumber BMKG.
+              </StatusBanner>
+            )}
+
             {source.isStale && (
               <StatusBanner kind="stale">
                 Data belum diperbarui.{" "}
@@ -160,10 +210,25 @@ export default async function DestinationPage({ params, searchParams }: Props) {
                 {overall ? `Waktu terbaik: ${relativeDayName(overallDayIndex).toLowerCase()}` : "Waktu terbaik"}
               </h2>
               {overall ? (
-                <div className="flex flex-wrap items-center gap-3">
-                  <ScoreChip score={overall.score} />
-                  <span className="text-ink">pukul {slotHour(overall.localTime)} WIB</span>
-                </div>
+                <>
+                  <div className="flex flex-wrap items-center gap-3">
+                    {destination.category === "pantai" && <span className="text-[14px] text-muted">Cuaca darat</span>}
+                    <ScoreChip score={overall.score} />
+                    {destination.category === "pantai" && seaEvaluation && (
+                      <SeaBadge
+                        status={seaEvaluation.status}
+                        waveHeight={seaEvaluation.waveHeightMax}
+                        waveCat={seaEvaluation.waveCat}
+                      />
+                    )}
+                    <span className="text-ink">pukul {slotHour(overall.localTime)} WIB</span>
+                  </div>
+                  {destination.category === "pantai" && seaEvaluation?.status === "bahaya" && (
+                    <p className="text-[14px] font-medium text-body">
+                      Cuaca darat mendukung, tetapi gelombang di perairan diprakirakan tinggi pada jam ini. Jangan bermain air.
+                    </p>
+                  )}
+                </>
               ) : (
                 <p className="text-body">Belum ada slot yang buka dengan prakiraan tersedia dalam 3 hari ke depan.</p>
               )}
@@ -185,6 +250,17 @@ export default async function DestinationPage({ params, searchParams }: Props) {
               </p>
               <AttributionBar sources={["bmkg"]} />
             </section>
+
+            {destination.category === "pantai" && (
+              <BeachMaritimeCard
+                destination={destination}
+                seaEvaluation={seaEvaluation}
+                marineForecast={marineForecast}
+                beachSafety={beachSafety}
+                slotLabel={seaSlotLabel}
+                worst={seaWorst}
+              />
+            )}
 
             {enrichment && (
               <DestinationEnrichmentCard

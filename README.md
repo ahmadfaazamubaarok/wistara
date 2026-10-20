@@ -23,6 +23,7 @@ Dokumen acuan:
 | F8–F9 | Transparansi sumber dan kesegaran data, halaman metodologi skor, API publik dengan dokumentasi OpenAPI di `/api/docs` |
 | F10 | Banner **peringatan dini cuaca BMKG** (CAP) bila destinasi berada di wilayah terdampak |
 | F11 | Destinasi terbaik lintas daftar untuk satu slot waktu (pemilih jam di beranda, `GET /api/v1/recommendations`) |
+| F12 | Prakiraan maritim BMKG (gelombang, arus, angin) & kerangka keselamatan pantai (`GET .../sea` & `GET .../safety`) |
 | Tambahan | **Wistara AI**, mode gelap, informasi praktis destinasi (tiket, tips, sorotan). Wistara AI berada di luar PRD MVP dan harus ditulis demikian di proposal |
 
 Halaman: `/` (peta + daftar + panel Wistara AI), `/destinasi/[slug]`, `/rencana`, `/masuk`, `/tentang-data`, `/api/docs`.
@@ -161,7 +162,7 @@ Asumsi desain yang harus ditulis jujur di proposal: ambang dan bobot skor, jende
 
 ## Status
 
-**Sudah:** F1–F11, Wistara AI, mode gelap, dialog konfirmasi hapus.
+**Sudah:** F1–F12, Wistara AI, mode gelap, dialog konfirmasi hapus.
 
 **Terverifikasi** di Windows 10 + Docker Desktop: compose, tes unit dan tes integrasi (jalankan perintah di atas untuk jumlah terkini), lint, typecheck, build produksi, header CSP produksi, alur login → simpan rencana → hapus → keluar di browser, dan panel Wistara AI di browser. Tes integrasi memuat satu tes batas laju (30 penulisan per menit) yang pernah gagal sekali karena bergantung pada batas menit; lulus saat diulang.
 
@@ -172,4 +173,4 @@ Asumsi desain yang harus ditulis jujur di proposal: ambang dan bobot skor, jende
 
 **Data yang perlu tindak lanjut tim:** jam buka 20 dari 20 destinasi belum diverifikasi ke pengelola; koordinat Taman Sari, Nglanggeran, dan Pentingsari adalah perkiraan (OSM tak punya objeknya); fasilitas OSM di pantai dan desa wisata jarang; atribut destinasi untuk Wistara AI belum terverifikasi; dengan radius alternatif 15 km, pantai di selatan tak akan pernah mendapat saran museum.
 
-**Belum dikerjakan:** F12 dan di atasnya (P2: rekomendasi personal, ulasan, jadwal Trans Jogja, tinggi gelombang, multi-kota, PWA), pergantian nama internal dari `jelajahlokal` ke `wistara`, dan set uji pertanyaan penuh untuk Wistara AI.
+**Belum dikerjakan:** F13 dan di atasnya (P2: rekomendasi personal, ulasan, jadwal Trans Jogja, multi-kota, PWA), pergantian nama internal dari `jelajahlokal` ke `wistara`, dan set uji pertanyaan penuh untuk Wistara AI.

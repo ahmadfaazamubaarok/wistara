@@ -9,6 +9,7 @@ import {
   addItemBody,
   alertListResponseSchema,
   alternativesResponseSchema,
+  beachSafetyResponseSchema,
   destinationListSchema,
   destinationSchema,
   errorSchema,
@@ -16,6 +17,7 @@ import {
   forecastResponseSchema,
   healthResponseSchema,
   recommendationsResponseSchema,
+  seaResponseSchema,
   tripBody,
   tripListSchema,
   tripSchema,
@@ -89,6 +91,42 @@ registry.registerPath({
     }),
   },
   responses: { 200: { description: "Prakiraan dan skor.", content: json(forecastResponseSchema) }, ...COMMON_ERRORS },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/destinations/{slug}/sea",
+  tags: ["Maritim"],
+  summary: "Prakiraan maritim BMKG per slot 3 jam (hanya pantai)",
+  description:
+    "Data gelombang, arus, dan angin laut per slot 3 jam untuk destinasi pantai. " +
+    "Status bernilai perhatian, waspada, bahaya, atau informasi_terbatas (kata 'aman' dilarang). " +
+    "Mengembalikan 404 bila destinasi bukan kategori pantai.",
+  request: {
+    params: slugPath,
+    query: z.object({
+      days: z.number().int().min(1).max(3).optional().openapi({ description: "Jumlah hari (1-3), default 3.", example: 3 }),
+    }),
+  },
+  responses: {
+    200: { description: "Prakiraan maritim per slot.", content: json(seaResponseSchema) },
+    ...COMMON_ERRORS,
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/destinations/{slug}/safety",
+  tags: ["Keselamatan"],
+  summary: "Data kurasi keselamatan pantai (hanya pantai)",
+  description:
+    "Informasi keselamatan pantai mencakup status boleh/tidaknya berenang, bahaya spesifik (palung, arus balik), " +
+    "pos pantau SAR, dan kontak darurat. Bila pantai belum dikurasi, mengembalikan 200 dengan verified: false.",
+  request: { params: slugPath },
+  responses: {
+    200: { description: "Data keselamatan pantai.", content: json(beachSafetyResponseSchema) },
+    ...COMMON_ERRORS,
+  },
 });
 
 registry.registerPath({

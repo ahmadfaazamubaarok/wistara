@@ -62,9 +62,28 @@ export async function setFetchState(
   );
 }
 
+export async function setMarineFetchState(
+  areaCode: string,
+  options: { fetchedHoursAgo?: number | null; lastAttemptHoursAgo?: number } = {},
+) {
+  const ago = options.fetchedHoursAgo === undefined ? 0 : options.fetchedHoursAgo;
+  await getPool().query(
+    `insert into marine_fetches (area_code, last_success_at, last_attempt_at)
+     values ($1,
+             case when $2::float8 is null then null else now() - make_interval(secs => $2::float8 * 3600) end,
+             now() - make_interval(secs => $3::float8 * 3600))
+     on conflict (area_code) do update set
+       last_success_at = excluded.last_success_at,
+       last_attempt_at = excluded.last_attempt_at,
+       last_status = null,
+       last_error = null`,
+    [areaCode, ago, options.lastAttemptHoursAgo ?? 1],
+  );
+}
+
 /** Hapus semua prakiraan dan status pengambilan (untuk skenario "belum ada data"). */
 export async function clearForecasts() {
-  await getPool().query("truncate forecasts, forecast_fetches");
+  await getPool().query("truncate forecasts, forecast_fetches, marine_forecasts, marine_fetches");
 }
 
 /** Buat semua destinasi berjam buka tetap tiap hari 08.00-17.00 agar hasil tes tidak bergantung hari. */

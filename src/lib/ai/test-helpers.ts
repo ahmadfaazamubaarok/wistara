@@ -81,6 +81,7 @@ export function makeDest(slug: string, overrides: Partial<EngineDestination> = {
     osmRef: null,
     verifiedAt: null,
     region: { desa: "Desa", kecamatan: "Kecamatan", kabupaten: "Bantul" },
+    marineAreaCode: overrides.marineAreaCode ?? null,
     slots: [...daySlots(TODAY), ...daySlots(TOMORROW)],
     enrichment: undefined,
     attr: getDestinationAttribute(slug, isIndoor),

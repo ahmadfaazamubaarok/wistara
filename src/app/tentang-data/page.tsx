@@ -4,7 +4,9 @@ import { FormulaCalculator } from "@/components/about/formula-calculator";
 import { TableOfContents, type TocItem } from "@/components/about/table-of-contents";
 import { ScoreChip } from "@/components/score-chip";
 import { SiteFooter } from "@/components/site-footer";
-import { BMKG_URL, OPENFREEMAP_URL, OSM_COPYRIGHT_URL } from "@/lib/attribution";
+import { BMKG_MARINE_URL, BMKG_URL, OPENFREEMAP_URL, OSM_COPYRIGHT_URL } from "@/lib/attribution";
+import { SeaBadge } from "@/components/sea-badge";
+import { SEA_FIXED_NOTICE, SEA_STATUS_HINT } from "@/lib/marine/sea-labels";
 import { CATEGORY_LABEL, DEST_CATEGORIES } from "@/lib/categories";
 import { getPool } from "@/lib/db";
 import { getScoreProfiles } from "@/lib/db/destinations";
@@ -60,6 +62,7 @@ const TOC_ITEMS: TocItem[] = [
   { id: "sumber", label: "Sumber & Kesegaran", number: "06" },
   { id: "alternatif", label: "Alternatif Hujan", number: "07" },
   { id: "fasilitas", label: "Fasilitas OSM", number: "08" },
+  { id: "maritim", label: "Prakiraan Maritim BMKG", number: "09" },
 ];
 
 export default async function AboutDataPage() {
@@ -456,6 +459,16 @@ export default async function AboutDataPage() {
                       </tr>
                       <tr>
                         <td className={`${td} font-semibold text-ink`}>
+                          <a href={BMKG_MARINE_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                            BMKG Maritim
+                          </a>
+                        </td>
+                        <td className={td}>Tinggi gelombang, arus, dan angin laut (P.N.01, P.N.02, P.N.03)</td>
+                        <td className={td}>Data maritim BMKG, wajib atribusi</td>
+                        <td className={td}>Pembaruan berkala harian</td>
+                      </tr>
+                      <tr>
+                        <td className={`${td} font-semibold text-ink`}>
                           <a href={OSM_COPYRIGHT_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
                             OpenStreetMap
                           </a>
@@ -540,6 +553,152 @@ export default async function AboutDataPage() {
                   sistem menampilkan status <em>&ldquo;Belum terpetakan di OpenStreetMap&rdquo;</em>, bukan menyatakan fasilitas tersebut
                   pasti tidak tersedia di dunia nyata.
                 </p>
+              </div>
+            </section>
+
+            {/* 09. Prakiraan Maritim & Status Laut */}
+            <section id="maritim" aria-labelledby="maritim-h" className="scroll-mt-28">
+              <h2 id="maritim-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
+                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                  09
+                </span>
+                Prakiraan maritim dan status laut
+              </h2>
+
+              <div className="mt-4 space-y-5 text-[15.5px] leading-[1.7] text-body">
+                <p>
+                  Untuk destinasi pantai, Wistara menampilkan prakiraan maritim BMKG berupa kategori dan tinggi gelombang, arus
+                  permukaan, dan hembusan angin laut. Data ini adalah <strong>prakiraan model untuk satu wilayah perairan</strong>,
+                  bukan hasil sensor dan bukan kondisi di titik tertentu di bibir pantai. Semua pantai dalam satu wilayah perairan
+                  mendapat angka yang sama.
+                </p>
+
+                <div className="rounded-xl border border-hairline bg-surface-card p-5 text-[14.5px] leading-relaxed">
+                  <h3 className="font-serif text-[17px] font-normal text-ink">Kenapa status laut dipisah dari skor cuaca?</h3>
+                  <p className="mt-2 text-body">
+                    Skor 0 sampai 100 hanya mengukur kenyamanan cuaca di darat, yaitu hujan, angin, panas, dan jarak pandang. Bila
+                    gelombang ikut dimasukkan, skor tinggi bisa terbaca sebagai &ldquo;laut aman&rdquo;. Karena itu di halaman pantai
+                    skor diberi keterangan &ldquo;Cuaca darat&rdquo;, dan status laut selalu tampil di sebelahnya. Cuaca darat bisa
+                    mendukung sementara gelombang di perairan diprakirakan tinggi.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border-l-4 border-sea-danger-text bg-surface-card p-5 text-[14.5px] leading-relaxed">
+                  <h3 className="font-serif text-[17px] font-normal text-ink">Kenapa tidak ada status &ldquo;aman&rdquo;?</h3>
+                  <p className="mt-2 text-body">
+                    Arus balik (<em>rip current</em>) adalah arus kuat yang mengalir dari bibir pantai ke arah laut. Arus ini bersifat
+                    lokal, bisa muncul saat gelombang terlihat kecil, dan tidak tercakup dalam prakiraan per wilayah perairan. Karena
+                    itu status paling rendah di Wistara hanya menyebut datanya, yaitu &ldquo;Gelombang rendah&rdquo;, tanpa kata
+                    perintah dan tanpa janji. Kata perintah baru dipakai saat BMKG memprakirakan gelombang sedang atau tinggi.
+                  </p>
+                </div>
+
+                <div className="space-y-4 pt-2">
+                  <h3 className="font-serif text-[20px] font-normal text-ink">Cara menghitung status laut per slot 3 jam</h3>
+
+                  <div className="rounded-xl border border-hairline bg-surface-card p-5">
+                    <h4 className="font-semibold text-ink">1. Memasangkan pantai ke wilayah perairan BMKG</h4>
+                    <p className="mt-2 text-[14.5px] text-body">
+                      Setiap pantai dipasangkan ke poligon wilayah perairan BMKG terdekat dari koordinatnya, bukan dari kode wilayah
+                      prakiraan darat. Pasangan yang meragukan (jarak lebih dari 5 km, atau dua poligon hampir sama dekat) dikosongkan,
+                      lalu ditinjau manual oleh tim. Pantai yang belum punya pasangan menampilkan &ldquo;Data laut belum tersedia&rdquo;.
+                    </p>
+                    <ul className="mt-2.5 list-disc space-y-1 pl-5 text-[14px] text-body">
+                      <li><strong className="font-mono text-ink">P.N.01</strong> Perairan Kulonprogo, misalnya Pantai Glagah dan Pantai Trisik</li>
+                      <li><strong className="font-mono text-ink">P.N.02</strong> Perairan Bantul, misalnya Pantai Parangtritis, Depok, dan Goa Cemara</li>
+                      <li><strong className="font-mono text-ink">P.N.03</strong> Perairan Gunungkidul, misalnya Pantai Baron, Drini, Indrayanti, dan Wediombo</li>
+                    </ul>
+                  </div>
+
+                  <div className="rounded-xl border border-hairline bg-surface-card p-5">
+                    <h4 className="font-semibold text-ink">2. Mencocokkan waktu</h4>
+                    <p className="mt-2 text-[14.5px] text-body">
+                      Prakiraan maritim hari pertama berresolusi 1 jam, hari kedua sampai keempat berresolusi 3 jam. Wistara mengambil
+                      semua titik maritim yang waktunya beririsan dengan slot 3 jam yang sama dengan slot cuaca darat.
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-hairline bg-surface-card p-5">
+                    <h4 className="font-semibold text-ink">3. Memakai kondisi terburuk</h4>
+                    <p className="mt-2 text-[14.5px] text-body">
+                      Bila satu slot berisi beberapa titik, yang dipakai adalah kategori, tinggi gelombang, dan hembusan angin
+                      <strong> terburuk</strong>, bukan rata-ratanya. Bila gelombang sempat masuk kategori Sedang selama satu jam, seluruh
+                      slot dinilai Waspada.
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-hairline bg-surface-card p-5">
+                    <h4 className="font-semibold text-ink">4. Menentukan status dari kategori gelombang BMKG</h4>
+                    <div className="mt-3 overflow-x-auto">
+                      <table className="w-full min-w-[520px] border-collapse text-[14px]">
+                        <thead>
+                          <tr className="border-b border-hairline">
+                            <th className={th}>Kategori BMKG</th>
+                            <th className={th}>Tinggi gelombang</th>
+                            <th className={th}>Tampilan di Wistara</th>
+                            <th className={th}>Kalimat pendamping</th>
+                          </tr>
+                        </thead>
+                        <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
+                          <tr>
+                            <td className={`${td} font-semibold text-ink`}>Tenang, Rendah</td>
+                            <td className={`${td} tabular-nums`}>di bawah 1,25 m</td>
+                            <td className={td}><SeaBadge status="perhatian" waveCat="Rendah" waveHeight={1.1} size="sm" /></td>
+                            <td className={td}>{SEA_STATUS_HINT.perhatian}</td>
+                          </tr>
+                          <tr>
+                            <td className={`${td} font-semibold text-ink`}>Sedang</td>
+                            <td className={`${td} tabular-nums`}>1,25 sampai di bawah 2,5 m</td>
+                            <td className={td}><SeaBadge status="waspada" waveCat="Sedang" waveHeight={1.9} size="sm" /></td>
+                            <td className={td}>{SEA_STATUS_HINT.waspada}</td>
+                          </tr>
+                          <tr>
+                            <td className={`${td} font-semibold text-ink`}>Tinggi, Sangat Tinggi, Ekstrem, Sangat Ekstrem</td>
+                            <td className={`${td} tabular-nums`}>2,5 m ke atas</td>
+                            <td className={td}><SeaBadge status="bahaya" waveCat="Tinggi" waveHeight={2.6} size="sm" /></td>
+                            <td className={td}>{SEA_STATUS_HINT.bahaya}</td>
+                          </tr>
+                          <tr>
+                            <td className={`${td} font-semibold text-ink`}>Tidak ada data, atau data lebih dari 24 jam</td>
+                            <td className={td}>-</td>
+                            <td className={td}><SeaBadge status="informasi_terbatas" size="sm" /></td>
+                            <td className={td}>{SEA_STATUS_HINT.informasi_terbatas}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <p className="mt-2 text-[13.5px] text-muted">
+                      Bila kategori kosong, status ditentukan dari tinggi gelombang dengan ambang yang sama. Angka di badge contoh
+                      adalah ilustrasi.
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-hairline bg-surface-card p-5">
+                    <h4 className="font-semibold text-ink">5. Menaikkan status saat angin laut kencang</h4>
+                    <p className="mt-2 text-[14.5px] text-body">
+                      Bila hembusan angin laut maksimum dalam slot lebih dari 25 knot (sekitar 46 km/jam), status naik satu tingkat.
+                      Gelombang rendah menjadi Waspada, dan Waspada menjadi Bahaya. Contohnya, gelombang rendah 1,1 m dengan hembusan
+                      27 knot tampil sebagai <SeaBadge status="waspada" waveCat="Rendah" waveHeight={1.1} size="sm" />.
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-hairline bg-surface-card p-5">
+                    <h4 className="font-semibold text-ink">6. Kesegaran data</h4>
+                    <p className="mt-2 text-[14.5px] text-body">
+                      Wistara mencoba mengambil ulang data maritim bila data yang tersimpan sudah lebih dari 6 jam. Bila pengambilan
+                      gagal, data terakhir tetap dipakai sampai berumur 24 jam. Lewat dari itu, status menjadi &ldquo;Data laut belum
+                      tersedia&rdquo;. Ambang 24 jam lebih ketat dari cuaca darat (13 jam) karena menyangkut kegiatan di air.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-hairline bg-surface-card p-4 text-[13.5px] leading-relaxed text-muted">
+                  <p>
+                    <strong className="text-ink">Pernyataan metodologi.</strong> Data maritim bersumber dari BMKG melalui API data
+                    maritim publik. Pemetaan kategori gelombang ke status Wistara, ambang hembusan angin 25 knot, dan batas umur data
+                    24 jam adalah <strong>asumsi desain tim Wistara</strong>, bukan standar resmi BMKG atau Basarnas. {SEA_FIXED_NOTICE}
+                  </p>
+                </div>
               </div>
             </section>
 
