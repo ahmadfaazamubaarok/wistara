@@ -74,20 +74,20 @@ export default async function AboutDataPage() {
 
   return (
     <>
-      <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-12 lg:grid lg:grid-cols-[210px_minmax(0,1fr)] lg:gap-14">
+      <div className="mx-auto max-w-6xl w-full min-w-0 px-4 py-6 md:px-8 md:py-12 lg:grid lg:grid-cols-[210px_minmax(0,1fr)] lg:gap-14 overflow-x-clip">
         {/* Navigasi Daftar Isi (Desktop Sidebar & Mobile Bar) */}
         <TableOfContents items={TOC_ITEMS} />
 
         {/* Konten Dokumen Utama */}
-        <main id="konten" className="min-w-0 max-w-[72ch] pb-24">
+        <main id="konten" className="w-full min-w-0 max-w-[72ch] pb-24 overflow-x-clip">
           <header>
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
               Metode · Sistem Penilaian Wistara
             </p>
-            <h1 className="mt-3 font-serif text-[clamp(30px,4vw,44px)] font-normal leading-[1.12] tracking-tight text-ink">
+            <h1 className="mt-3 font-serif text-[clamp(26px,4vw,44px)] font-normal leading-[1.15] tracking-tight text-ink">
               Bagaimana Wistara menilai kelayakan kunjungan wisata.
             </h1>
-            <p className="mt-4 text-[17px] leading-[1.65] text-body">
+            <p className="mt-4 text-[16px] sm:text-[17px] leading-[1.65] text-body">
               Setiap warna dan rekomendasi di peta berasal dari satu perhitungan objektif: nilai dasar
               100 dikurangi empat penalti cuaca BMKG terbobot. Halaman ini menjelaskan dari mana data
               berasal, bagaimana rumus menghitungnya, dan contoh nyatanya di berbagai destinasi.
@@ -95,28 +95,28 @@ export default async function AboutDataPage() {
 
             {/* Metadata Bar */}
             <dl className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-y border-hairline py-3 text-[13px]">
-              <div className="flex gap-1.5">
-                <dt className="text-muted">Prakiraan:</dt>
+              <div className="flex gap-1.5 min-w-0">
+                <dt className="text-muted shrink-0">Prakiraan:</dt>
                 <dd className="font-semibold text-ink">BMKG 3 Hari</dd>
               </div>
-              <div className="flex gap-1.5">
-                <dt className="text-muted">Cakupan:</dt>
+              <div className="flex gap-1.5 min-w-0">
+                <dt className="text-muted shrink-0">Cakupan:</dt>
                 <dd className="font-semibold text-ink">20 Destinasi DIY</dd>
               </div>
-              <div className="flex gap-1.5">
-                <dt className="text-muted">Peta & Fasilitas:</dt>
+              <div className="flex gap-1.5 min-w-0">
+                <dt className="text-muted shrink-0">Peta & Fasilitas:</dt>
                 <dd className="font-semibold text-ink">OpenStreetMap (ODbL)</dd>
               </div>
-              <div className="flex gap-1.5">
-                <dt className="text-muted">Pembaruan:</dt>
+              <div className="flex gap-1.5 min-w-0">
+                <dt className="text-muted shrink-0">Pembaruan:</dt>
                 <dd className="font-semibold text-ink">Otomatis 2× Sehari</dd>
               </div>
             </dl>
           </header>
 
-          <div className="mt-8 flex flex-col gap-8">
+          <div className="mt-8 flex flex-col gap-8 w-full min-w-0">
             {/* Ringkasnya */}
-            <section id="ringkas" aria-labelledby="ringkas-h" className="scroll-mt-28">
+            <section id="ringkas" aria-labelledby="ringkas-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="ringkas-h" className="font-serif text-[26px] font-normal text-ink">
                 Ringkasnya
               </h2>
@@ -149,7 +149,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 01. Rumusnya & Contoh */}
-            <section id="rumus" aria-labelledby="rumus-h" className="scroll-mt-28">
+            <section id="rumus" aria-labelledby="rumus-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="rumus-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   01
@@ -159,8 +159,8 @@ export default async function AboutDataPage() {
 
               <div className="mt-4 space-y-4 text-[15.5px] leading-[1.7] text-body">
                 {/* Kotak Formula Besar */}
-                <div className="rounded-xl border border-hairline bg-surface-card p-5 md:p-6 text-ink">
-                  <p className="font-serif text-[clamp(18px,2.2vw,22px)] leading-snug">
+                <div className="rounded-xl border border-hairline bg-surface-card p-4 sm:p-5 md:p-6 text-ink overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <p className="font-serif text-[clamp(15px,2.2vw,22px)] leading-snug break-words">
                     Skor = maks(0, 100 − (w<sub>hujan</sub>·P<sub>hujan</sub> + w<sub>angin</sub>·P<sub>angin</sub> + w<sub>panas</sub>·P<sub>panas</sub> + w<sub>pandang</sub>·P<sub>pandang</sub>))
                   </p>
                   <p className="mt-2 text-sm text-muted">
@@ -186,7 +186,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 02. Empat Band Skor */}
-            <section id="band" aria-labelledby="band-h" className="scroll-mt-28">
+            <section id="band" aria-labelledby="band-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="band-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   02
@@ -200,7 +200,7 @@ export default async function AboutDataPage() {
                 </p>
 
                 {/* Visualisasi Spektrum Band */}
-                <div className="pt-2" aria-hidden="true">
+                <div className="pt-2 w-full max-w-full overflow-hidden" aria-hidden="true">
                   <div className="relative h-3.5 overflow-hidden rounded-full border border-hairline flex">
                     <span className="h-full bg-score-bad-bg border-r border-hairline" style={{ width: "50%" }} />
                     <span className="h-full bg-score-mid-bg border-r border-hairline" style={{ width: "25%" }} />
@@ -218,7 +218,7 @@ export default async function AboutDataPage() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="w-full max-w-full overflow-x-auto rounded-lg border border-hairline/60">
                   <table className="w-full min-w-[500px] border-collapse text-[14px]">
                     <caption className="sr-only">Rentang skor dan artinya</caption>
                     <thead>
@@ -269,7 +269,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 03. Penalti Cuaca */}
-            <section id="penalti" aria-labelledby="penalti-h" className="scroll-mt-28">
+            <section id="penalti" aria-labelledby="penalti-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="penalti-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   03
@@ -280,7 +280,7 @@ export default async function AboutDataPage() {
                 <p>
                   Nilai penalti mentah (0 sampai 100) ditentukan oleh aturan berdasar data parameter resmi BMKG:
                 </p>
-                <div className="overflow-x-auto">
+                <div className="w-full max-w-full overflow-x-auto rounded-lg border border-hairline/60">
                   <table className="w-full min-w-[540px] border-collapse text-[14.5px]">
                     <thead>
                       <tr className="border-b border-hairline">
@@ -330,7 +330,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 04. Bobot Kategori */}
-            <section id="bobot" aria-labelledby="bobot-h" className="scroll-mt-28">
+            <section id="bobot" aria-labelledby="bobot-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="bobot-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   04
@@ -342,7 +342,7 @@ export default async function AboutDataPage() {
                   Setiap jenis destinasi memiliki profil kerentanan berbeda yang disimpan di tabel basis data{" "}
                   <code>score_profiles</code>:
                 </p>
-                <div className="overflow-x-auto">
+                <div className="w-full max-w-full overflow-x-auto rounded-lg border border-hairline/60">
                   <table className="w-full min-w-[500px] border-collapse text-[14.5px] tabular-nums">
                     <thead>
                       <tr className="border-b border-hairline">
@@ -394,7 +394,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 05. Jam Buka & Kunjungan */}
-            <section id="jam" aria-labelledby="jam-h" className="scroll-mt-28">
+            <section id="jam" aria-labelledby="jam-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="jam-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   05
@@ -419,7 +419,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 06. Sumber & Kesegaran Data */}
-            <section id="sumber" aria-labelledby="sumber-h" className="scroll-mt-28">
+            <section id="sumber" aria-labelledby="sumber-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="sumber-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   06
@@ -432,7 +432,7 @@ export default async function AboutDataPage() {
                   Aplikasi mematuhi penuh batas wajar dan lisensi penggunaan data terbuka:
                 </p>
 
-                <div className="overflow-x-auto">
+                <div className="w-full max-w-full overflow-x-auto rounded-lg border border-hairline/60">
                   <table className="w-full min-w-[620px] border-collapse text-[14px]">
                     <thead>
                       <tr className="border-b border-hairline">
@@ -506,7 +506,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 07. Alternatif Saat Hujan */}
-            <section id="alternatif" aria-labelledby="alt-h" className="scroll-mt-28">
+            <section id="alternatif" aria-labelledby="alt-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="alt-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   07
@@ -535,7 +535,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 08. Fasilitas OSM */}
-            <section id="fasilitas" aria-labelledby="fasilitas-h" className="scroll-mt-28">
+            <section id="fasilitas" aria-labelledby="fasilitas-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="fasilitas-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   08
@@ -557,7 +557,7 @@ export default async function AboutDataPage() {
             </section>
 
             {/* 09. Prakiraan Maritim & Status Laut */}
-            <section id="maritim" aria-labelledby="maritim-h" className="scroll-mt-28">
+            <section id="maritim" aria-labelledby="maritim-h" className="w-full min-w-0 scroll-mt-28">
               <h2 id="maritim-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
                 <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   09
@@ -629,7 +629,7 @@ export default async function AboutDataPage() {
 
                   <div className="rounded-xl border border-hairline bg-surface-card p-5">
                     <h4 className="font-semibold text-ink">4. Menentukan status dari kategori gelombang BMKG</h4>
-                    <div className="mt-3 overflow-x-auto">
+                    <div className="mt-3 w-full max-w-full overflow-x-auto rounded-lg border border-hairline/60">
                       <table className="w-full min-w-[520px] border-collapse text-[14px]">
                         <thead>
                           <tr className="border-b border-hairline">

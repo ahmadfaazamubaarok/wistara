@@ -144,11 +144,11 @@ export function TableOfContents({ items }: Props) {
       {/* Bilah Navigasi Horizontal Mobile Sticky */}
       <nav
         aria-label="Daftar isi ponsel"
-        className="sticky top-14 z-20 -mx-4 border-b border-hairline bg-canvas/92 px-4 py-2 backdrop-blur lg:hidden"
+        className="sticky top-14 z-20 -mx-4 w-[calc(100%+2rem)] max-w-[100vw] border-b border-hairline bg-canvas/92 px-4 py-2 backdrop-blur lg:hidden"
       >
         <ol
           ref={mobileNavRef}
-          className="flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex w-full max-w-full gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {items.map((item) => {
             const isActive = activeId === item.id;
