@@ -1,5 +1,7 @@
 # PRD JelajahLokal (MVP UINIC 8.0)
 
+> **Status dokumen (22 Okt 2026).** Ini dokumen desain awal (16 Okt) dan dibiarkan seperti aslinya sebagai jejak keputusan. Yang berubah sejak itu: cakupan data kini **365 destinasi di 5 kabupaten/kota** (bukan 20); **tinggi gelombang pantai kini dibangun** sebagai status kondisi laut dari prakiraan maritim BMKG (disebut F12 di README); dan ditambah **usulan destinasi oleh pengelola dengan panel tinjauan admin** yang tidak ada di PRD ini. Bila berbeda dengan dokumen ini, [README](README.md) yang berlaku.
+
 Oct 15, 2026 · @Rani
 
 ## Ringkasan produk
@@ -56,7 +58,7 @@ Pembanding terkuat sudah menyediakan cuaca dan peta, jadi pembeda JelajahLokal h
 
 | Kebutuhan | Google Maps | Info BMKG | JelajahLokal |
 | --- | --- | --- | --- |
-| Peta, rute, tempat di sekitar | Sangat lengkap | Tidak menjadi fokus | Terbatas pada 20 destinasi dan fasilitas OSM, rute diarahkan ke Google Maps |
+| Peta, rute, tempat di sekitar | Sangat lengkap | Tidak menjadi fokus | Terbatas pada 365 destinasi DIY dan fasilitas OSM, rute diarahkan ke Google Maps |
 | Cuaca | Kondisi saat ini dan prakiraan 6 jam di Android, data dari The Weather Channel ([Android Central](https://www.androidcentral.com/apps-software/google-maps-for-android-shows-weather-data)) | Prakiraan 7 hari per kecamatan, peringatan dini, cuaca maritim termasuk tinggi gelombang ([App Store](https://apps.apple.com/fr/app/info-bmkg/id1114372539)) | Prakiraan 3 hari per 3 jam dari API publik BMKG |
 | Menilai apakah cuaca cocok untuk jenis destinasi tertentu | Tidak ada | Tidak ada, pengguna menafsirkan sendiri | Skor per kategori beserta alasannya |
 | Saran pengganti saat cuaca buruk | Tidak ada | Tidak ada | Destinasi indoor terdekat dengan skor lebih baik |
@@ -84,9 +86,9 @@ Rilis 30 Oktober memuat 9 fitur P0. Fitur P1 hanya dikerjakan jika semua P0 suda
 | F10 | Banner peringatan dini BMKG | P1 |
 | F11 | Destinasi terbaik lintas daftar untuk satu slot | P1 |
 
-**Cakupan data.** 20 destinasi di DIY, sekitar 4 per kategori (pantai, alam, budaya, museum, desa wisata). Bahasa antarmuka Bahasa Indonesia. Tampilan mobile-first yang tetap layak di desktop.
+**Cakupan data.** 20 destinasi di DIY, sekitar 4 per kategori (pantai, alam, budaya, museum, desa wisata). Bahasa antarmuka Bahasa Indonesia. Tampilan mobile-first yang tetap layak di desktop. *[Diperbarui 22 Okt: 365 destinasi di 5 kabupaten/kota; 50 di antaranya pantai.]*
 
-**Tidak masuk MVP (ditulis sebagai rencana lanjutan).** Rekomendasi berbasis preferensi dengan AI, ulasan pengguna, jadwal Trans Jogja langsung, tinggi gelombang untuk pantai, kota lain di luar DIY, mode offline, dan dukungan bahasa Inggris.
+**Tidak masuk MVP (ditulis sebagai rencana lanjutan).** Rekomendasi berbasis preferensi dengan AI, ulasan pengguna, jadwal Trans Jogja langsung, tinggi gelombang untuk pantai, kota lain di luar DIY, mode offline, dan dukungan bahasa Inggris. *[Diperbarui 22 Okt: tinggi gelombang pantai sekarang ada sebagai status kondisi laut (Perhatian, Waspada, Bahaya) dari prakiraan maritim BMKG per wilayah perairan. Yang tetap tidak dibangun: rekomendasi personal, ulasan, jadwal Trans Jogja langsung, kota lain, mode offline, dan bahasa Inggris.]*
 
 ## User story dan kriteria penerimaan
 

@@ -1,5 +1,12 @@
 # Rancangan Teknis JelajahLokal (MVP UINIC 8.0)
 
+> **Status dokumen (22 Okt 2026).** Ini dokumen desain awal (15 Okt) dan dibiarkan seperti aslinya sebagai jejak keputusan. Yang berubah sejak itu:
+> - Cakupan data **365 destinasi** (bukan 20), diimpor dari OpenStreetMap lewat `scripts/import-all-diy-destinations.ts` dan disaring ke batas wilayah DIY.
+> - **Penomoran fitur bentrok dengan README.** Di tabel fitur dokumen ini, F12 adalah kelompok rencana lanjutan P2 (termasuk tinggi gelombang, "tidak dibangun"). Di README, F12 dipakai untuk **kondisi laut** yang kini dibangun. Gunakan penomoran README.
+> - Ditambah di luar rancangan ini: kondisi laut (prakiraan maritim BMKG, tabel `marine_*` dan `beach_safety`), Wistara AI, serta **usulan destinasi oleh pengelola** dengan panel admin (tabel `destination_submissions` dan `admins`).
+>
+> Bila berbeda dengan dokumen ini, [README](README.md) yang berlaku.
+
 Oct 15, 2026 · @Rani
 
 ## Ringkasan
@@ -35,7 +42,7 @@ Sembilan fitur P0 wajib selesai dan ter-deploy paling lambat 24 Oktober, karena 
 | F11 | Waktu terbaik lintas destinasi | P1 | "Besok pagi, destinasi mana yang paling sesuai?" diurutkan dari skor tertinggi | F3 untuk semua destinasi |
 | F12 | Rekomendasi berbasis preferensi (AI), ulasan, jadwal Trans Jogja langsung, tinggi gelombang pantai, multi-kota, PWA | P2 | Tidak dibangun, hanya ditulis sebagai rencana | - |
 
-**Cakupan data MVP.** 20 destinasi di DIY, kira-kira 4 per kategori. Contoh kandidat yang perlu dicek koordinat dan kode wilayahnya antara lain Pantai Parangtritis, Pantai Indrayanti, Gumuk Pasir Parangkusumo, Gunung Api Purba Nglanggeran, Hutan Pinus Mangunan, Keraton Yogyakarta, Taman Sari, Candi Prambanan, Museum Benteng Vredeburg, Museum Sonobudoyo, dan Desa Wisata Pentingsari. Daftar final ditentukan tim.
+**Cakupan data MVP.** 20 destinasi di DIY, kira-kira 4 per kategori. Contoh kandidat yang perlu dicek koordinat dan kode wilayahnya antara lain Pantai Parangtritis, Pantai Indrayanti, Gumuk Pasir Parangkusumo, Gunung Api Purba Nglanggeran, Hutan Pinus Mangunan, Keraton Yogyakarta, Taman Sari, Candi Prambanan, Museum Benteng Vredeburg, Museum Sonobudoyo, dan Desa Wisata Pentingsari. Daftar final ditentukan tim. *[Diperbarui 22 Okt: katalog kini 365 destinasi.]*
 
 ## Sumber data
 
@@ -67,7 +74,7 @@ Semua sumber di bawah sudah dicek langsung di halaman resminya pada 15 Oktober 2
 out center tags;
 ```
 
-Dengan 20 destinasi, impor penuh hanya 20 permintaan, jauh di bawah panduan Overpass.
+Dengan 20 destinasi, impor penuh hanya 20 permintaan, jauh di bawah panduan Overpass. *[Diperbarui 22 Okt: untuk 365 destinasi, impor memakai satu kueri Overpass dengan bounding box DIY (`import-all-diy-destinations.ts`, dengan percobaan ulang dan pergantian server), lalu hasilnya disaring ke poligon batas DIY; bukan satu permintaan per destinasi.]*
 
 ## Stack teknologi
 

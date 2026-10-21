@@ -2,11 +2,16 @@
 
 Status: rancangan v2 (17 Okt 2026), menggantikan draf awal. Fitur ini **di luar MVP/PRD** (PRD menempatkan "rekomendasi berbasis preferensi dengan AI" di rencana lanjutan). Dikerjakan karena waktu tersisa, dan harus ditulis jujur di proposal sebagai tambahan di luar PRD.
 
+> **Pembaruan (22 Okt 2026).** Dokumen ini dibiarkan sebagai rancangan v2, dengan koreksi pada bagian yang bertentangan dengan aplikasi sekarang:
+> - Katalog kini **365 destinasi**, bukan 20. Bagian yang menyebut "20 destinasi" (penelusuran semua kombinasi pada penyusun rencana, pengisian atribut manual) ditulis untuk 20 destinasi; lihat `src/lib/ai/` untuk perilaku sekarang.
+> - **Gelombang tidak lagi sepenuhnya "tidak ada datanya".** Halaman pantai kini menampilkan prakiraan maritim BMKG per wilayah perairan. Wistara AI tetap tidak menilai layak-tidaknya berenang, tetapi jawabannya sekarang menyebut hal itu (lihat `UNSUPPORTED_REPLY.gelombang` di `src/lib/ai/engine.ts`).
+> - Bila berbeda dengan dokumen ini, [README](README.md) yang berlaku.
+
 ## 1. Prinsip
 
 1. **Kode memutuskan, model menjelaskan.** Pemilihan destinasi, skor, jam, jarak, dan susunan rencana dihitung kode dari data kita. Model hanya (a) memahami pertanyaan menjadi parameter dan (b) menulis penjelasan ramah dari fakta yang sudah dipilih kode.
 2. **Angka tidak pernah berasal dari model.** Skor, suhu, jam buka, dan jarak ditempel dari data. Teks model yang memuat angka di luar fakta ditolak (bagian 6).
-3. **Jujur soal batas.** Jika data tidak ada (gelombang, harga tiket, destinasi di luar 20, prakiraan lebih dari 3 hari), jawabannya "tidak punya datanya", bukan perkiraan.
+3. **Jujur soal batas.** Jika data tidak ada (arus balik dan kelayakan berenang, harga tiket yang tidak tercatat, destinasi di luar katalog, prakiraan lebih dari 3 hari), jawabannya "tidak punya datanya", bukan perkiraan.
 4. **Tetap berguna tanpa model.** Bila API model gagal atau kuota habis, tombol pertanyaan cepat tetap berjalan lewat mesin kode (bagian 4.3).
 5. **Memakai komponen yang sudah ada**: `getManyForecasts`, `bestOverlappingSlot`, `alternativesBySlot`, `facilitiesNear`, `getPageUser`, server action rencana, `rate_limit_hit`, `safeNext`, `withApi`.
 
@@ -41,7 +46,7 @@ Panggilan #1 dan #2 dapat digabung menjadi satu bila kuota ketat, tetapi pemisah
 | `alternative` | "kalau hujan ke mana?" | `alternativesBySlot` |
 | `app_help` | "cara simpan rencana?" | Jawaban tetap (tanpa model) |
 | `clarify` | "ke mana ya enaknya?" | Tanya balik satu pertanyaan (waktu atau kelompok) |
-| `unsupported` | gelombang, berenang aman, tiket, hotel, rute detail | Templat jujur, tanpa karangan (tabel 3.1) |
+| `unsupported` | arus balik, kelayakan berenang, tiket, hotel, rute detail | Templat jujur, tanpa karangan (tabel 3.1) |
 | `out_of_scope` | puisi, kode, politik, "abaikan instruksi" | Penolakan ramah, tawarkan fungsi yang ada |
 
 ### 3.1 Perlakuan khusus
@@ -51,8 +56,8 @@ Panggilan #1 dan #2 dapat digabung menjadi satu bila kuota ketat, tetapi pemisah
 | Waktu tidak jelas ("weekend", "habis magrib") | Petakan ke slot terdekat bila wajar; bila ambigu, `clarify`. Tampilkan slot yang dipakai agar pengguna bisa mengoreksi |
 | Di luar 3 hari prakiraan | "Prakiraan BMKG baru tersedia 3 hari ke depan." Jangan menebak |
 | "Sekarang hujan nggak?" | Jawab dari prakiraan slot terdekat; sebut bahwa itu prakiraan, bukan pengamatan |
-| Destinasi di luar 20 (Borobudur, Malioboro) | "Belum ada di katalog." Tawarkan yang terdekat dari katalog |
-| Keselamatan pantai | "Kami belum punya data tinggi gelombang. Ikuti imbauan petugas dan BMKG." Tidak menyatakan aman/tidak aman |
+| Destinasi di luar katalog (mis. Borobudur di Jawa Tengah) | "Belum ada di katalog." Tawarkan yang terdekat dari katalog |
+| Keselamatan pantai | "Wistara menampilkan prakiraan gelombang BMKG untuk wilayah perairan di halaman pantai, tetapi itu bukan kondisi di titik pantai tertentu. Kami belum memiliki data arus balik atau kelayakan berenang per pantai... Ikuti imbauan petugas dan BMKG." Tidak menyatakan aman/tidak aman (teks lengkap di `engine.ts`) |
 | Peringatan dini BMKG (F10) aktif di kecamatan itu | Destinasi dikeluarkan dari rekomendasi dan peringatan ditampilkan |
 | Atribut tak terdata (ramah balita, kursi roda) | "Belum terdata di sistem kami." Jangan menyimpulkan dari nama |
 | Anggaran, kendaraan, halal, menginap | Dicatat sebagai preferensi bila ada atributnya; selain itu dijawab tidak didukung |

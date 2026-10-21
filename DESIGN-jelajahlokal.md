@@ -1,5 +1,5 @@
 ---
-version: 0.1
+version: 0.2   # 22 Okt 2026: token dan spesifikasi status kondisi laut, catatan mode gelap
 name: JelajahLokal-design
 description: Sistem desain JelajahLokal untuk Web Development Competition UINIC 8.0. Kerangka hangat-editorial (latar krem, judul serif bobot 400, skala radius dan spasi 4px) diturunkan dari analisis DESIGN.md Claude.com, tetapi identitasnya diganti dengan palet batik klasik Yogyakarta (krem, soga, nila), font berlisensi terbuka, dan komponen khusus aplikasi peta wisata. Semua pasangan warna teks lulus WCAG 2.2 AA.
 
@@ -39,6 +39,15 @@ colors:
   banner-stale-bg: "#f6e7c8"
   banner-alert-text: "#b3261e"
   banner-alert-bg: "#f7dcd8"
+  # Status kondisi laut (badge persegi berikon ombak; nilai mode terang)
+  sea-info-text: "#1e2b45"
+  sea-info-bg: "#e4e9f2"
+  sea-caution-text: "#8a5a00"
+  sea-caution-bg: "#f6e7c8"
+  sea-danger-text: "#b3261e"
+  sea-danger-bg: "#f7dcd8"
+  sea-unknown-text: "#66635c"
+  sea-unknown-bg: "#efe9de"
 
 typography:
   display-lg:
@@ -265,6 +274,19 @@ Status skor **selalu** tampil sebagai chip berlatar muda dengan ikon dan teks. J
 
 Bentuk ikon yang berbeda membuat status tetap terbaca oleh pengguna buta warna dan saat dicetak hitam putih.
 
+### Status kondisi laut
+
+Status laut (prakiraan maritim BMKG untuk pantai) adalah indikator **terpisah** dari skor kelayakan, jadi sengaja **tidak memakai chip skor**: bentuknya persegi bersudut tipis (bukan pill), berikon ombak, dan tanpa varian hijau, supaya tidak terbaca sebagai "nilai baik". Teks badge berasal dari satu sumber, `src/lib/marine/sea-labels.ts`; token warnanya `--color-sea-*` di `src/app/globals.css`.
+
+| Status | Kategori BMKG | Contoh teks badge | Terang: teks / latar (kontras) | Gelap: teks / latar (kontras) |
+| --- | --- | --- | --- | --- |
+| Perhatian | Tenang, Rendah | Gelombang rendah · 1,1 m | #1e2b45 / #e4e9f2 (11,59) | #a9bce0 / #1c2638 (7,92) |
+| Waspada | Sedang | Waspada · gelombang sedang 1,9 m | #8a5a00 / #f6e7c8 (4,85) | #fbbf24 / #362a12 (8,40) |
+| Bahaya | Tinggi ke atas | Bahaya · gelombang tinggi 2,6 m | #b3261e / #f7dcd8 (5,04) | #f87171 / #381615 (5,87) |
+| Informasi terbatas | Tidak ada data, atau data lebih dari 24 jam | Data laut belum tersedia | #66635c / #efe9de (4,96) | #9ca3af / #262626 (5,96) |
+
+Semua pasangan lulus AA (4,5). Kontras dihitung dengan rumus WCAG 2.2 pada 22 Okt 2026. Aturan isi: kata "aman" **tidak pernah** dipakai untuk kondisi laut; status terendah adalah "Perhatian"; hanya Waspada dan Bahaya memakai kata perintah.
+
 ### Warna dari DESIGN.md yang tidak dipakai
 
 | Warna asli | Masalah |
@@ -310,6 +332,10 @@ Aturan tipografi:
 ### Chip skor
 
 Bentuk pill berisi ikon, angka skor, dan label, misalnya ikon centang, "82", "Sangat sesuai". Di ruang sempit (sel slot), label boleh disingkat menjadi angka dan ikon saja, tetapi `aria-label` tetap memuat label lengkap.
+
+### Badge status laut
+
+Padanan chip skor untuk kondisi laut pada destinasi pantai: persegi bersudut tipis dengan garis tepi tipis sewarna teks, ikon ombak (3 gelombang) di kiri, lalu teks dari `sea-labels.ts`, misalnya "Waspada · gelombang sedang 1,9 m". Tampil di kartu daftar, tooltip peta, dan halaman detail. Ukuran `sm` (11px) untuk ruang sempit, `md` (12,5px) selebihnya. `aria-label` memuat status, kategori, tinggi, dan kalimat pendamping (mis. "Jangan bermain air."), `title` memuat hal yang sama. Detail aturan warna ada di "Status kondisi laut" di atas.
 
 ### Strip slot 3 jam
 
@@ -415,6 +441,10 @@ Gunakan style Positron dari OpenFreeMap sebagai titik awal, lalu ubah JSON style
 
 Strip slot tetap digulir horizontal di semua lebar, tidak dibungkus menjadi beberapa baris.
 
+## Mode gelap
+
+Aplikasi punya mode gelap (tombol di header; bila belum dipilih, mengikuti preferensi sistem). Nilai tiap token untuk mode gelap ada di `src/app/globals.css` (blok `.dark`), **bukan** di front matter di atas, yang hanya mencatat mode terang. Dokumen ini baru mencatat nilai dan kontras mode gelap untuk token status laut; kontras seluruh palet gelap lainnya belum diaudit di sini.
+
 ## Boleh dan jangan
 
 **Boleh**
@@ -452,3 +482,4 @@ Strip slot tetap digulir horizontal di semua lebar, tidak dibungkus menjadi bebe
 - [ ] Hasil kustomisasi style OpenFreeMap Positron dengan warna krem dan nila.
 - [ ] Kontras pin peta terhadap peta dasar setelah style dikustomisasi (minimal 3:1).
 - [ ] Skor Lighthouse Accessibility minimal 90 setelah halaman dibangun.
+- [ ] Kontras seluruh pasangan warna mode gelap (baru token status laut yang tercatat di dokumen ini).
