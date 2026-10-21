@@ -49,7 +49,7 @@ export async function withUser<T>(userId: string, run: (client: PoolClient) => P
 
 function mapDatabaseError(error: unknown): unknown {
   const pg = error as { code?: string; hint?: string; message?: string };
-  if (pg?.code === "P0001" && (pg.hint === "LIMIT_TRIPS" || pg.hint === "LIMIT_ITEMS")) {
+  if (pg?.code === "P0001" && pg.hint?.startsWith("LIMIT_")) {
     return new ApiError("VALIDATION_ERROR", pg.message ?? "Batas tercapai");
   }
   return error;

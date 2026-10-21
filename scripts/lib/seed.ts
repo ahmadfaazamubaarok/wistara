@@ -148,13 +148,16 @@ export async function loadSeed(client: Client): Promise<SeedCounts> {
       );
     }
 
+    // Hanya baris asal seed yang dibersihkan. Destinasi dari usulan yang sudah disetujui admin
+    // (origin = 'usulan') tidak ada di berkas seed dan tidak boleh ikut terhapus.
     const seedSlugs = destinations.map((d) => d.slug);
     await client.query(
-      `delete from trip_items where destination_id in (select id from destinations where not (slug = any($1::text[])))`,
+      `delete from trip_items where destination_id in (
+         select id from destinations where origin = 'seed' and not (slug = any($1::text[])))`,
       [seedSlugs],
     );
     await client.query(
-      `delete from destinations where not (slug = any($1::text[]))`,
+      `delete from destinations where origin = 'seed' and not (slug = any($1::text[]))`,
       [seedSlugs],
     );
 

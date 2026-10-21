@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOutAction } from "@/app/actions/auth";
 import { getPageUser } from "@/lib/auth/session";
+import { isAdmin } from "@/lib/submissions/service";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_LINK =
@@ -8,6 +9,8 @@ const NAV_LINK =
 
 export async function SiteHeader() {
   const user = await getPageUser();
+  // Gagal-aman: header tampil di setiap halaman, jadi galat database tidak boleh menjatuhkannya.
+  const admin = user ? await isAdmin(user.id).catch(() => false) : false;
 
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-canvas/95 backdrop-blur-md">
@@ -46,6 +49,11 @@ export async function SiteHeader() {
                   Tentang Data
                 </Link>
               </li>
+              <li>
+                <Link href="/usul" className={NAV_LINK}>
+                  Usulkan
+                </Link>
+              </li>
               {user ? (
                 <>
                   <li>
@@ -53,6 +61,13 @@ export async function SiteHeader() {
                       Rencana
                     </Link>
                   </li>
+                  {admin && (
+                    <li>
+                      <Link href="/admin/usulan" className={NAV_LINK}>
+                        Tinjau
+                      </Link>
+                    </li>
+                  )}
                   <li>
                     <form action={signOutAction}>
                       <button type="submit" className={NAV_LINK}>

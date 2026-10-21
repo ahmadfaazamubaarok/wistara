@@ -75,6 +75,10 @@ describe("hak akses basis data (RLS dan GRANT)", () => {
       "delete from marine_forecasts",
       "insert into beach_safety (destination_id, swim_status, source_url, verified_at) values ('00000000-0000-0000-0000-000000000000', 'dilarang', 'http://example.com', now())",
       "delete from beach_safety",
+      "insert into admins (user_id) values ('00000000-0000-0000-0000-000000000000')",
+      "delete from admins",
+      // Tanpa hak UPDATE: pengguna tidak bisa menyetujui usulannya sendiri.
+      "update destination_submissions set status = 'disetujui'",
     ];
     for (const sql of attempts) {
       await expect(asRole(role, (c) => c.query(sql)), `${role}: ${sql}`).rejects.toThrow(/permission denied|row-level security/i);
@@ -84,6 +88,15 @@ describe("hak akses basis data (RLS dan GRANT)", () => {
   it.each(["anon", "authenticated"] as const)("%s tidak bisa melihat status internal pengambilan BMKG", async (role) => {
     await expect(asRole(role, (c) => c.query("select * from forecast_fetches"))).rejects.toThrow(/permission denied/i);
     await expect(asRole(role, (c) => c.query("select * from marine_fetches"))).rejects.toThrow(/permission denied/i);
+  });
+
+  it.each(["anon", "authenticated"] as const)("%s tidak bisa membaca daftar admin", async (role) => {
+    await expect(asRole(role, (c) => c.query("select * from admins"))).rejects.toThrow(/permission denied/i);
+  });
+
+  it("anon tidak punya akses sama sekali ke usulan destinasi (berisi nomor WA)", async () => {
+    await expect(asRole("anon", (c) => c.query("select * from destination_submissions"))).rejects.toThrow(/permission denied/i);
+    await expect(asRole("anon", (c) => c.query("select contact_wa from destination_submissions"))).rejects.toThrow(/permission denied/i);
   });
 
   it("semua tabel di schema public mengaktifkan RLS", async () => {

@@ -24,9 +24,9 @@ Dokumen acuan:
 | F10 | Banner **peringatan dini cuaca BMKG** (CAP) bila destinasi berada di wilayah terdampak |
 | F11 | Destinasi terbaik lintas daftar untuk satu slot waktu (pemilih jam di beranda, `GET /api/v1/recommendations`) |
 | F12 | Prakiraan maritim BMKG (gelombang, arus, angin) & kerangka keselamatan pantai (`GET .../sea` & `GET .../safety`) |
-| Tambahan | **Wistara AI**, mode gelap, informasi praktis destinasi (tiket, tips, sorotan). Wistara AI berada di luar PRD MVP dan harus ditulis demikian di proposal |
+| Tambahan | **Wistara AI**, mode gelap, informasi praktis destinasi (tiket, tips, sorotan), **usulan destinasi dari pengelola** dengan panel tinjauan admin. Wistara AI dan usulan destinasi berada di luar PRD MVP dan harus ditulis demikian di proposal |
 
-Halaman: `/` (peta + daftar + panel Wistara AI), `/destinasi/[slug]`, `/rencana`, `/masuk`, `/tentang-data`, `/api/docs`.
+Halaman: `/` (peta + daftar + panel Wistara AI), `/destinasi/[slug]`, `/rencana`, `/masuk`, `/tentang-data`, `/api/docs`, `/usul` (formulir usulan, perlu login), `/admin/usulan` (khusus admin).
 
 ## Menjalankan (Windows dan Ubuntu sama)
 
@@ -69,6 +69,7 @@ Semua opsional di lokal. Daftar lengkap dan komentarnya ada di [.env.example](.e
 | `NEXT_PUBLIC_MAP_STYLE_URL` | Style peta (bawaan OpenFreeMap) |
 | `CRON_SECRET` | Rahasia endpoint `/api/cron/refresh` (wajib di produksi) |
 | `BMKG_API_BASE_URL` | Mengganti alamat API BMKG (untuk uji ketahanan) |
+| `GEOCODER_BASE_URL` | Layanan saran alamat dari peta pada formulir usulan. Kosong = Nominatim publik (OpenStreetMap, 1 permintaan/detik untuk semua pemakai); untuk beban besar arahkan ke instance sendiri |
 | `AI_API_KEY`, `AI_MODEL` | Kunci dan nama model Gemini untuk Wistara AI. **Rahasia**: isi hanya di `.env` dan env Vercel, jangan di-commit, jangan berawalan `NEXT_PUBLIC_` |
 | `AI_RATE_GUEST_PER_HOUR`, `AI_RATE_USER_PER_HOUR`, `AI_DAILY_LIMIT` | Batas pertanyaan per jam (tamu / pengguna login) dan batas harian seluruh aplikasi |
 
@@ -90,6 +91,29 @@ pertanyaan -> pemahaman (kode, + model bila kode belum yakin) -> mesin determini
 - **Keamanan dan biaya**: kunci hanya di server dan dikirim lewat header; batas per jam dan harian; setelah HTTP 429/503 model dilewati sementara; teks percakapan tidak disimpan (log hanya metadata).
 - Kode ada di `src/lib/ai/`; endpoint `POST /api/v1/assistant` dan `POST /api/v1/assistant/save-itinerary`.
 
+## Usulan destinasi dan panel admin
+
+Pengelola, pemilik, atau pemerintah desa dapat mengusulkan destinasi lewat `/usul` (perlu login). Hanya wilayah DIY.
+
+- **Usulan tidak pernah langsung tayang.** Masuk tabel `destination_submissions` (status menunggu, disetujui, ditolak). Skor cuaca bergantung pada koordinat dan jam buka, jadi admin memeriksa lebih dulu di `/admin/usulan`. Saat disetujui, baris baru dibuat di `destinations` dengan `origin = 'usulan'`.
+- **Lokasi** dipilih dengan klik di peta (atau koordinat manual, atau lokasi perangkat) dan **divalidasi di server** terhadap poligon `supabase/seed/diy-boundary.json`. Titik yang kurang dari 75 m dari destinasi yang sudah ada ditolak sebagai duplikat.
+- **Kabupaten/kota dan alamat terisi otomatis saat peta diklik** (reverse geocoding OpenStreetMap lewat Nominatim, dipanggil dari server, `src/lib/geocode/`). Hanya saran: saran **tidak pernah menimpa** isian yang sudah diketik atau dipilih pengguna, dan bila layanan gagal formulir tetap diisi manual. Dibatasi 20 pencarian per pengguna dan 40 per menit global (kebijakan Nominatim publik: maksimal 1 permintaan/detik), dengan cache kecil per instance. Nama kecamatan dari OpenStreetMap kadang kurang tepat, jadi pengusul diminta memeriksanya.
+- **Pengusul tidak mengisi kode wilayah cuaca.** Panel admin menyarankan wilayah BMKG dari destinasi terdekat (beserta jaraknya), dan untuk pantai wilayah perairan dari pantai terdekat dalam 5 km. Admin boleh mengganti keduanya.
+- **Jam buka**: tanggal verifikasi (`verified_at`) hanya terisi bila admin mencentang bahwa jam buka sudah dikonfirmasi ke pengelola.
+- **Nomor WhatsApp pengusul adalah data pribadi**: hanya terbaca oleh pemilik usulan dan admin (RLS), tidak ada di API publik, dan dikosongkan saat usulan ditolak. Formulir meminta persetujuan eksplisit.
+- **Pembatas**: 5 usulan menunggu per akun (trigger database) dan 5 pengiriman per jam (`rate_limit_hit`).
+- **Admin** = baris di tabel `admins` (tanpa hak akses untuk `anon` maupun `authenticated`). Pemeriksaan ada di layanan (`src/lib/submissions/service.ts`), bukan hanya di halaman; non-admin melihat 404.
+- **`db:seed` aman**: hanya menghapus destinasi `origin = 'seed'` yang tak ada di berkas seed, sehingga destinasi dari usulan yang disetujui tidak ikut hilang.
+
+Menjadikan pengguna sebagai admin (pengguna harus sudah mendaftar di `/masuk?mode=daftar`):
+
+```bash
+docker compose exec app npm run admin:grant -- email@contoh.com
+docker compose exec app npm run admin:grant -- email@contoh.com --revoke
+```
+
+Di Supabase produksi, jalankan `npm run admin:grant` dengan `DATABASE_URL` proyek tersebut, atau `insert into admins (user_id) select id from auth.users where email = '...'` di SQL editor.
+
 ## Perintah harian
 
 Jalankan dari root repository; sama persis di PowerShell dan bash.
@@ -103,6 +127,7 @@ Jalankan dari root repository; sama persis di PowerShell dan bash.
 | Lint dan tipe | `docker compose exec app npm run lint` · `... npm run typecheck` |
 | Build produksi | `docker compose exec app npm run build` (lihat peringatan di Pemecahan masalah) |
 | Terapkan migrasi / muat ulang seed | `... npm run db:migrate` · `... npm run db:seed` |
+| Jadikan pengguna admin peninjau usulan | `... npm run admin:grant -- email@contoh.com` (tambah `--revoke` untuk mencabut) |
 | psql | `docker compose exec db psql -U wistara -d jelajahlokal` |
 | **Reset total** (hapus DB dan node_modules) | `docker compose down -v` |
 
@@ -162,7 +187,7 @@ Asumsi desain yang harus ditulis jujur di proposal: ambang dan bobot skor, jende
 
 ## Status
 
-**Sudah:** F1–F12, Wistara AI, mode gelap, dialog konfirmasi hapus.
+**Sudah:** F1–F12, Wistara AI, mode gelap, dialog konfirmasi hapus, usulan destinasi dengan panel admin.
 
 **Terverifikasi** di Windows 10 + Docker Desktop: compose, tes unit dan tes integrasi (jalankan perintah di atas untuk jumlah terkini), lint, typecheck, build produksi, header CSP produksi, alur login → simpan rencana → hapus → keluar di browser, dan panel Wistara AI di browser. Tes integrasi memuat satu tes batas laju (30 penulisan per menit) yang pernah gagal sekali karena bergantung pada batas menit; lulus saat diulang.
 

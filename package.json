@@ -16,6 +16,7 @@
     "start": "next start",
     "db:migrate": "tsx scripts/db-migrate.ts",
     "db:seed": "tsx scripts/db-seed.ts",
+    "admin:grant": "tsx scripts/admin-grant.ts",
     "seed:destinations": "tsx scripts/seed-destinations.ts",
     "seed:facilities": "tsx scripts/seed-facilities.ts",
     "lint": "eslint .",
