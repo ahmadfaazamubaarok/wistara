@@ -145,7 +145,7 @@ export default async function TripsPage() {
                                 action={removeItemAction}
                                 fields={{ tripId: trip.id, itemId: item.id }}
                                 triggerLabel="Hapus"
-                                triggerClassName="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold text-primary underline"
+                                triggerClassName="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold text-link underline"
                                 triggerAriaLabel={`Hapus ${item.destination.name} dari rencana ${trip.title}`}
                                 title="Hapus dari rencana?"
                                 description={

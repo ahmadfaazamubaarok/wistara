@@ -541,11 +541,11 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
             }}
             className={`flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold transition-all ${sidebarTab === "ai"
                 ? "border border-primary/30 bg-primary text-white shadow-xs"
-                : "text-muted hover:bg-surface-soft hover:text-primary"
+                : "text-muted hover:bg-surface-soft hover:text-link"
               }`}
           >
             <svg
-              className={`h-4 w-4 ${sidebarTab === "ai" ? "text-white" : "text-primary"}`}
+              className={`h-4 w-4 ${sidebarTab === "ai" ? "text-white" : "text-link"}`}
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -592,7 +592,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
             <div className="rounded-xl border border-hairline/80 bg-surface-card p-3.5 shadow-xs">
               <div className="flex items-center justify-between border-b border-hairline/60 pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-link">
                     <WeatherIcon description={weatherSummaryToday.dominantWeather} size={18} />
                   </span>
                   <div>
@@ -648,7 +648,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-primary">
+                              <span className="text-link">
                                 <CategoryIcon category={item.category} size={13} />
                               </span>
                               <span className="text-[11px] font-medium text-muted truncate">
@@ -658,7 +658,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                             <h3 className="mt-0.5 truncate font-sans text-sm font-semibold text-ink">
                               <Link
                                 href={`/destinasi/${item.slug}`}
-                                className="hover:text-primary transition-colors"
+                                className="hover:text-link transition-colors"
                               >
                                 {item.name}
                               </Link>
@@ -715,7 +715,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
 
                         {selected && (
                           <div className="mt-2 flex items-center justify-between border-t border-hairline/60 pt-2 text-xs text-muted">
-                            <span className="inline-flex items-center gap-1.5 font-medium text-primary">
+                            <span className="inline-flex items-center gap-1.5 font-medium text-link">
                               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                               {isLoadingFacilities
                                 ? "Memuat fasilitas sekitar..."
@@ -754,7 +754,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                   onClick={() => applyQuickFilter("alam")}
                   className="flex items-center gap-2 rounded-lg border border-hairline/80 bg-surface-card p-2.5 text-left text-xs font-semibold text-ink transition-colors hover:border-border-input hover:bg-surface-card-strong"
                 >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-primary">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-link">
                     <CategoryIcon category="alam" size={15} />
                   </span>
                   <div>
@@ -768,7 +768,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                   onClick={() => applyQuickFilter("budaya")}
                   className="flex items-center gap-2 rounded-lg border border-hairline/80 bg-surface-card p-2.5 text-left text-xs font-semibold text-ink transition-colors hover:border-border-input hover:bg-surface-card-strong"
                 >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-primary">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-link">
                     <CategoryIcon category="budaya" size={15} />
                   </span>
                   <div>
@@ -782,7 +782,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                   onClick={() => applyQuickFilter("hujan")}
                   className="flex items-center gap-2 rounded-lg border border-hairline/80 bg-surface-card p-2.5 text-left text-xs font-semibold text-ink transition-colors hover:border-border-input hover:bg-surface-card-strong"
                 >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-primary">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-link">
                     <CategoryIcon category="museum" size={15} />
                   </span>
                   <div>
@@ -796,7 +796,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                   onClick={() => applyQuickFilter("sunset")}
                   className="flex items-center gap-2 rounded-lg border border-hairline/80 bg-surface-card p-2.5 text-left text-xs font-semibold text-ink transition-colors hover:border-border-input hover:bg-surface-card-strong"
                 >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-primary">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-soft text-link">
                     <MiscIcon name="clock" size={15} />
                   </span>
                   <div>
@@ -1080,7 +1080,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                                   <h3 className="font-sans text-[17px] font-semibold leading-snug tracking-normal">
                                     <Link
                                       href={`/destinasi/${item.slug}`}
-                                      className="text-ink hover:text-primary transition-colors"
+                                      className="text-ink hover:text-link transition-colors"
                                     >
                                       {item.name}
                                     </Link>
@@ -1162,7 +1162,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                               </div>
                               {selected && (
                                 <div className="mt-2.5 flex items-center justify-between border-t border-hairline/60 pt-2 text-xs text-muted">
-                                  <span className="inline-flex items-center gap-1.5 font-medium text-primary">
+                                  <span className="inline-flex items-center gap-1.5 font-medium text-link">
                                     <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                                     {isLoadingFacilities
                                       ? "Memuat fasilitas sekitar..."

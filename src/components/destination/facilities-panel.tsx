@@ -180,7 +180,7 @@ export function FacilitiesPanel({ slug, destination, initialRadius, initialFacil
               {rows.length > VISIBLE_BY_DEFAULT && (
                 <button
                   type="button"
-                  className="mt-1 inline-flex min-h-11 items-center text-sm font-semibold text-primary underline"
+                  className="mt-1 inline-flex min-h-11 items-center text-sm font-semibold text-link underline"
                   onClick={() => setExpanded((current) => ({ ...current, [type]: !open }))}
                 >
                   {open ? "Tampilkan lebih sedikit" : `Tampilkan semua (${rows.length})`}

@@ -126,7 +126,7 @@ export function TableOfContents({ items }: Props) {
                   {item.number && (
                     <span
                       className={`text-[12px] font-mono tabular-nums ${
-                        isActive ? "text-primary font-semibold" : "text-muted"
+                        isActive ? "text-link font-semibold" : "text-muted"
                       }`}
                       aria-hidden="true"
                     >

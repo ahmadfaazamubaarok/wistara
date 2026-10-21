@@ -443,7 +443,9 @@ Strip slot tetap digulir horizontal di semua lebar, tidak dibungkus menjadi bebe
 
 ## Mode gelap
 
-Aplikasi punya mode gelap (tombol di header; bila belum dipilih, mengikuti preferensi sistem). Nilai tiap token untuk mode gelap ada di `src/app/globals.css` (blok `.dark`), **bukan** di front matter di atas, yang hanya mencatat mode terang. Dokumen ini baru mencatat nilai dan kontras mode gelap untuk token status laut; kontras seluruh palet gelap lainnya belum diaudit di sini.
+Aplikasi punya mode gelap (tombol di header; bila belum dipilih, mengikuti preferensi sistem). Nilai tiap token untuk mode gelap ada di `src/app/globals.css` (blok `.dark`), **bukan** di front matter di atas, yang hanya mencatat mode terang. Kontras pasangan utama mode gelap dihitung dengan rumus WCAG 2.2 pada 22 Okt 2026 dan lulus AA (4,5): teks utama pada latar 16,61; teks isi 10,45; teks sekunder 5,34; teks putih pada tombol utama 5,03; tautan pada latar 8,07; chip skor dan badge laut 5,87 sampai 8,40.
+
+Audit itu menemukan dua pasangan yang gagal di nilai awal soga mode gelap `#b5633b` (teks putih pada tombol 4,36; tautan pada latar 4,26). Perbaikannya memisahkan dua peran yang sebelumnya berbagi satu token: tombol memakai `primary` (mode gelap `#a85a34`, `primary-active` `#8f4a28`), tautan memakai token baru `link` (terang `#9a4f2c`, gelap `#e39a70`). Di mode terang kedua token bernilai sama dengan soga.
 
 ## Boleh dan jangan
 
@@ -482,4 +484,4 @@ Aplikasi punya mode gelap (tombol di header; bila belum dipilih, mengikuti prefe
 - [ ] Hasil kustomisasi style OpenFreeMap Positron dengan warna krem dan nila.
 - [ ] Kontras pin peta terhadap peta dasar setelah style dikustomisasi (minimal 3:1).
 - [ ] Skor Lighthouse Accessibility minimal 90 setelah halaman dibangun.
-- [ ] Kontras seluruh pasangan warna mode gelap (baru token status laut yang tercatat di dokumen ini).
+- [x] Kontras pasangan utama mode gelap (22 Okt 2026, lihat bagian Mode gelap). Pasangan lain, mis. teks sekunder pada kartu gelap, belum dihitung satu per satu.

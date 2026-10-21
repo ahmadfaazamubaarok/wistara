@@ -272,7 +272,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
       {/* Header Panel Wistara AI (Gaya Google Maps) */}
       <header className="flex items-center justify-between border-b border-hairline px-4 py-3 bg-surface-card">
         <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-link">
             <svg
               className="h-4 w-4"
               viewBox="0 0 24 24"
@@ -332,7 +332,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
         {/* State Awal: Rekomendasi Pertanyaan Cepat */}
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center py-6 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-link mb-3">
               <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2v4" />
                 <path d="m4.93 4.93 2.83 2.83" />
@@ -391,7 +391,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                           ol: ({ children }) => <ol className="my-2 ml-4 list-decimal space-y-1">{children}</ol>,
                           li: ({ children }) => <li className="leading-relaxed">{children}</li>,
                           code: ({ children }) => (
-                            <code className="rounded bg-surface-soft px-1.5 py-0.5 font-mono text-[11.5px] text-primary">
+                            <code className="rounded bg-surface-soft px-1.5 py-0.5 font-mono text-[11.5px] text-link">
                               {children}
                             </code>
                           ),
@@ -400,7 +400,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                               href={href}
                               target="_blank"
                               rel="noreferrer noopener"
-                              className="font-medium text-primary underline hover:text-primary/80"
+                              className="font-medium text-link underline hover:text-link/80"
                             >
                               {children}
                             </a>
@@ -439,7 +439,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                           <div key={`${slotItem.part}-${slotItem.destination.slug}`} className="relative pl-4 border-l-2 border-primary/30">
                             <span className="absolute -left-[5px] top-1 h-2 w-2 rounded-full bg-primary" />
                             <div className="flex items-center justify-between gap-1">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-link">
                                 {slotItem.timeLabel}
                               </span>
                               <ScoreChip score={slotItem.destination.score} size="sm" />
@@ -468,7 +468,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                                 <button
                                   type="button"
                                   onClick={() => onSelectDestination(slotItem.destination.slug)}
-                                  className="inline-flex min-h-6 items-center rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors"
+                                  className="inline-flex min-h-6 items-center rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-link hover:bg-primary/20 transition-colors"
                                 >
                                   Sorot di peta
                                 </button>
@@ -609,7 +609,7 @@ export function WistaraAiPanel({ onSelectDestination, onClose }: Props) {
                                 <button
                                   type="button"
                                   onClick={() => onSelectDestination(dest.slug)}
-                                  className="inline-flex min-h-7 items-center rounded-md bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors"
+                                  className="inline-flex min-h-7 items-center rounded-md bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-link hover:bg-primary/20 transition-colors"
                                 >
                                   Sorot di peta
                                 </button>

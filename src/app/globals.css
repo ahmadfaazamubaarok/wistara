@@ -17,6 +17,8 @@
   --color-primary: #9a4f2c;
   /* soga */
   --color-primary-active: #7a3d22;
+  /* Teks tautan: sama dengan soga di mode terang; terpisah dari warna tombol agar keduanya lulus kontras di mode gelap. */
+  --color-link: #9a4f2c;
   --color-primary-disabled: #e6dfd8;
   --color-on-primary: #ffffff;
   --color-on-dark: #faf9f5;
@@ -86,8 +88,9 @@
   --color-surface-card-strong: #2f2b26;
   --color-surface-dark: #2a3a5a;
   --color-surface-dark-elevated: #36496e;
-  --color-primary: #b5633b;
-  --color-primary-active: #9a4f2c;
+  --color-primary: #a85a34;
+  --color-primary-active: #8f4a28;
+  --color-link: #e39a70;
   --color-primary-disabled: #3d3a33;
   --color-on-primary: #ffffff;
   --color-on-dark: #faf9f5;
@@ -255,7 +258,7 @@
 
   /* Tautan dalam teks: warna soga dan bergaris bawah. */
   a {
-    color: var(--color-primary);
+    color: var(--color-link);
     text-decoration: underline;
   }
 

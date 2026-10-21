@@ -24,7 +24,7 @@ export function GoogleMapsPlaceCard({ destination, routeUrl }: Props) {
       <div className="flex items-start gap-3">
         {/* Thumbnail Link Google Maps */}
         <div
-          className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-border-input/60 bg-surface-soft text-primary"
+          className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-border-input/60 bg-surface-soft text-link"
           aria-hidden="true"
         >
           {/* Ikon Pin Google Maps bersih */}

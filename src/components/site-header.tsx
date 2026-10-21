@@ -5,7 +5,7 @@ import { isAdmin } from "@/lib/submissions/service";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_LINK =
-  "inline-flex min-h-11 items-center whitespace-nowrap rounded-md px-2 text-sm font-medium text-body no-underline hover:bg-surface-soft hover:text-ink md:px-3";
+  "inline-flex min-h-11 items-center whitespace-nowrap rounded-md px-2 text-sm font-medium text-body no-underline hover:bg-surface-soft hover:text-ink max-sm:px-1.5 md:px-3";
 
 export async function SiteHeader() {
   const user = await getPageUser();
@@ -45,7 +45,7 @@ export async function SiteHeader() {
                 </Link>
               </li>
               <li>
-                <Link href="/tentang-data" className={NAV_LINK}>
+                <Link href="/tentang-data" className={`${NAV_LINK} max-sm:hidden`}>
                   Tentang Data
                 </Link>
               </li>

@@ -151,7 +151,7 @@ export default async function AboutDataPage() {
             {/* 01. Rumusnya & Contoh */}
             <section id="rumus" aria-labelledby="rumus-h" className="scroll-mt-28">
               <h2 id="rumus-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   01
                 </span>
                 Rumusnya
@@ -188,7 +188,7 @@ export default async function AboutDataPage() {
             {/* 02. Empat Band Skor */}
             <section id="band" aria-labelledby="band-h" className="scroll-mt-28">
               <h2 id="band-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   02
                 </span>
                 Empat Band Skor
@@ -271,7 +271,7 @@ export default async function AboutDataPage() {
             {/* 03. Penalti Cuaca */}
             <section id="penalti" aria-labelledby="penalti-h" className="scroll-mt-28">
               <h2 id="penalti-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   03
                 </span>
                 Penalti Cuaca
@@ -332,7 +332,7 @@ export default async function AboutDataPage() {
             {/* 04. Bobot Kategori */}
             <section id="bobot" aria-labelledby="bobot-h" className="scroll-mt-28">
               <h2 id="bobot-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   04
                 </span>
                 Bobot per Jenis Destinasi
@@ -396,7 +396,7 @@ export default async function AboutDataPage() {
             {/* 05. Jam Buka & Kunjungan */}
             <section id="jam" aria-labelledby="jam-h" className="scroll-mt-28">
               <h2 id="jam-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   05
                 </span>
                 Jam Buka dan Kunjungan
@@ -421,7 +421,7 @@ export default async function AboutDataPage() {
             {/* 06. Sumber & Kesegaran Data */}
             <section id="sumber" aria-labelledby="sumber-h" className="scroll-mt-28">
               <h2 id="sumber-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   06
                 </span>
                 Sumber Data & Kesegaran
@@ -445,7 +445,7 @@ export default async function AboutDataPage() {
                     <tbody className="[&_tr]:border-b [&_tr]:border-hairline">
                       <tr>
                         <td className={`${td} font-semibold text-ink`}>
-                          <a href={BMKG_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                          <a href={BMKG_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-link">
                             BMKG Prakiraan Cuaca
                           </a>
                         </td>
@@ -459,7 +459,7 @@ export default async function AboutDataPage() {
                       </tr>
                       <tr>
                         <td className={`${td} font-semibold text-ink`}>
-                          <a href={BMKG_MARINE_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                          <a href={BMKG_MARINE_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-link">
                             BMKG Maritim
                           </a>
                         </td>
@@ -469,7 +469,7 @@ export default async function AboutDataPage() {
                       </tr>
                       <tr>
                         <td className={`${td} font-semibold text-ink`}>
-                          <a href={OSM_COPYRIGHT_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                          <a href={OSM_COPYRIGHT_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-link">
                             OpenStreetMap
                           </a>
                         </td>
@@ -479,7 +479,7 @@ export default async function AboutDataPage() {
                       </tr>
                       <tr>
                         <td className={`${td} font-semibold text-ink`}>
-                          <a href={OPENFREEMAP_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                          <a href={OPENFREEMAP_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-link">
                             OpenFreeMap
                           </a>
                         </td>
@@ -508,7 +508,7 @@ export default async function AboutDataPage() {
             {/* 07. Alternatif Saat Hujan */}
             <section id="alternatif" aria-labelledby="alt-h" className="scroll-mt-28">
               <h2 id="alt-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   07
                 </span>
                 Alternatif Saat Cuaca Buruk (F5)
@@ -537,7 +537,7 @@ export default async function AboutDataPage() {
             {/* 08. Fasilitas OSM */}
             <section id="fasilitas" aria-labelledby="fasilitas-h" className="scroll-mt-28">
               <h2 id="fasilitas-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   08
                 </span>
                 Kelengkapan Fasilitas OSM
@@ -559,7 +559,7 @@ export default async function AboutDataPage() {
             {/* 09. Prakiraan Maritim & Status Laut */}
             <section id="maritim" aria-labelledby="maritim-h" className="scroll-mt-28">
               <h2 id="maritim-h" className="flex items-baseline gap-2.5 font-serif text-[26px] font-normal text-ink">
-                <span className="font-mono text-[16px] font-semibold text-primary" aria-hidden="true">
+                <span className="font-mono text-[16px] font-semibold text-link" aria-hidden="true">
                   09
                 </span>
                 Prakiraan maritim dan status laut
