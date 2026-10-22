@@ -17,7 +17,7 @@ import { getGoogleMapsPlaceUrl } from "@/lib/google-maps";
 import { WistaraAiPanel } from "./wistara-ai-panel";
 import { BAND_COLOR, type ScoreBand } from "@/lib/score-band";
 import { SeaBadge } from "@/components/sea-badge";
-import { seaRecommendationRank, type SeaStatus } from "@/lib/marine/sea-status";
+import { type SeaStatus } from "@/lib/marine/sea-status";
 
 export type HomeSlotItem = {
   validAt: string;
@@ -367,33 +367,6 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
       current.includes(category) ? current.filter((c) => c !== category) : [...current, category],
     );
 
-  const topPicksToday = useMemo(() => {
-    return items
-      .map((item) => {
-        const best = item.bestByDay[0];
-        const bestSlot = best && item.slots ? item.slots.find((s) => s.localTime === best.localTime) : undefined;
-        return {
-          item,
-          score: best?.score ?? -1,
-          band: best?.band ?? ("closed" as ScoreBand),
-          label: best?.label ?? "Tutup",
-          timeText: best ? `pukul ${slotHour(best.localTime)}` : "Tutup",
-          weatherDesc: bestSlot?.weatherDesc ?? null,
-          t: bestSlot?.t ?? null,
-          seaStatus: best?.seaStatus ?? null,
-          waveHeightMax: best?.waveHeightMax ?? null,
-          waveCat: best?.waveCat ?? null,
-        };
-      })
-      .filter((entry) => entry.score > 0)
-      .sort(
-        (a, b) =>
-          seaRecommendationRank(a.seaStatus) - seaRecommendationRank(b.seaStatus) ||
-          b.score - a.score ||
-          a.item.name.localeCompare(b.item.name, "id"),
-      )
-      .slice(0, 3);
-  }, [items]);
 
   const weatherSummaryToday = useMemo(() => {
     const total = items.length;
@@ -760,111 +733,8 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
               </div>
             )}
 
-            {/* 5. Rekomendasi Teratas Hari Ini (Hanya pada hari pertama tanpa pencarian/filter) */}
-            {dayIndex === 0 && !searchQuery && categories.length === 0 && selectedHour === null && topPicksToday.length > 0 && (
-              <section aria-label="Rekomendasi terbaik hari ini" className="flex flex-col gap-2 pt-1">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-muted">
-                    ⭐ Rekomendasi Teratas Hari Ini
-                  </h2>
-                  <span className="text-[11px] text-muted">Skor tertinggi</span>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  {topPicksToday.map(({ item, score, timeText, weatherDesc, t, seaStatus, waveHeightMax, waveCat }) => {
-                    const selected = item.slug === selectedSlug;
-                    const mapsUrl = getGoogleMapsPlaceUrl(item.name, item.kabupaten);
-                    return (
-                      <div
-                        key={`top-${item.slug}`}
-                        onClick={() => select(item.slug)}
-                        className={`group cursor-pointer rounded-lg border bg-surface-card p-3 transition-all ${
-                          selected
-                            ? "border-surface-dark outline-2 outline-surface-dark"
-                            : "border-hairline hover:border-border-input hover:bg-surface-card-strong"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-link">
-                                <CategoryIcon category={item.category} size={13} />
-                              </span>
-                              <span className="text-[11px] font-medium text-muted truncate">
-                                {CATEGORY_LABEL[item.category]} · {item.kabupaten}
-                              </span>
-                            </div>
-                            <h3 className="mt-0.5 truncate font-sans text-sm font-semibold text-ink group-hover:text-link">
-                              <Link
-                                href={`/destinasi/${item.slug}`}
-                                onClick={(e) => e.stopPropagation()}
-                                className="hover:underline"
-                              >
-                                {item.name}
-                              </Link>
-                            </h3>
-                          </div>
-
-                          <div className="flex items-center gap-1 shrink-0">
-                            <a
-                              href={mapsUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              aria-label={`Buka ${item.name} di Google Maps`}
-                              title="Buka di Google Maps"
-                              className="inline-flex size-7 items-center justify-center rounded-md text-muted hover:bg-surface-soft hover:text-ink transition-colors"
-                            >
-                              <MiscIcon name="externalLink" size={13} />
-                            </a>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                select(item.slug);
-                              }}
-                              aria-label={`Tampilkan ${item.name} di peta`}
-                              title="Tampilkan di peta"
-                              className={`inline-flex size-7 items-center justify-center rounded-pill transition-colors ${
-                                selected
-                                  ? "bg-surface-dark text-on-dark"
-                                  : "text-muted hover:bg-surface-soft hover:text-ink"
-                              }`}
-                            >
-                              <MiscIcon name="mapPin" size={14} />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="mt-2 flex items-center justify-between gap-2 border-t border-hairline/60 pt-2 text-xs">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <ScoreChip score={score} size="sm" />
-                            {item.category === "pantai" && seaStatus && (
-                              <SeaBadge
-                                status={seaStatus}
-                                waveHeight={waveHeightMax}
-                                waveCat={waveCat}
-                                size="sm"
-                              />
-                            )}
-                            <span className="text-[11px] font-medium text-muted">{timeText}</span>
-                          </div>
-                          {weatherDesc && (
-                            <span className="text-[11px] text-muted truncate">
-                              {weatherDesc}
-                              {t !== null ? ` · ${Math.round(t)}°C` : ""}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
-
-            {/* 6. Daftar Utama Seluruh Destinasi */}
-            <section aria-label="Daftar destinasi wisata" className="flex flex-col gap-3 pt-2 border-t border-hairline/80">
+            {/* 5. Daftar Utama Seluruh Destinasi */}
+            <section aria-label="Daftar destinasi wisata" className="flex flex-col gap-3 pt-1">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-ink" aria-live="polite">
                   {searchQuery
