@@ -7,15 +7,25 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const UNAVAILABLE = "Layanan login belum tersedia atau sedang bermasalah. Coba lagi sebentar lagi.";
 
+function getAppOrigin(headersList: Headers): string {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL;
+  if (envUrl) return envUrl.replace(/\/+$/, "");
+
+  const forwardedHost = headersList.get("x-forwarded-host");
+  const host = forwardedHost || headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
+
+  if (host) return `${proto}://${host}`;
+  return "https://wistara.ai.id";
+}
+
 export async function signInWithGoogleAction(formData: FormData): Promise<void> {
   const next = safeNext(formData.get("next"));
   const supabase = await createSupabaseServerClient();
   if (!supabase) redirect("/masuk?error=unavailable");
 
   const headersList = await headers();
-  const host = headersList.get("x-forwarded-host") || headersList.get("host") || "localhost:3000";
-  const proto = headersList.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
-  const origin = `${proto}://${host}`;
+  const origin = getAppOrigin(headersList);
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
