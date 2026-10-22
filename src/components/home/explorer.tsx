@@ -397,24 +397,145 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
     };
   }, [items]);
 
-  const applyQuickFilter = (type: "alam" | "budaya" | "hujan" | "sunset") => {
-    if (type === "alam") {
-      setCategories((prev) => (prev.length === 2 && prev.includes("alam") && prev.includes("pantai") ? [] : ["alam", "pantai"]));
-      setSearchQuery("");
-      setSelectedHour(null);
-    } else if (type === "budaya") {
-      setCategories((prev) => (prev.length === 1 && prev.includes("budaya") ? [] : ["budaya"]));
-      setSearchQuery("");
-      setSelectedHour(null);
-    } else if (type === "hujan") {
-      setCategories((prev) => (prev.length === 2 && prev.includes("budaya") && prev.includes("museum") ? [] : ["budaya", "museum"]));
-      setSearchQuery("");
-      setSelectedHour(null);
-    } else if (type === "sunset") {
-      setCategories([]);
-      setSearchQuery("");
-      setSelectedHour((prev) => (prev === "18.00" ? null : "18.00"));
-    }
+  const renderDestinationCard = (item: HomeItem) => {
+    const evaluation = getItemEvaluation(item);
+    const selected = item.slug === selectedSlug;
+    const mapsUrl = getGoogleMapsPlaceUrl(item.name, item.kabupaten);
+    const enrichment = getDestinationEnrichment(item.slug);
+
+    return (
+      <li
+        key={item.slug}
+        data-slug={item.slug}
+        onClick={() => select(item.slug)}
+        className={`group cursor-pointer rounded-2xl border p-4 sm:p-5 transition-all ${
+          selected
+            ? "border-surface-dark bg-surface-card outline-2 outline-surface-dark shadow-sm"
+            : "border-hairline/80 bg-surface-card hover:border-border-input hover:bg-surface-card-strong shadow-xs hover:shadow-sm"
+        }`}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 text-xs text-muted">
+              <span className="text-link">
+                <CategoryIcon category={item.category} size={13} />
+              </span>
+              <span className="truncate">
+                {CATEGORY_LABEL[item.category]} · {item.kabupaten}
+              </span>
+            </div>
+
+            <h3 className="mt-1 font-sans text-base font-semibold leading-snug text-ink group-hover:text-link transition-colors">
+              <Link
+                href={`/destinasi/${item.slug}`}
+                onClick={(e) => e.stopPropagation()}
+                className="hover:underline"
+              >
+                {item.name}
+              </Link>
+            </h3>
+
+            {enrichment && enrichment.tags.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {enrichment.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-md bg-surface-soft px-2 py-0.5 text-[10px] font-medium text-muted"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1 shrink-0 -mr-1">
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title="Buka di Google Maps"
+              aria-label={`Buka ${item.name} di Google Maps`}
+              className="inline-flex size-8 items-center justify-center rounded-lg text-muted hover:bg-surface-soft hover:text-ink transition-colors"
+            >
+              <MiscIcon name="externalLink" size={14} />
+            </a>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                select(item.slug);
+              }}
+              aria-label={`Tampilkan ${item.name} di peta`}
+              title="Tampilkan di peta"
+              className={`inline-flex size-8 items-center justify-center rounded-pill transition-colors ${
+                selected
+                  ? "bg-surface-dark text-on-dark"
+                  : "text-muted hover:bg-surface-soft hover:text-ink"
+              }`}
+            >
+              <MiscIcon name="mapPin" size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-3.5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 border-t border-hairline/60 pt-2.5 text-xs">
+          {evaluation.isOpen && evaluation.score !== null ? (
+            <>
+              <ScoreChip score={evaluation.score} size="sm" />
+              {item.category === "pantai" && evaluation.seaStatus && (
+                <SeaBadge
+                  status={evaluation.seaStatus}
+                  waveHeight={evaluation.waveHeightMax}
+                  waveCat={evaluation.waveCat}
+                  size="sm"
+                />
+              )}
+              <span className="text-[12px] text-muted">
+                {evaluation.timeText}
+                {evaluation.weatherDesc ? ` · ${evaluation.weatherDesc}` : ""}
+                {evaluation.t !== null ? ` (${Math.round(evaluation.t)}°C)` : ""}
+              </span>
+            </>
+          ) : (
+            <>
+              <ScoreChip score={null} size="sm" />
+              {item.category === "pantai" && evaluation.seaStatus && (
+                <SeaBadge
+                  status={evaluation.seaStatus}
+                  waveHeight={evaluation.waveHeightMax}
+                  waveCat={evaluation.waveCat}
+                  size="sm"
+                />
+              )}
+              <span className="text-[12px] text-muted">{evaluation.timeText}</span>
+            </>
+          )}
+        </div>
+
+        {selected && (
+          <div className="mt-3 flex items-center justify-between border-t border-hairline/60 pt-2.5 text-xs text-muted">
+            <span className="inline-flex items-center gap-1.5 font-medium text-link">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              {isLoadingFacilities
+                ? "Memuat fasilitas sekitar..."
+                : `${nearbyFacilities.length} fasilitas terdekat aktif di peta`}
+            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedSlug(null);
+              }}
+              className="text-muted hover:text-ink underline underline-offset-2"
+            >
+              Sembunyikan
+            </button>
+          </div>
+        )}
+      </li>
+    );
   };
 
   const select = (slug: string, fromMap = false) => {
@@ -535,21 +656,21 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
           />
         </div>
 
-        <div className={`min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-6 pt-3 md:pt-4 ${sidebarTab === "explore" ? "flex" : "hidden"}`}>
-          <div className="flex flex-col gap-4">
+        <div className={`min-h-0 flex-1 flex-col overflow-y-auto px-5 sm:px-6 pb-8 pt-5 sm:pt-6 ${sidebarTab === "explore" ? "flex" : "hidden"}`}>
+          <div className="flex flex-col gap-6">
             {/* 1. Header Ringkas & Status Cuaca */}
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start justify-between gap-4">
               <div>
                 <h1 className="font-serif text-lg font-bold tracking-tight text-ink md:text-xl">
                   Eksplorasi Destinasi DIY
                 </h1>
-                <p className="mt-0.5 text-xs text-muted">
-                  Waktu terbaik wisata berbasis prakiraan BMKG
+                <p className="mt-1 text-xs text-muted leading-relaxed">
+                  Prakiraan cuaca & kondisi terbaik wisata BMKG
                 </p>
               </div>
 
               <div
-                className="flex shrink-0 items-center gap-1.5 rounded-full border border-hairline/80 bg-surface-card px-2.5 py-1 text-xs text-body shadow-2xs"
+                className="flex shrink-0 items-center gap-2 rounded-full border border-hairline/80 bg-surface-card px-3 py-1.5 text-xs text-body shadow-2xs"
                 title="Kondisi cuaca umum di DIY hari ini"
               >
                 <span className="text-link">
@@ -568,14 +689,14 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
               </StatusBanner>
             )}
 
-            {/* 2. Search Input Utama (Selalu Terbuka & Mudah Dijangkau) */}
+            {/* 2. Search Input Utama (Live Search) */}
             <div className="relative w-full">
               <label htmlFor="cari-destinasi" className="sr-only">
                 Cari destinasi wisata
               </label>
               <div className="relative flex items-center">
-                <span className="pointer-events-none absolute left-3 text-muted" aria-hidden="true">
-                  <MiscIcon name="search" size={17} />
+                <span className="pointer-events-none absolute left-3.5 text-muted" aria-hidden="true">
+                  <MiscIcon name="search" size={18} />
                 </span>
                 <input
                   ref={searchInputRef}
@@ -583,26 +704,26 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari nama, daerah, atau tag (mis. pantai, candi, sunset)…"
-                  className="min-h-11 w-full rounded-lg border border-border-input bg-canvas pl-9 pr-9 text-sm text-ink placeholder:text-muted focus:border-focus focus:outline-none transition-colors"
+                  placeholder="Cari nama tempat, daerah, atau kategori…"
+                  className="min-h-12 w-full rounded-xl border border-border-input bg-canvas pl-11 pr-11 text-sm text-ink placeholder:text-muted focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus shadow-2xs transition-colors"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery("")}
                     aria-label="Hapus kata kunci pencarian"
-                    className="absolute right-2 inline-flex size-7 items-center justify-center rounded-full text-muted hover:bg-surface-soft hover:text-ink transition-colors"
+                    className="absolute right-3 inline-flex size-7 items-center justify-center rounded-full text-muted hover:bg-surface-soft hover:text-ink transition-colors"
                   >
-                    <MiscIcon name="x" size={14} />
+                    <MiscIcon name="x" size={15} />
                   </button>
                 )}
               </div>
             </div>
 
             {/* 3. Filter Hub: Tab Hari, Kategori, & Jam */}
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-3.5">
               {/* Tab Pemilihan Hari */}
-              <div role="tablist" aria-label="Pilih hari kunjungan" className="flex gap-1.5 rounded-lg border border-hairline/80 bg-surface-soft p-1">
+              <div role="tablist" aria-label="Pilih hari kunjungan" className="flex gap-2 rounded-xl border border-hairline/80 bg-surface-soft p-1.5">
                 {days.map((day, index) => (
                   <button
                     key={day}
@@ -610,24 +731,24 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                     type="button"
                     aria-selected={dayIndex === index}
                     onClick={() => setDayIndex(index)}
-                    className={`flex-1 rounded-md py-1.5 px-2 text-center text-xs font-semibold transition-all ${
+                    className={`flex-1 rounded-lg py-2 px-2.5 text-center text-xs font-semibold transition-all ${
                       dayIndex === index
-                        ? "bg-canvas text-ink shadow-xs border border-hairline/80 font-bold"
+                        ? "bg-canvas text-ink shadow-xs border border-hairline font-bold"
                         : "text-muted hover:text-ink"
                     }`}
                   >
                     <span className="block leading-tight">{relativeDayName(index)}</span>
-                    <span className="block text-[10px] font-normal opacity-75">{formatDayKey(day)}</span>
+                    <span className="block text-[10px] font-normal opacity-75 mt-0.5">{formatDayKey(day)}</span>
                   </button>
                 ))}
               </div>
 
               {/* Kategori Chips (Pill Filter) */}
-              <div className="flex flex-wrap items-center gap-1.5">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setCategories([])}
-                  className={`inline-flex min-h-8 items-center rounded-full px-3 text-xs font-medium transition-colors ${
+                  className={`inline-flex min-h-8 items-center rounded-full px-3.5 py-1 text-xs font-medium transition-colors ${
                     categories.length === 0
                       ? "bg-surface-dark text-on-dark font-semibold shadow-2xs"
                       : "border border-border-input/70 bg-canvas text-muted hover:border-border-input hover:text-ink"
@@ -643,7 +764,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                       type="button"
                       aria-pressed={pressed}
                       onClick={() => toggleCategory(category)}
-                      className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-colors ${
+                      className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                         pressed
                           ? "bg-surface-dark text-on-dark font-semibold shadow-2xs"
                           : "border border-border-input/70 bg-canvas text-muted hover:border-border-input hover:text-ink"
@@ -657,18 +778,18 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
               </div>
 
               {/* Filter Jam Acuan Kunjungan */}
-              <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 text-xs no-scrollbar">
+              <div className="flex items-center gap-2 overflow-x-auto py-1 text-xs no-scrollbar">
                 <span className="text-[11px] font-medium text-muted shrink-0">Waktu:</span>
                 <button
                   type="button"
                   onClick={() => setSelectedHour(null)}
-                  className={`inline-flex min-h-7 shrink-0 items-center rounded-md px-2 text-[11px] font-medium transition-colors ${
+                  className={`inline-flex min-h-7 shrink-0 items-center rounded-lg px-2.5 text-[11px] font-medium transition-colors ${
                     selectedHour === null
                       ? "bg-primary text-white font-semibold shadow-2xs"
                       : "border border-border-input/60 bg-canvas text-muted hover:text-ink"
                   }`}
                 >
-                  ⭐ Terbaik
+                  Terbaik
                 </button>
                 {STANDARD_HOURS.map((hour) => {
                   const checked = selectedHour === hour;
@@ -677,7 +798,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                       key={hour}
                       type="button"
                       onClick={() => setSelectedHour(checked ? null : hour)}
-                      className={`inline-flex min-h-7 shrink-0 items-center rounded-md px-2 text-[11px] font-medium transition-colors ${
+                      className={`inline-flex min-h-7 shrink-0 items-center rounded-lg px-2.5 text-[11px] font-medium transition-colors ${
                         checked
                           ? "bg-surface-dark text-on-dark font-semibold shadow-2xs"
                           : "border border-border-input/60 bg-canvas text-muted hover:text-ink"
@@ -690,239 +811,76 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
               </div>
             </div>
 
-            {/* 4. Inspirasi Cepat (Hanya tampil bila pencarian kosong dan filter kategori belum dipilih) */}
-            {!searchQuery && categories.length === 0 && (
-              <div className="flex flex-col gap-1.5 pt-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
-                  Inspirasi Cepat
-                </span>
-                <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
-                  <button
-                    type="button"
-                    onClick={() => applyQuickFilter("alam")}
-                    className="flex items-center gap-1.5 rounded-lg border border-hairline bg-surface-card p-2 text-left text-xs font-medium text-ink transition-all hover:bg-surface-soft hover:border-border-input"
-                  >
-                    <span>🌲</span>
-                    <span className="truncate">Alam & Pantai</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => applyQuickFilter("budaya")}
-                    className="flex items-center gap-1.5 rounded-lg border border-hairline bg-surface-card p-2 text-left text-xs font-medium text-ink transition-all hover:bg-surface-soft hover:border-border-input"
-                  >
-                    <span>🏛️</span>
-                    <span className="truncate">Candi & Budaya</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => applyQuickFilter("hujan")}
-                    className="flex items-center gap-1.5 rounded-lg border border-hairline bg-surface-card p-2 text-left text-xs font-medium text-ink transition-all hover:bg-surface-soft hover:border-border-input"
-                  >
-                    <span>☔</span>
-                    <span className="truncate">Ramah Hujan</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => applyQuickFilter("sunset")}
-                    className="flex items-center gap-1.5 rounded-lg border border-hairline bg-surface-card p-2 text-left text-xs font-medium text-ink transition-all hover:bg-surface-soft hover:border-border-input"
-                  >
-                    <span>🌅</span>
-                    <span className="truncate">Waktu Sunset</span>
-                  </button>
-                </div>
-              </div>
-            )}
+            {/* 4. Hasil Live Search / Destinasi Pilihan */}
+            <section aria-label="Daftar destinasi wisata" className="flex flex-col gap-4 pt-1">
+              {searchQuery.trim().length > 0 ? (
+                <>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-ink" aria-live="polite">
+                      {visible.length} hasil untuk &ldquo;{searchQuery.trim()}&rdquo;
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("");
+                        setCategories([]);
+                        setSelectedHour(null);
+                      }}
+                      className="text-xs font-semibold text-link hover:underline"
+                    >
+                      Hapus Pencarian
+                    </button>
+                  </div>
 
-            {/* 5. Daftar Utama Seluruh Destinasi */}
-            <section aria-label="Daftar destinasi wisata" className="flex flex-col gap-3 pt-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-ink" aria-live="polite">
-                  {searchQuery
-                    ? `${visible.length} hasil ditemukan`
-                    : selectedHour
-                    ? `${visible.length} destinasi (pukul ${selectedHour})`
-                    : `${visible.length} destinasi tersedia`}
-                </span>
-                {(searchQuery || categories.length > 0 || selectedHour !== null) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setCategories([]);
-                      setSelectedHour(null);
-                    }}
-                    className="text-xs font-semibold text-link hover:underline"
-                  >
-                    Reset Filter
-                  </button>
-                )}
-              </div>
-
-              {visible.length === 0 ? (
-                <div className="flex flex-col items-center justify-center rounded-xl border border-hairline bg-surface-card p-8 text-center">
-                  <p className="font-semibold text-ink">Tidak ada destinasi yang cocok</p>
-                  <p className="mt-1 text-xs text-muted max-w-[280px]">
-                    {searchQuery
-                      ? `Tidak ada tempat wisata yang cocok dengan "${searchQuery}".`
-                      : "Tidak ada destinasi yang memenuhi kriteria filter."}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setCategories([]);
-                      setSelectedHour(null);
-                    }}
-                    className="mt-4 inline-flex min-h-9 items-center rounded-lg border border-border-input bg-canvas px-4 text-xs font-semibold text-ink hover:bg-surface-soft transition-colors"
-                  >
-                    Reset Pencarian & Filter
-                  </button>
+                  {visible.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center rounded-2xl border border-hairline/80 bg-surface-card/60 p-8 sm:p-10 text-center my-2">
+                      <div className="flex size-12 items-center justify-center rounded-full bg-surface-soft text-muted mb-3">
+                        <MiscIcon name="search" size={22} />
+                      </div>
+                      <p className="font-semibold text-ink text-sm">Tidak ada hasil</p>
+                      <p className="mt-1.5 text-xs text-muted max-w-[280px] leading-relaxed">
+                        Tidak ada tempat wisata yang cocok dengan &ldquo;{searchQuery}&rdquo;.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                        className="mt-4 inline-flex min-h-9 items-center rounded-lg border border-border-input bg-canvas px-4 text-xs font-medium text-ink hover:bg-surface-soft transition-colors"
+                      >
+                        Hapus Pencarian
+                      </button>
+                    </div>
+                  ) : (
+                    <ul ref={listRef} className="flex flex-col gap-3.5">
+                      {visible.map((item) => renderDestinationCard(item))}
+                    </ul>
+                  )}
+                </>
+              ) : selectedItem ? (
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-ink">Destinasi Terpilih di Peta</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSlug(null)}
+                      className="text-xs font-medium text-muted hover:text-ink hover:underline"
+                    >
+                      Tutup
+                    </button>
+                  </div>
+                  <ul ref={listRef} className="flex flex-col gap-3.5">
+                    {renderDestinationCard(selectedItem)}
+                  </ul>
                 </div>
               ) : (
-                <ul ref={listRef} className="flex flex-col gap-2.5">
-                  {visible.map((item) => {
-                    const evaluation = getItemEvaluation(item);
-                    const selected = item.slug === selectedSlug;
-                    const mapsUrl = getGoogleMapsPlaceUrl(item.name, item.kabupaten);
-                    return (
-                      <li
-                        key={item.slug}
-                        data-slug={item.slug}
-                        onClick={() => select(item.slug)}
-                        className={`group cursor-pointer rounded-xl border p-3.5 transition-all ${
-                          selected
-                            ? "border-surface-dark bg-surface-card outline-2 outline-surface-dark shadow-sm"
-                            : "border-hairline/80 bg-surface-card hover:border-border-input hover:bg-surface-card-strong shadow-2xs"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2.5">
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5 text-xs text-muted">
-                              <span className="text-link">
-                                <CategoryIcon category={item.category} size={13} />
-                              </span>
-                              <span className="truncate">
-                                {CATEGORY_LABEL[item.category]} · {item.kabupaten}
-                              </span>
-                            </div>
-
-                            <h3 className="mt-1 font-sans text-base font-semibold leading-snug text-ink group-hover:text-link transition-colors">
-                              <Link
-                                href={`/destinasi/${item.slug}`}
-                                onClick={(e) => e.stopPropagation()}
-                                className="hover:underline"
-                              >
-                                {item.name}
-                              </Link>
-                            </h3>
-
-                            {(() => {
-                              const enrichment = getDestinationEnrichment(item.slug);
-                              if (!enrichment || !enrichment.tags.length) return null;
-                              return (
-                                <div className="mt-1.5 flex flex-wrap gap-1">
-                                  {enrichment.tags.slice(0, 3).map((tag) => (
-                                    <span
-                                      key={tag}
-                                      className="rounded bg-surface-soft px-1.5 py-0.5 text-[10px] font-medium text-muted"
-                                    >
-                                      #{tag}
-                                    </span>
-                                  ))}
-                                </div>
-                              );
-                            })()}
-                          </div>
-
-                          <div className="flex items-center gap-1 shrink-0 -mr-1">
-                            <a
-                              href={mapsUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              title="Buka di Google Maps"
-                              aria-label={`Buka ${item.name} di Google Maps`}
-                              className="inline-flex size-8 items-center justify-center rounded-md text-muted hover:bg-surface-soft hover:text-ink transition-colors"
-                            >
-                              <MiscIcon name="externalLink" size={14} />
-                            </a>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                select(item.slug);
-                              }}
-                              aria-label={`Tampilkan ${item.name} di peta`}
-                              title="Tampilkan di peta"
-                              className={`inline-flex size-8 items-center justify-center rounded-pill transition-colors ${
-                                selected
-                                  ? "bg-surface-dark text-on-dark"
-                                  : "text-muted hover:bg-surface-soft hover:text-ink"
-                              }`}
-                            >
-                              <MiscIcon name="mapPin" size={16} />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 border-t border-hairline/60 pt-2 text-xs">
-                          {evaluation.isOpen && evaluation.score !== null ? (
-                            <>
-                              <ScoreChip score={evaluation.score} size="sm" />
-                              {item.category === "pantai" && evaluation.seaStatus && (
-                                <SeaBadge
-                                  status={evaluation.seaStatus}
-                                  waveHeight={evaluation.waveHeightMax}
-                                  waveCat={evaluation.waveCat}
-                                  size="sm"
-                                />
-                              )}
-                              <span className="text-[12px] text-muted">
-                                {evaluation.timeText}
-                                {evaluation.weatherDesc ? ` · ${evaluation.weatherDesc}` : ""}
-                                {evaluation.t !== null ? ` (${Math.round(evaluation.t)}°C)` : ""}
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <ScoreChip score={null} size="sm" />
-                              {item.category === "pantai" && evaluation.seaStatus && (
-                                <SeaBadge
-                                  status={evaluation.seaStatus}
-                                  waveHeight={evaluation.waveHeightMax}
-                                  waveCat={evaluation.waveCat}
-                                  size="sm"
-                                />
-                              )}
-                              <span className="text-[12px] text-muted">{evaluation.timeText}</span>
-                            </>
-                          )}
-                        </div>
-
-                        {selected && (
-                          <div className="mt-2.5 flex items-center justify-between border-t border-hairline/60 pt-2 text-xs text-muted">
-                            <span className="inline-flex items-center gap-1.5 font-medium text-link">
-                              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                              {isLoadingFacilities
-                                ? "Memuat fasilitas sekitar..."
-                                : `${nearbyFacilities.length} fasilitas terdekat aktif di peta`}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedSlug(null);
-                              }}
-                              className="text-muted hover:text-ink underline underline-offset-2"
-                            >
-                              Sembunyikan
-                            </button>
-                          </div>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-hairline/90 bg-surface-card/40 p-10 sm:p-12 text-center my-3">
+                  <div className="flex size-12 items-center justify-center rounded-full bg-surface-soft text-muted mb-4">
+                    <MiscIcon name="search" size={22} />
+                  </div>
+                  <h2 className="text-sm font-semibold text-ink">Cari Destinasi Wisata</h2>
+                  <p className="mt-2 max-w-[280px] text-xs text-muted leading-relaxed">
+                    Ketik nama tempat, daerah, atau kategori di kolom pencarian untuk melihat prakiraan cuaca wisata, atau pilih titik langsung di peta.
+                  </p>
+                </div>
               )}
             </section>
 
