@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { AdminNav } from "@/components/admin/admin-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ReviewCard } from "@/components/submissions/review-card";
 import { getPageUser } from "@/lib/auth/session";
@@ -31,6 +32,7 @@ export default async function ReviewSubmissionsPage() {
   return (
     <>
       <main id="konten" className="mx-auto w-full max-w-[860px] flex-1 px-4 py-8 md:px-8 md:py-10">
+        <AdminNav />
         <h1>Tinjau usulan destinasi</h1>
         <p className="mt-3 max-w-[65ch]">
           Periksa lokasi, wilayah cuaca, dan kandidat duplikat sebelum menayangkan. Usulan yang disetujui langsung menjadi

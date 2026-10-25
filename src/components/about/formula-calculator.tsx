@@ -201,7 +201,7 @@ export function FormulaCalculator() {
   const s = SCENARIOS.find((item) => item.id === activeId) ?? SCENARIOS[0];
 
   return (
-    <div className="my-6 overflow-hidden rounded-xl border border-hairline bg-surface-card/60 p-5 shadow-xs md:p-6">
+    <div className="my-6 overflow-hidden rounded-xl border border-hairline bg-surface-card/60 p-4 sm:p-5 md:p-6 shadow-xs">
       {/* Header & Tab Selector */}
       <div className="flex flex-col gap-3 border-b border-hairline pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -217,7 +217,7 @@ export function FormulaCalculator() {
         <div
           role="tablist"
           aria-label="Pilihan contoh destinasi"
-          className="flex flex-wrap gap-1.5"
+          className="flex max-w-full gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap"
         >
           {SCENARIOS.map((item) => (
             <button
@@ -226,7 +226,7 @@ export function FormulaCalculator() {
               role="tab"
               aria-selected={item.id === activeId}
               onClick={() => setActiveId(item.id)}
-              className={`rounded-pill px-3 py-1.5 text-[13px] font-medium transition-all focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 ${
+              className={`shrink-0 rounded-pill px-3 py-1.5 text-[12.5px] sm:text-[13px] font-medium transition-all focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 ${
                 item.id === activeId
                   ? "bg-surface-dark text-on-dark shadow-xs"
                   : "border border-border-input bg-canvas text-body hover:bg-surface-soft hover:text-ink"
@@ -268,60 +268,60 @@ export function FormulaCalculator() {
       </div>
 
       {/* Rincian Hitungan Matematika */}
-      <div className="mt-6 space-y-2 font-mono text-[13px] leading-relaxed">
-        <div className="flex items-center justify-between text-muted">
-          <span>Nilai dasar slot awal</span>
-          <span className="font-bold text-ink">100,0</span>
+      <div className="mt-6 space-y-2 font-mono text-[12.5px] sm:text-[13px] leading-relaxed">
+        <div className="flex items-center justify-between gap-2 text-muted">
+          <span className="min-w-0">Nilai dasar slot awal</span>
+          <span className="font-bold text-ink shrink-0 tabular-nums">100,0</span>
         </div>
 
         {/* Baris Penalti Hujan */}
-        <div className="flex items-center justify-between text-body">
-          <span>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 text-body">
+          <span className="min-w-0">
             − Penalti Hujan{" "}
-            <span className="text-[12px] text-muted">
+            <span className="text-[11.5px] sm:text-[12px] text-muted inline-block sm:inline">
               (w: {s.weights.wRain.toFixed(1)} × P: {s.rawPenalties.pRain.toFixed(1)})
             </span>
           </span>
-          <span className={s.weightedPenalties.wRain > 0 ? "font-semibold text-score-bad-text" : "text-muted"}>
+          <span className={`shrink-0 tabular-nums ${s.weightedPenalties.wRain > 0 ? "font-semibold text-score-bad-text" : "text-muted"}`}>
             {s.weightedPenalties.wRain > 0 ? `−${s.weightedPenalties.wRain.toFixed(1)}` : "0,0"}
           </span>
         </div>
 
         {/* Baris Penalti Angin */}
-        <div className="flex items-center justify-between text-body">
-          <span>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 text-body">
+          <span className="min-w-0">
             − Penalti Angin{" "}
-            <span className="text-[12px] text-muted">
+            <span className="text-[11.5px] sm:text-[12px] text-muted inline-block sm:inline">
               (w: {s.weights.wWind.toFixed(1)} × P: {s.rawPenalties.pWind.toFixed(1)})
             </span>
           </span>
-          <span className={s.weightedPenalties.wWind > 0 ? "font-semibold text-score-bad-text" : "text-muted"}>
+          <span className={`shrink-0 tabular-nums ${s.weightedPenalties.wWind > 0 ? "font-semibold text-score-bad-text" : "text-muted"}`}>
             {s.weightedPenalties.wWind > 0 ? `−${s.weightedPenalties.wWind.toFixed(1)}` : "0,0"}
           </span>
         </div>
 
         {/* Baris Penalti Panas */}
-        <div className="flex items-center justify-between text-body">
-          <span>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 text-body">
+          <span className="min-w-0">
             − Penalti Panas{" "}
-            <span className="text-[12px] text-muted">
+            <span className="text-[11.5px] sm:text-[12px] text-muted inline-block sm:inline">
               (w: {s.weights.wHeat.toFixed(1)} × P: {s.rawPenalties.pHeat.toFixed(1)})
             </span>
           </span>
-          <span className={s.weightedPenalties.wHeat > 0 ? "font-semibold text-score-bad-text" : "text-muted"}>
+          <span className={`shrink-0 tabular-nums ${s.weightedPenalties.wHeat > 0 ? "font-semibold text-score-bad-text" : "text-muted"}`}>
             {s.weightedPenalties.wHeat > 0 ? `−${s.weightedPenalties.wHeat.toFixed(1)}` : "0,0"}
           </span>
         </div>
 
         {/* Baris Penalti Jarak Pandang */}
-        <div className="flex items-center justify-between text-body">
-          <span>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 text-body">
+          <span className="min-w-0">
             − Penalti Jarak Pandang{" "}
-            <span className="text-[12px] text-muted">
+            <span className="text-[11.5px] sm:text-[12px] text-muted inline-block sm:inline">
               (w: {s.weights.wVis.toFixed(1)} × P: {s.rawPenalties.pVis.toFixed(1)})
             </span>
           </span>
-          <span className={s.weightedPenalties.wVis > 0 ? "font-semibold text-score-bad-text" : "text-muted"}>
+          <span className={`shrink-0 tabular-nums ${s.weightedPenalties.wVis > 0 ? "font-semibold text-score-bad-text" : "text-muted"}`}>
             {s.weightedPenalties.wVis > 0 ? `−${s.weightedPenalties.wVis.toFixed(1)}` : "0,0"}
           </span>
         </div>
@@ -330,16 +330,16 @@ export function FormulaCalculator() {
         <div className="border-t border-hairline pt-2" />
 
         {/* Total Penalti */}
-        <div className="flex items-center justify-between text-sm text-muted">
-          <span>Total pengurangan penalti</span>
-          <span className="font-semibold text-score-bad-text tabular-nums">
+        <div className="flex items-center justify-between gap-2 text-sm text-muted">
+          <span className="min-w-0">Total pengurangan penalti</span>
+          <span className="font-semibold text-score-bad-text tabular-nums shrink-0">
             −{s.totalPenalty.toFixed(1)} poin
           </span>
         </div>
       </div>
 
       {/* Kotak Hasil Akhir */}
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-surface-soft p-4">
+      <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-hairline bg-surface-soft p-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">
             Hasil Akhir Di Aplikasi
@@ -353,11 +353,11 @@ export function FormulaCalculator() {
         </div>
 
         {/* Alasan yang tampil di kartu */}
-        <div className="max-w-[340px] text-right sm:text-left">
+        <div className="max-w-[340px] text-left sm:text-right">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">
             Alasan Di Balik Skor
           </p>
-          <div className="mt-1 flex flex-wrap gap-1.5">
+          <div className="mt-1 flex flex-wrap gap-1.5 sm:justify-end">
             {s.reasons.map((r) => (
               <span
                 key={r}
