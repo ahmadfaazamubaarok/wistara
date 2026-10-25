@@ -80,7 +80,7 @@ export function GoogleMapsPlaceCard({ destination, routeUrl }: Props) {
           rel="noopener noreferrer"
           className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-md border border-border-input/70 px-3 text-xs font-medium text-ink hover:bg-surface-soft transition-colors"
         >
-          <span>Rute Angkutan Umum</span>
+          <span>Rute Kendaraan Umum</span>
           <MiscIcon name="externalLink" size={13} />
         </a>
 

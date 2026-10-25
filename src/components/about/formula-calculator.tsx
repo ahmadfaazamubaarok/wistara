@@ -242,7 +242,7 @@ export function FormulaCalculator() {
       <div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <h4 className="font-serif text-[20px] font-semibold text-ink">{s.destination}</h4>
+            <h3 className="font-serif text-[20px] font-semibold text-ink">{s.destination}</h3>
             <span className="rounded-md bg-surface-soft px-2 py-0.5 text-[12px] font-medium text-muted">
               {s.categoryLabel}
             </span>

@@ -21,7 +21,7 @@ export function AttributionBar({
   tone?: "light" | "dark";
 }) {
   const color = tone === "dark" ? "text-on-dark-soft" : "text-muted";
-  const link = tone === "dark" ? "text-on-dark" : "text-muted";
+  const link = `inline-flex min-h-6 items-center ${tone === "dark" ? "text-on-dark" : "text-muted"}`;
   return (
     <p className={`flex flex-wrap gap-x-3 gap-y-1 text-[13px] leading-snug ${color}`}>
       {sources.includes("bmkg") && (
