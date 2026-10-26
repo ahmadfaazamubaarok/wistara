@@ -4,15 +4,7 @@ Aplikasi web yang memberi tahu wisatawan **kapan waktu terbaik** mengunjungi 365
 
 > **Soal nama.** Nama produknya **Wistara**. "JelajahLokal" adalah nama sementara dan masih muncul di nama berkas dokumen lama (PRD, Rancangan Teknis, DESIGN), nama basis data dev (`jelajahlokal`), dan nama paket di `package.json`. Itu hanya identitas teknis dan belum diganti agar migrasi dan basis data yang sudah ada tidak rusak.
 
-Dokumen acuan:
-[PRD](<PRD JelajahLokal (MVP UINIC 8.0).md>) ·
-[Rancangan Teknis](<Rancangan Teknis JelajahLokal (MVP UINIC 8.0).md>) ·
-[Keunggulan Wistara vs Platform Lain](KEUNGGULAN_WISTARA.md) ·
-[Sistem desain](DESIGN-jelajahlokal.md) ·
-[Rancangan Wistara AI](<Rancangan Wistara AI (Asisten Rencana).md>) ·
-[Skalabilitas data destinasi](<Rancangan Skalabilitas Data Destinasi (Pipeline & Kurasi).md>)
-
-> **Catatan tentang dokumen acuan.** PRD, Rancangan Teknis, dan Rancangan Wistara AI adalah dokumen desain awal (15–17 Okt 2026). Beberapa angka dan cakupannya sudah berubah (misalnya 20 menjadi 365 destinasi, dan gelombang yang semula "tidak dibangun"); tiap dokumen memuat catatan status di bagian atasnya. **Bila berbeda, README ini yang berlaku.**
+> **Catatan desain.** Dokumen rancangan awal dan spesifikasi internal diarsipkan secara terpisah. **README ini merupakan acuan utama fitur dan implementasi proyek.**
 
 **Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · PostgreSQL + PostGIS · Supabase Auth (GoTrue) · MapLibre · Zod + OpenAPI · Vitest · Google Gemini (opsional, hanya untuk Wistara AI). Produksi di Vercel + Supabase; Docker hanya untuk pengembangan lokal.
 
