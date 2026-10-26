@@ -575,7 +575,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
         <button
           type="button"
           aria-expanded={sheet !== "collapsed"}
-          aria-label={`Ubah ukuran daftar, sekarang ${sheet === "collapsed" ? "terlipat" : sheet === "half" ? "setengah" : "penuh"}`}
+          aria-label={`${searchQuery ? `${visible.length} hasil pencarian` : `${visible.length} destinasi`}. Ubah ukuran daftar, sekarang ${sheet === "collapsed" ? "terlipat" : sheet === "half" ? "setengah" : "penuh"}`}
           onClick={() => setSheet((c) => SHEET_ORDER[(SHEET_ORDER.indexOf(c) + 1) % SHEET_ORDER.length])}
           onPointerDown={(e) => {
             dragStart.current = e.clientY;
@@ -738,7 +738,7 @@ export function HomeExplorer({ items, days, source, mapStyleUrl }: Props) {
                     }`}
                   >
                     <span className="block leading-tight">{relativeDayName(index)}</span>
-                    <span className="block text-[10px] font-normal opacity-75 mt-0.5">{formatDayKey(day)}</span>
+                    <span className="block text-[11px] font-normal mt-0.5">{formatDayKey(day)}</span>
                   </button>
                 ))}
               </div>

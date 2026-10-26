@@ -53,6 +53,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   allowedDevOrigins,
   poweredByHeader: false,
+  // Metadata (title, description) harus ada di <head> untuk semua pengguna agent. Tanpa ini Next
+  // mengalirkannya ke <body> untuk peramban biasa, dan Lighthouse melaporkan "tidak ada meta description".
+  htmlLimitedBots: /.*/,
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

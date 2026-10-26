@@ -22,7 +22,7 @@ export function MapLegend({ className = "", defaultExpanded = false }: MapLegend
         role={!isExpanded ? "button" : undefined}
         tabIndex={!isExpanded ? 0 : undefined}
         aria-expanded={isExpanded}
-        aria-label={!isExpanded ? "Tampilkan keterangan warna kesesuaian cuaca" : undefined}
+        aria-label={!isExpanded ? "Legenda: tampilkan keterangan warna kesesuaian cuaca" : undefined}
         onKeyDown={
           !isExpanded
             ? (e) => {
