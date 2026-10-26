@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { AttributionBar } from "./attribution-bar";
 
@@ -27,7 +28,18 @@ export function SiteFooter() {
             </a>
           </li>
         </ul>
-        <p className="text-[13px]">MVP UINIC 8.0 · Subtema Sosial Budaya</p>
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-on-dark-soft/20 pt-4">
+          <div className="flex items-center gap-3">
+            <Image src="/logo/uinic-putih.webp" alt="Logo UINIC 8.0" width={40} height={40} />
+            <p className="text-[13px]">MVP UINIC 8.0 · Subtema Sosial Budaya</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <p className="text-[13px]">Dikembangkan oleh mahasiswa</p>
+            <span className="inline-flex rounded-md bg-canvas px-2.5 py-1.5">
+              <Image src="/logo/sibermu.webp" alt="Universitas Siber Muhammadiyah" width={132} height={31} />
+            </span>
+          </div>
+        </div>
       </div>
     </footer>
   );
