@@ -25,6 +25,9 @@ colors:
   border-input: "#8f877b"
   hairline: "#e6dfd8"              # dekoratif saja, bukan batas komponen
   focus: "#1e2b45"
+  # Teks yang disorot pengguna (::selection)
+  selection-bg: "#dfb9a3"          # soga muda
+  selection-text: "#141413"
   # Status skor kelayakan (selalu sebagai chip berlatar muda)
   score-good-text: "#1a6b4f"
   score-good-bg: "#dcefe6"
@@ -260,6 +263,7 @@ Semua rasio dihitung dengan rumus kontras WCAG 2.2. Batas lulus AA adalah 4,5 un
 | `border-input` | #8f877b | 3,37 di `canvas` | Batas input, tombol sekunder, chip filter |
 | `hairline` | #e6dfd8 | 1,25 | Pemisah dekoratif saja |
 | `focus` | #1e2b45 | 13,41 | Cincin fokus |
+| `selection-bg` (soga muda) | #dfb9a3 | 10,19 dengan `selection-text` (`ink`); 1,72 di `canvas`, 1,50 di `surface-card` | Latar teks yang disorot. Sengaja soga muda, bukan soga penuh, supaya tidak bersaing dengan tombol utama; bukan komponen, jadi kontras terhadap latar tidak wajib 3,0 |
 
 ### Status skor kelayakan
 
@@ -446,6 +450,8 @@ Strip slot tetap digulir horizontal di semua lebar, tidak dibungkus menjadi bebe
 Aplikasi punya mode gelap (tombol di header; bila belum dipilih, mengikuti preferensi sistem). Nilai tiap token untuk mode gelap ada di `src/app/globals.css` (blok `.dark`), **bukan** di front matter di atas, yang hanya mencatat mode terang. Kontras pasangan utama mode gelap dihitung dengan rumus WCAG 2.2 pada 22 Okt 2026 dan lulus AA (4,5): teks utama pada latar 16,61; teks isi 10,45; teks sekunder 5,34; teks putih pada tombol utama 5,03; tautan pada latar 8,07; chip skor dan badge laut 5,87 sampai 8,40.
 
 Audit itu menemukan dua pasangan yang gagal di nilai awal soga mode gelap `#b5633b` (teks putih pada tombol 4,36; tautan pada latar 4,26). Perbaikannya memisahkan dua peran yang sebelumnya berbagi satu token: tombol memakai `primary` (mode gelap `#a85a34`, `primary-active` `#8f4a28`), tautan memakai token baru `link` (terang `#9a4f2c`, gelap `#e39a70`). Di mode terang kedua token bernilai sama dengan soga.
+
+Teks yang disorot (`::selection`) memakai `selection-bg` dan `selection-text`. Mode gelap memakai soga gelap `#8f4a28` (sama dengan `primary-active` gelap) dengan teks `#faf9f5`, kontras 6,27. Latar sorot dibuat buram dan warna teksnya dipasang bersamaan, jadi tetap terbaca di atas permukaan nila (footer) pada kedua mode.
 
 ## Boleh dan jangan
 

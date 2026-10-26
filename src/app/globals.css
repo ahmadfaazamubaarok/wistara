@@ -35,6 +35,10 @@
   /* dekoratif saja, bukan batas komponen */
   --color-focus: #1e2b45;
 
+  /* Teks yang disorot pengguna (::selection): soga muda, bukan biru bawaan peramban */
+  --color-selection-bg: #dfb9a3;
+  --color-selection-text: #141413;
+
   /* Status skor kelayakan (selalu sebagai chip berlatar muda) */
   --color-score-good-text: #1a6b4f;
   --color-score-good-bg: #dcefe6;
@@ -105,6 +109,10 @@
   --color-border-input: #575247;
   --color-hairline: #2b2822;
   --color-focus: #b5633b;
+
+  /* Teks yang disorot: soga gelap (sama dengan primary-active mode gelap) */
+  --color-selection-bg: #8f4a28;
+  --color-selection-text: #faf9f5;
 
   /* Status skor kelayakan (latar gelap kaya kontras tinggi) */
   --color-score-good-text: #4ade80;
@@ -213,6 +221,12 @@
     html {
       scroll-behavior: auto;
     }
+  }
+
+  /* Latar buram dan warna teks dipasang bersamaan agar tetap terbaca di atas permukaan terang maupun nila (footer). */
+  ::selection {
+    background-color: var(--color-selection-bg);
+    color: var(--color-selection-text);
   }
 
   /* Serif hanya untuk judul halaman dan judul bagian, selalu bobot 400. */
