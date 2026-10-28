@@ -259,6 +259,9 @@ function buildMarkerElement(
       background: "transparent",
       cursor: "pointer",
       overflow: "visible",
+      willChange: "transform",
+      contain: "layout style paint",
+      transform: "translateZ(0)",
     });
 
     // Beacon radar/sonar berdenyut di bawah ujung jarum pin hero
@@ -276,12 +279,12 @@ function buildMarkerElement(
     Object.assign(svg.style, {
       display: "block",
       overflow: "visible",
+      // Hanya terapkan filter blur berat pada hero atau pin terpilih; hindari filter pada 365 pin biasa agar GPU ponsel tidak drop frame
       filter: isHero
-        ? "drop-shadow(0 4px 12px rgba(154, 79, 44, 0.45)) drop-shadow(0 2px 4px rgba(20,20,19,0.35))"
+        ? "drop-shadow(0 4px 10px rgba(154, 79, 44, 0.45)) drop-shadow(0 2px 4px rgba(20,20,19,0.35))"
         : (selected
-          ? "drop-shadow(0 4px 8px rgba(20,20,19,0.38))"
-          : "drop-shadow(0 3px 6px rgba(20,20,19,0.26))"),
-      transition: "transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)",
+          ? "drop-shadow(0 3px 6px rgba(20,20,19,0.38))"
+          : "none"),
       transformOrigin: "bottom center",
     });
 
@@ -349,18 +352,22 @@ function buildMarkerElement(
     });
 
     button.addEventListener("mouseenter", () => {
+      svg.style.transition = "transform 0.15s ease-out";
       svg.style.transform = "scale(1.15)";
       onHover?.(marker);
     });
     button.addEventListener("mouseleave", () => {
+      svg.style.transition = "transform 0.15s ease-out";
       svg.style.transform = "scale(1)";
       onLeave?.();
     });
     button.addEventListener("focus", () => {
+      svg.style.transition = "transform 0.15s ease-out";
       svg.style.transform = "scale(1.15)";
       onHover?.(marker);
     });
     button.addEventListener("blur", () => {
+      svg.style.transition = "transform 0.15s ease-out";
       svg.style.transform = "scale(1)";
       onLeave?.();
     });
@@ -383,6 +390,9 @@ function buildMarkerElement(
     border: "0",
     background: "transparent",
     cursor: "pointer",
+    willChange: "transform",
+    contain: "layout style paint",
+    transform: "translateZ(0)",
   });
 
   const disc = document.createElement("span");
@@ -503,6 +513,11 @@ export function MapView({
         zoom: 9,
         cooperativeGestures,
         attributionControl: { compact: true },
+        // Optimasi rendering ponsel: matikan fade animasi tile agar zoom/geser tidak tersendat (jank-free)
+        fadeDuration: 0,
+        renderWorldCopies: false,
+        trackResize: true,
+        maxTileCacheSize: 80,
       });
       mapRef.current = map;
       map.addControl(new maplibre.NavigationControl({ showCompass: false }), "bottom-right");
