@@ -95,6 +95,13 @@ export async function getDestinationForecast(
   return buildDestinationForecast(destination, region, profiles, now, options.days);
 }
 
+let manyForecastsCache: {
+  bucket: number;
+  destLength: number;
+  days: number;
+  result: { bySlug: Map<string, DestinationForecast>; source: SourceInfo | null; dayKeys: string[] };
+} | null = null;
+
 /**
  * Prakiraan banyak destinasi sekaligus (untuk peta Beranda). Satu wilayah hanya
  * dibaca sekali walau dipakai beberapa destinasi.
@@ -105,6 +112,20 @@ export async function getManyForecasts(
 ): Promise<{ bySlug: Map<string, DestinationForecast>; source: SourceInfo | null; dayKeys: string[] }> {
   const now = options.now ?? new Date();
   const days = options.days ?? 3;
+
+  const isTest = process.env.NODE_ENV === "test";
+  const bucket = Math.floor(now.getTime() / (120 * 1000)); // bucket 2 menit
+
+  if (
+    !isTest &&
+    manyForecastsCache &&
+    manyForecastsCache.bucket === bucket &&
+    manyForecastsCache.destLength === destinations.length &&
+    manyForecastsCache.days === days
+  ) {
+    return manyForecastsCache.result;
+  }
+
   const profiles = await getScoreProfiles();
 
   const codes = [...new Set(destinations.map((d) => d.adm4Code))];
@@ -135,5 +156,10 @@ export async function getManyForecasts(
     };
   }
 
-  return { bySlug, source, dayKeys: wibDayKeys(now, days) };
+  const result = { bySlug, source, dayKeys: wibDayKeys(now, days) };
+  if (!isTest) {
+    manyForecastsCache = { bucket, destLength: destinations.length, days, result };
+  }
+
+  return result;
 }

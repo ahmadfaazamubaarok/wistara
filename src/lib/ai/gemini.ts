@@ -12,8 +12,15 @@ import type { CatalogEntry } from "./resolver";
 import type { ModelUnderstanding } from "./understand";
 import type { AssistantCard } from "./engine";
 
-const TIMEOUT_MS = 30_000;
-const DEFAULT_MODELS = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-flash-latest"];
+const TIMEOUT_MS = 8_000;
+const DEFAULT_MODELS = [
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-3.5-flash",
+  "gemini-3.8-flash",
+  "gemini-flash-latest",
+];
 
 export const isAiConfigured = () => Boolean(process.env.AI_API_KEY || process.env.GEMINI_API_KEY);
 

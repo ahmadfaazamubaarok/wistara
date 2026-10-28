@@ -8,7 +8,7 @@
 import type { DestCategory } from "../categories";
 import { getScoreProfiles, indoorCandidates, type Destination } from "../db/destinations";
 import type { ScoreProfile } from "../scoring/score";
-import { getRegionForecast } from "../weather/service";
+import { getRegionForecast, type RegionForecast } from "../weather/service";
 import { warnUnknownWeather } from "./destination-forecast";
 import { bestOverlappingSlot, scoreSlots, type ScoredSlot } from "./slots";
 
@@ -64,16 +64,28 @@ export async function alternativesBySlot(
     profilesIn ?? getScoreProfiles(),
   ]);
 
-  const scoredCandidates = await Promise.all(
-    candidates.map(async (candidate) => {
-      const region = await getRegionForecast(candidate.adm4Code, { now });
-      const profile = profiles[candidate.category];
-      const scored = profile
-        ? scoreSlots(region.rows, candidate, profile, { onUnknownWeather: warnUnknownWeather })
-        : [];
-      return { candidate, scored };
+  // Hanya evaluasi maksimal 8 kandidat terdekat agar hemat query dan komputasi
+  const topCandidates = candidates.slice(0, 8);
+  const uniqueCodes = [...new Set(topCandidates.map((c) => c.adm4Code))];
+  const regionMap = new Map<string, RegionForecast>();
+  await Promise.all(
+    uniqueCodes.map(async (code) => {
+      try {
+        regionMap.set(code, await getRegionForecast(code, { now }));
+      } catch {
+        // Abaikan galat wilayah individual agar tidak menumbangkan seluruh alternatif
+      }
     }),
   );
+
+  const scoredCandidates = topCandidates.map((candidate) => {
+    const region = regionMap.get(candidate.adm4Code);
+    const profile = profiles[candidate.category];
+    const scored = profile && region
+      ? scoreSlots(region.rows, candidate, profile, { onUnknownWeather: warnUnknownWeather })
+      : [];
+    return { candidate, scored };
+  });
 
   for (const slot of triggered) {
     const list: Alternative[] = [];

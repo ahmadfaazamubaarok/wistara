@@ -70,9 +70,18 @@ export default async function DestinationPage({ params, searchParams }: Props) {
 
   const [forecast, nearby, access, activeAlerts, marineForecast, beachSafety] = await Promise.all([
     getDestinationForecast(destination, { days: 3, now }),
-    facilitiesNear(destination.id, 1000, PANEL_TYPES),
-    facilitiesNear(destination.id, ACCESS_RADIUS_M, ["halte", "stasiun"]),
-    getActiveAlertsForDestination(destination, now),
+    facilitiesNear(destination.id, 1000, PANEL_TYPES).catch((err) => {
+      console.warn(`[destination:${destination.slug}] gagal mengambil fasilitas sekitar:`, err instanceof Error ? err.message : err);
+      return [];
+    }),
+    facilitiesNear(destination.id, ACCESS_RADIUS_M, ["halte", "stasiun"]).catch((err) => {
+      console.warn(`[destination:${destination.slug}] gagal mengambil akses halte/stasiun:`, err instanceof Error ? err.message : err);
+      return [];
+    }),
+    getActiveAlertsForDestination(destination, now).catch((err) => {
+      console.warn(`[destination:${destination.slug}] gagal mengambil peringatan cuaca:`, err instanceof Error ? err.message : err);
+      return [];
+    }),
     destination.category === "pantai" && destination.marineAreaCode
       ? getAreaForecast(destination.marineAreaCode, { now }).catch(() => null)
       : Promise.resolve(null),
@@ -82,7 +91,10 @@ export default async function DestinationPage({ params, searchParams }: Props) {
   ]);
 
   const alerts = isDemoAlert && activeAlerts.length === 0 ? [createDemoAlert(destination, now)] : activeAlerts;
-  const altMap = await alternativesBySlot(destination, forecast.slots, now);
+  const altMap = await alternativesBySlot(destination, forecast.slots, now).catch((err) => {
+    console.warn(`[destination:${destination.slug}] gagal mengambil alternatif indoor:`, err instanceof Error ? err.message : err);
+    return new Map();
+  });
 
   // "Simpan ke rencana" (F7): yang belum login diarahkan ke login lalu kembali ke halaman ini.
   const user = await getPageUser();

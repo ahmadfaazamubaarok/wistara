@@ -3,7 +3,7 @@ import { ApiError, withApi } from "@/lib/api/errors";
 import { noStoreJson, parseJsonBody } from "@/lib/api/http";
 import { getPageUser } from "@/lib/auth/session";
 import { getPool } from "@/lib/db";
-import { getActiveAlertsForDestination, listActiveAlerts } from "@/lib/db/alerts";
+import { listActiveAlerts } from "@/lib/db/alerts";
 import { facilitiesNear, indoorCandidates, listDestinations } from "@/lib/db/destinations";
 import { getDestinationEnrichment } from "@/lib/destination-enrichment";
 import { getManyForecasts } from "@/lib/forecast/destination-forecast";
@@ -111,18 +111,27 @@ export const POST = withApi(async (request) => {
   // Data: prakiraan, peringatan dini, pengayaan.
   const { bySlug } = await getManyForecasts(destinations, { days: 3, now });
   const activeAlerts = await listActiveAlerts(now);
-  const items: EngineDestination[] = await Promise.all(
-    destinations.map(async (dest) => {
-      const alerts = activeAlerts.length > 0 ? await getActiveAlertsForDestination(dest, now) : [];
-      return {
-        ...dest,
-        slots: bySlug.get(dest.slug)?.slots ?? [],
-        enrichment: getDestinationEnrichment(dest.slug),
-        attr: getDestinationAttribute(dest.slug, dest.isIndoor),
-        alert: alerts[0] ?? null,
-      };
-    }),
-  );
+  const items: EngineDestination[] = destinations.map((dest) => {
+    let alert = null;
+    if (activeAlerts.length > 0) {
+      const destKec = dest.region.kecamatan.toLowerCase().trim();
+      const match = activeAlerts.find((a) => {
+        const kecMatch = (a.admKecamatan ?? []).some((k) => k.toLowerCase().trim() === destKec);
+        const provinceMatch =
+          (!a.admKecamatan || a.admKecamatan.length === 0) &&
+          ["d.i. yogyakarta", "daerah istimewa yogyakarta", "diy"].includes(a.areaDesc.toLowerCase().trim());
+        return kecMatch || provinceMatch;
+      });
+      alert = match ?? null;
+    }
+    return {
+      ...dest,
+      slots: bySlug.get(dest.slug)?.slots ?? [],
+      enrichment: getDestinationEnrichment(dest.slug),
+      attr: getDestinationAttribute(dest.slug, dest.isIndoor),
+      alert,
+    };
+  });
 
   const result = await runEngine({
     now,

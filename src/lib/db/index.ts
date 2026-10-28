@@ -14,7 +14,14 @@ export function getPool(): Pool {
     );
   }
 
-  const pool = new Pool({ connectionString, max: 5, connectionTimeoutMillis: 3000 });
+  const max = Number(process.env.DB_POOL_MAX || "15");
+  const connectionTimeoutMillis = Number(process.env.DB_CONNECTION_TIMEOUT_MS || "10000");
+  const pool = new Pool({
+    connectionString,
+    max,
+    connectionTimeoutMillis,
+    idleTimeoutMillis: 30000,
+  });
   // Tanpa handler ini, koneksi idle yang putus (mis. DB di-restart) memicu
   // 'error' yang tidak tertangani dan mematikan proses.
   pool.on("error", (error) => {
