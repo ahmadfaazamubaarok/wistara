@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { signOutAction } from "@/app/actions/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { buttonClass } from "@/components/ui";
 
 const NAV_LINK =
   "inline-flex min-h-11 items-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-body no-underline transition-colors hover:bg-surface-soft hover:text-ink";
@@ -19,11 +20,44 @@ type Props = {
 
 export function SiteNav({ isLoggedIn, isAdminUser }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSigningOut, startSignOut] = useTransition();
+  const [signOutError, setSignOutError] = useState<string | null>(null);
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const logoutDialogRef = useRef<HTMLDialogElement>(null);
+  const cancelLogoutRef = useRef<HTMLButtonElement>(null);
+  const logoutTitleId = useId();
+  const logoutDescId = useId();
 
   const closeMenu = () => setIsOpen(false);
+
+  const openLogoutConfirm = () => {
+    setSignOutError(null);
+    setIsOpen(false);
+    logoutDialogRef.current?.showModal();
+    cancelLogoutRef.current?.focus();
+  };
+
+  const closeLogoutConfirm = () => {
+    if (isSigningOut) return;
+    logoutDialogRef.current?.close();
+  };
+
+  const handleConfirmSignOut = () => {
+    setSignOutError(null);
+    startSignOut(async () => {
+      try {
+        await signOutAction();
+        logoutDialogRef.current?.close();
+        setIsOpen(false);
+        // Muat ulang penuh ke beranda agar seluruh state UI dan header langsung tersinkron setelah cookie dihapus
+        window.location.assign("/");
+      } catch {
+        setSignOutError("Gagal keluar dari akun. Silakan coba lagi.");
+      }
+    });
+  };
 
   // Tutup menu saat tombol Escape ditekan atau klik di luar
   useEffect(() => {
@@ -96,11 +130,14 @@ export function SiteNav({ isLoggedIn, isAdminUser }: Props) {
                 </li>
               )}
               <li>
-                <form action={signOutAction}>
-                  <button type="submit" className={NAV_LINK}>
-                    Keluar
-                  </button>
-                </form>
+                <button
+                  type="button"
+                  onClick={openLogoutConfirm}
+                  aria-haspopup="dialog"
+                  className={NAV_LINK}
+                >
+                  Keluar
+                </button>
               </li>
             </>
           ) : (
@@ -231,16 +268,15 @@ export function SiteNav({ isLoggedIn, isAdminUser }: Props) {
                       </li>
                     )}
                     <li>
-                      <form action={signOutAction} className="w-full">
-                        <button
-                          type="submit"
-                          onClick={closeMenu}
-                          className={`${MOBILE_LINK} text-red-600 hover:text-red-700 dark:text-red-400`}
-                        >
-                          <span>Keluar dari Akun</span>
-                          <span aria-hidden="true">→</span>
-                        </button>
-                      </form>
+                      <button
+                        type="button"
+                        onClick={openLogoutConfirm}
+                        aria-haspopup="dialog"
+                        className={`${MOBILE_LINK} text-red-600 hover:text-red-700 dark:text-red-400`}
+                      >
+                        <span>Keluar dari Akun</span>
+                        <span aria-hidden="true">→</span>
+                      </button>
                     </li>
                   </>
                 ) : (
@@ -259,6 +295,56 @@ export function SiteNav({ isLoggedIn, isAdminUser }: Props) {
           </div>
         </>
       )}
+
+      {/* Dialog konfirmasi keluar (bottom sheet di ponsel, modal di desktop) */}
+      <dialog
+        ref={logoutDialogRef}
+        aria-labelledby={logoutTitleId}
+        aria-describedby={logoutDescId}
+        onCancel={(event) => {
+          if (isSigningOut) event.preventDefault();
+        }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) closeLogoutConfirm();
+        }}
+        className="confirm-dialog fixed inset-x-0 bottom-0 top-auto w-full max-w-none rounded-t-2xl border border-hairline bg-canvas p-0 text-ink shadow-xl backdrop:bg-black/50 md:inset-0 md:m-auto md:h-fit md:w-[min(28rem,calc(100%-2rem))] md:rounded-2xl"
+      >
+        <div className="flex flex-col gap-4 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] md:p-6">
+          <span aria-hidden="true" className="mx-auto h-1 w-10 rounded-full bg-border-input/60 md:hidden" />
+          <div className="flex flex-col gap-2">
+            <h2 id={logoutTitleId} className="!text-[20px]">
+              Keluar dari akun?
+            </h2>
+            <p id={logoutDescId} className="text-[15px] text-body">
+              Sesi Anda akan berakhir. Anda perlu masuk kembali untuk mengakses rencana kunjungan dan usulan destinasi.
+            </p>
+            {signOutError && (
+              <p role="alert" className="text-sm font-medium text-score-bad-text">
+                {signOutError}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col-reverse gap-2 md:flex-row md:justify-end">
+            <button
+              ref={cancelLogoutRef}
+              type="button"
+              onClick={closeLogoutConfirm}
+              disabled={isSigningOut}
+              className={`${buttonClass.secondary} w-full disabled:opacity-60 md:w-auto`}
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirmSignOut}
+              disabled={isSigningOut}
+              className={`${buttonClass.secondary} w-full border-transparent bg-score-bad-text text-canvas hover:bg-score-bad-text hover:opacity-90 disabled:opacity-60 md:w-auto`}
+            >
+              {isSigningOut ? "Keluar…" : "Ya, Keluar"}
+            </button>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

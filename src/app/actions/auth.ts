@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { safeNext } from "@/lib/auth/safe-next";
@@ -43,6 +44,11 @@ export async function signInWithGoogleAction(formData: FormData): Promise<void> 
 
 export async function signOutAction() {
   const supabase = await createSupabaseServerClient();
-  await supabase?.auth.signOut();
-  redirect("/");
+  if (supabase) {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      await supabase.auth.signOut({ scope: "local" });
+    }
+  }
+  revalidatePath("/", "layout");
 }
